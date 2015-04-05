@@ -141,7 +141,7 @@ As a convenience, when you use the `@Require` annotation your class is decorated
 @Require('^parent', 'sibling')
 class MyComponent{
 	static link(scope, element, attrs, controllers){
-		let {parent, sibling} = unpackRequiredComponents(controllers);
+		let {parent, sibling} = MyComponent.unpackRequires(controllers);
 	}
 }
 ```

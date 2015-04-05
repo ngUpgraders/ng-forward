@@ -3,7 +3,7 @@ export let Require = (...components) => t => {
 
 	t.$component.require = components;
 
-	t.unpackRequiredComponents = function(resolved){
+	t.unpackRequires = function(resolved){
 		let unpacked = {};
 
 		if(components.length > 1)
