@@ -1,7 +1,7 @@
 let _parsers = {};
 
 export class Module{
-	constructor(name, ...modules){
+	constructor(name, modules){
 		this.$es6 = true;
 		this.name = name;
 		this.modules = Module.moduleList(...modules);
@@ -50,6 +50,15 @@ export class Module{
 		if(! this.bundled ) this.bundle();
 
 
+	}
+
+	static addToExisting(module, ...providers){
+		for(provider in providers)
+		{
+			_parsers[provider.$provider.type](provider, module);
+		}
+
+		return module;
 	}
 
 	static moduleList(...modules){

@@ -10,14 +10,18 @@ export let Require = (...components) => t => {
 		{
 			for(let i = 0; i < components.length; i++)
 			{
-				unpacked[components[i]] = resolved[i];
+				unpacked[name(components[i])] = resolved[i];
 			}
 		}
 		else
 		{
-			unpacked[components[0]] = resolved;
+			unpacked[name(components[0])] = resolved;
 		}
 
 		return unpacked;
 	};
+}
+
+function name(component){
+	return component.replace(/(\?)/g, '').replace(/(\^)/g, '');
 }

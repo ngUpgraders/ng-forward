@@ -2,6 +2,34 @@
 
 Angular 2, due to be released this year, offers a drastically different API for creating applications. angular-es6 provides annotations and utilities that allow you to write AngularJS 1.x apps in a similar way to this new API. By taking advantage of these annotations and utilities, porting your existing AngularJS 1.x apps to Angular 2 will be a quicker, less painful process.
 
+## Modules
+
+The standard `angular.module` does not understand the meta data attached to your classes or functions from this libraries annotations. As such, you must use the provided Module class in this library to create Angular modules:
+
+```js
+let myModule = new Module('my-module', ['ui.bootrap', 'ui.router']);
+```
+
+Registering an annotated component is easy:
+
+```js
+myModule.register(AnnotatedClass);
+```
+
+When you've finished registering your ES6 annotated components, publish the module to create a regular Angular module:
+
+```js
+myModule.publish();
+```
+
+If you need to add ES6 annotated components to a pre-existing Angular module, you can use the static `Module.addToExisting` method:
+
+```js
+let myModule = angular.module('my-module', []);
+
+Module.addToExisting(myModule, AnnotatedClass);
+```
+
 ## Annotations
 
 The annotations provided in this package follow [this proposal](https://github.com/jonathandturner/brainstorming/blob/master/README.md). They work by adding meta information to your classes and functions under the `$component` and `$provider` namespaces. 
@@ -91,6 +119,45 @@ angular.module('my-component-module', [
 ```
 
 
+##### About the Require Annotation
+In AngularJS, when your directive requires multiple other directive controllers, they are passed to your link function as an array:
+
+```js
+myModule.directive('myComponent', function(){
+	return {
+		require : ['^parent', 'sibling'],
+		link : function(scope, element, attrs, controllers){
+			var parent = controllers[0];
+			var sibling = controllers[1];
+		}
+	};
+});
+```
+
+As a convenience, when you use the `@Require` annotation your class is decorated with an `unpackRequiredComponents` method to make it easy to reference your required components:
+
+```js
+@Component({ selector : 'my-component' })
+@Require('^parent', 'sibling')
+class MyComponent{
+	static link(scope, element, attrs, controllers){
+		let {parent, sibling} = unpackRequiredComponents(controllers);
+	}
+}
+
+### Decorator
+The `@Decorator` annotation is identical to the `@Component` annotation, except you would `@Decorator` for directives that you want to restrict to a class or attribute:
+
+```js
+@Decorator({ selector : '[my-attr]' })
+class MyAttrCtrl{
+	constructor(){
+
+	}
+}
+```
+
+
 ### Service
 The `@Service` annotation simply turns your class/function into a service:
 
@@ -164,8 +231,8 @@ If you want more control over the factory function, just add a static create met
 ```js
 @Factory
 class Comment{
-	@Inject('$http')
-	constructor($http, postID, comment){
+	@Inject('$http', '$q')
+	constructor($http, $q, postID, comment){
 
 	}
 

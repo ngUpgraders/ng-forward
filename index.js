@@ -7,6 +7,7 @@ import {ProviderParser} from './annotations/provider-parser';
 import {Require} from './annotations/require';
 import {Service} from './annotations/service';
 import {Template} from './annotations/template';
+import {Module} from './module/module';
 
 
 export {
@@ -18,5 +19,6 @@ export {
 	ProviderParser,
 	Require,
 	Service,
-	Template
+	Template,
+	Module
 };
