@@ -1,3 +1,5 @@
+Note: this library is currently in development and is not ready for use
+
 # angular-es6
 
 Angular 2, due to be released this year, offers a drastically different API for creating applications. angular-es6 provides annotations and utilities that allow you to write AngularJS 1.x apps in a similar way to this new API. By taking advantage of these annotations and utilities, porting your existing AngularJS 1.x apps to Angular 2 will be a quicker, less painful process.
@@ -118,6 +120,36 @@ angular.module('my-component-module', [
 });
 ```
 
+##### Component Inheritance
+One major benefit of structuring your components this way is that it now becomes much easier to extend components, creating specialized varianets:
+
+```js
+@Component({ selector : 'animal', bind : { name : '@' } })
+@Inject('$q')
+class Animal{
+	constructor($q){
+		this.type = 'Animal';
+		console.log(`${this.name} the ${this.type}`);
+	}
+}
+
+
+@Component({ selector : 'frog-animal' })
+class Frog extends Animal{
+	constructor($q, RibbitFactory){
+		this.type = 'Frog';
+		super($q);
+	}
+}
+```
+
+Then in your HTML:
+
+```html
+<frog animal name="Kermit"></frog>
+```
+
+Output: `Kermit the Frog`
 
 ##### About the Require Annotation
 In AngularJS, when your directive requires multiple other directive controllers, they are passed to your link function as an array:
@@ -245,7 +277,7 @@ class Comment{
 
 ## Adding Your Own Providers
 
-Adding your own providers through annotations is very easy. To demonstrate, let's create a `@Router` annotation that lets you setup router configuration for Anguar 1.4's new router:
+Adding your own providers through annotations is very easy. To demonstrate, let's create a `@Route` annotation that lets you setup router configuration for Anguar 1.4's new router:
 
 ```js
 // First we setup the Router annotation function:
@@ -276,7 +308,6 @@ function parseRouteController(provider, module){
 }
 
 // Now we can use our Router annotation:
-
 @Route({ path : '/', component : 'home' })
 @Inject('$q')
 class HomeController{
