@@ -144,6 +144,7 @@ class MyComponent{
 		let {parent, sibling} = unpackRequiredComponents(controllers);
 	}
 }
+```
 
 ### Decorator
 The `@Decorator` annotation is identical to the `@Component` annotation, except you would `@Decorator` for directives that you want to restrict to a class or attribute:
