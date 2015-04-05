@@ -147,7 +147,7 @@ class MyComponent{
 ```
 
 ### Decorator
-The `@Decorator` annotation is identical to the `@Component` annotation, except you would `@Decorator` for directives that you want to restrict to a class or attribute:
+The `@Decorator` annotation is identical to the `@Component` annotation, except you use `@Decorator` for directives that you want to restrict to a class or attribute:
 
 ```js
 @Decorator({ selector : '[my-attr]' })
@@ -239,6 +239,49 @@ class Comment{
 
 	static create(dependencies, post, comment){
 		return new Comment(...dependencies, post.id, comment);
+	}
+}
+```
+
+## Adding Your Own Providers
+
+Adding your own providers through annotations is very easy. To demonstrate, let's create a `@Router` annotation that lets you setup router configuration for Anguar 1.4's new router:
+
+```js
+// First we setup the Router annotation function:
+export function Route(config){
+	return function(target){
+		target.$routeConfig = config;
+
+		target.$provider = target.$provider || {};
+		target.$provider.type = 'routeController';
+		target.$provider.name = target.name;
+	}
+}
+
+// Then we need to setup the parser:
+import {ProviderParser} from 'angular-es6';
+
+@ProviderParser('routeController')
+function parseRouteController(provider, module){
+	// Provider parsers accept the anotated provider class/function 
+	// and the target angular module
+
+	module.controller(provider.$provider.name, 
+		['$router', ...provider.$inject, 
+		function($router, ...dependencies){
+			return new provider(...dependencies);
+		}
+	]);
+}
+
+// Now we can use our Router annotation:
+
+@Route({ path : '/', component : 'home' })
+@Inject('$q')
+class HomeController{
+	constructor($q){
+
 	}
 }
 ```
