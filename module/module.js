@@ -4,7 +4,7 @@ export class Module{
 	constructor(name, modules){
 		this.$es6 = true;
 		this.name = name;
-		this.modules = Module.moduleList(...modules);
+		this.modules = Module.moduleList(modules);
 		this.providers = [];
 		this.bundled = false;
 	}
@@ -12,7 +12,7 @@ export class Module{
 	register(...providers){
 		if(! this.bundled )
 		{
-			this.providers.concat(providers);
+			this.providers.push(...providers);
 		}
 		else
 		{
@@ -30,10 +30,14 @@ export class Module{
 		if(! this.bundled )
 		{
 			let module = angular.module(this.name, this.modules);
+			console.log(this.providers);
 
-			for(provider in this.providers)
+			for(let i = 0; i < this.providers.length; i++)
 			{
-				_parsers[provider.$provider.type](provider, module);
+
+				let parser = _parsers[this.providers[i].$provider.type];
+
+				parser(this.providers[i], module);
 			}
 
 			this.bundled = true;
@@ -53,35 +57,39 @@ export class Module{
 	}
 
 	static addToExisting(module, ...providers){
-		for(provider in providers)
+		for(let i = 0; i < providers.length; i++)
 		{
-			_parsers[provider.$provider.type](provider, module);
+			let parser = _parsers[providers[i].$provider.type];
+
+			parser(providers[i], module);
 		}
 
 		return module;
 	}
 
-	static moduleList(...modules){
+	static moduleList(modules){
 		let realModuleList = [];
 
-		for(module in modules){
-			if(module.$es6)
-			{
-				let bundled = module.bundle();
+		if(modules){
+			for(let i = 0; i < modules.length; i++){
+				if(modules[i].$es6)
+				{
+					let bundled = modules[i].bundle();
 
-				realModuleList.push(bundled.name);
-			}
-			else if(module.name)
-			{
-				realModuleList.push(module.name);
-			}
-			else if(typeof module == 'string')
-			{
-				realModuleList.push(module);
-			}
-			else
-			{
-				throw new Error('Cannot create submodule: unknown module type');
+					realModuleList.push(bundled.name);
+				}
+				else if(modules[i].name)
+				{
+					realModuleList.push(module.name);
+				}
+				else if(typeof modules[i] == 'string')
+				{
+					realModuleList.push(modules[i]);
+				}
+				else
+				{
+					throw new Error('Cannot create submodule: unknown module type');
+				}
 			}
 		}
 

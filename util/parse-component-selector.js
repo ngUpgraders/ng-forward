@@ -1,5 +1,6 @@
 export function parseComponentSelector(selector){
 	let selectorArray;
+	let type;
 
 	if( selector.match(/\[(.*?)\]/) !== null )
 	{
@@ -22,12 +23,14 @@ export function parseComponentSelector(selector){
 
 	if(selectorArray.length > 0)
 	{
-		for(s in selectorArray)
+		for(let i = 0; i < selectorArray.length; i++)
 		{
-			s = s.splice(0,1).toUpperCase() + s.splice(1, s.length - 2);
+			let s = selectorArray[i];
+			s = s.slice(0,1).toUpperCase() + s.slice(1, s.length);
+			selectorArray[i] = s;
 		}
 
-		name = [first, ...selectorArray];
+		name = [first, ...selectorArray].join('');
 	}
 	else
 	{

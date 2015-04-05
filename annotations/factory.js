@@ -1,4 +1,4 @@
-import {ProviderParser} from './provider-parser';
+import {Module} from '../module/module';
 
 export let Factory = t => {
 	t.$provider = t.$provider || {};
@@ -7,8 +7,8 @@ export let Factory = t => {
 	t.$provider.type = 'factory';
 };
 
-@ProviderParser('factory')
-function factoryParser(provider, module){
+
+Module.registerProvider('factory', (provider, module) => {
 	let create = provider.create || function(dependencies, ...params){
 		return new provider(...dependencies, ...params);
 	};
@@ -22,4 +22,4 @@ function factoryParser(provider, module){
 	factory.$inject = provider.$inject;
 
 	module.factory(provider.$provider.name, factory);
-}
+});

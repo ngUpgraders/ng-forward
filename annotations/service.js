@@ -1,4 +1,4 @@
-import {ProviderParser} from './provider-parser';
+import {Module} from '../module/module';
 
 export let Service = t => {
 	t.$provider = t.$provider || {};
@@ -7,7 +7,6 @@ export let Service = t => {
 	t.$provider.type = 'service';	
 };
 
-@ProviderParser('service')
-function serviceParser(provider, module){
+Module.registerProvider('service', (provider, module) => {
 	module.service(provider.$provider.name, provider);
-}
+});

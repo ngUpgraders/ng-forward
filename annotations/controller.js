@@ -1,4 +1,4 @@
-import {ProviderParser} from './provider-parser';
+import {Module} from '../module/module';
 
 export function Controller(t){
 	t.$provider = t.$provider || {};
@@ -7,7 +7,6 @@ export function Controller(t){
 	t.$provider.type = 'controller';
 }
 
-@ProviderParser('controller')
-function controllerParser(provider, module){
+Module.registerProvider('controller', (provider, module) => {
 	module.controller(provider.$provider.name, provider);
-}
+});
