@@ -134,7 +134,7 @@ class Animal{
 }
 
 
-@Component({ selector : 'frog-animal' })
+@Component({ selector : 'frog' })
 class Frog extends Animal{
 	constructor($q, RibbitFactory){
 		this.type = 'Frog';
@@ -146,7 +146,7 @@ class Frog extends Animal{
 Then in your HTML:
 
 ```html
-<frog animal name="Kermit"></frog>
+<frog name="Kermit"></frog>
 ```
 
 Output: `Kermit the Frog`
