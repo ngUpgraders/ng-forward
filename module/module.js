@@ -18,6 +18,12 @@ export class Module{
 		{
 			throw new Error(`${this.name} has already been bundled`);
 		}
+
+		return this;
+	}
+
+	publish(){
+		return this.bundle();
 	}
 
 	bundle(){
