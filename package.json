@@ -1,0 +1,21 @@
+{
+  "name": "angular-es6",
+  "version": "0.1.0",
+  "description": "A collection of utilities and annotations that make it easier to write Angular 2 style code in AngularJS 1.x",
+  "main": "index.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "keywords": [
+    "angular",
+    "angular2",
+    "angularjs",
+    "annotations",
+    "ecmascript6"
+  ],
+  "author": "Mike Ryan",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.8.11"
+  }
+}
