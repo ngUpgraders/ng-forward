@@ -35,11 +35,11 @@ _Module.Module.registerProvider('factory', function (provider, module) {
 		}
 
 		return function () {
-			for (var _len3 = arguments.length, parmas = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-				parmas[_key3] = arguments[_key3];
+			for (var _len3 = arguments.length, params = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+				params[_key3] = arguments[_key3];
 			}
 
-			return create.apply(undefined, [dependencies].concat(_toConsumableArray(params)));
+			return create.apply(undefined, [dependencies].concat(params));
 		};
 	}
 

@@ -14,7 +14,7 @@ Module.registerProvider('factory', (provider, module) => {
 	};
 
 	function factory(...dependencies){
-		return function(...parmas){
+		return function(...params){
 			return create(dependencies, ...params);
 		}
 	}
