@@ -1,12 +1,12 @@
 Note: this library is currently in development and is not ready for use
 
-# angular-es6
+# angular-decorators
 
-Angular 2, due to be released this year, offers a drastically different API for creating applications. angular-es6 provides annotations and utilities that allow you to write AngularJS 1.x apps in a similar way to this new API. By taking advantage of these annotations and utilities, porting your existing AngularJS 1.x apps to Angular 2 will be a quicker, less painful process.
+Angular 2, due to be released this year, offers a drastically different API for creating applications in comparison to Angular 1.x. angular-decorators provides annotations and utilities that allow you to write AngularJS 1.x apps in a similar way to this new API. By taking advantage of these annotations and utilities, porting your existing AngularJS 1.x apps to Angular 2 will be a quicker, less painful process.
 
 ## Modules
 
-The standard `angular.module` does not understand the meta data attached to your classes or functions from this libraries annotations. As such, you must use the provided Module class in this library to create Angular modules:
+The standard `angular.module` does not understand the meta data attached to your classes or functions from this library's annotations. As such, you must use the provided Module class to create Angular modules:
 
 ```js
 let myModule = new Module('my-module', ['ui.bootrap', 'ui.router']);
