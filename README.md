@@ -8,10 +8,10 @@ The standard `angular.module` does not understand the meta data attached to your
 
 ```js
 // Create a new module:
-let myModule = new Module('my-module', ['ui.bootrap', 'ui.router']);
+let myModule = Module('my-module', ['ui.bootrap', 'ui.router']);
 
 // Reference a pre-existing module:
-let otherModule = new Module('my-module');
+let otherModule = Module('my-module');
 ```
 
 Registering an annotated component is easy:
@@ -29,14 +29,14 @@ let angularModule = myModule.add(AnnotatedClass).publish();
 Note: You do not need to publish a module to add it as a dependency to another module:
 
 ```js
-let myModule = new Module('my-module', []);
-let otherModule = new Module('other-module', [ myModule ]);
+let myModule = Module('my-module', []);
+let otherModule = Module('other-module', [ myModule ]);
 ```
 
 This works for traditional AngularJS modules and vice versa:
 ```js
 let otherModule = angular.module('other-module', []);
-let myModule = new Module('my-module', [ otherModule ]);
+let myModule = Module('my-module', [ otherModule ]);
 let lastModule = angular.module('last-module', [ myModule.name ]);
 ```
 
@@ -73,7 +73,7 @@ MyService.$inject = ['$q', '$http'];
 The `@Component` annotation transforms a class into a directive, where the class becomes the directive's controller and the `controllerAs` property is the name of the class:
 
 ```js
-let myModule = new Module('my-component-module', []);
+let myModule = Module('my-component-module', []);
 
 @Component({ 
 	selector : 'my-component',
