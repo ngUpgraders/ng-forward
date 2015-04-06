@@ -4,12 +4,12 @@ export function parseComponentSelector(selector){
 
 	if( selector.match(/\[(.*?)\]/) !== null )
 	{
-		selectorArray = selector.shift().pop().split('-');
+		selectorArray = selector.slice(1, selector.length - 1).split('-');
 		type = 'A';
 	}
 	else if( selector[0] === '.' )
 	{
-		selectorArray = selector.shift().split('-');
+		selectorArray = selector.slice(1, selector.length).split('-');
 		type = 'C';
 	}
 	else

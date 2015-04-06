@@ -98,5 +98,10 @@ export class Module{
 
 	static registerProvider(providerType, parser){
 		_parsers[providerType] = parser;
+	
+	}
+
+	static getParser(providerType){
+		return _parsers[providerType];
 	}
 }

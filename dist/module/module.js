@@ -111,6 +111,11 @@ var Module = (function () {
 		value: function registerProvider(providerType, parser) {
 			_parsers[providerType] = parser;
 		}
+	}, {
+		key: 'getParser',
+		value: function getParser(providerType) {
+			return _parsers[providerType];
+		}
 	}]);
 
 	return Module;

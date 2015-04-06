@@ -11,14 +11,10 @@ function Inject() {
 	}
 
 	return function (t) {
-		var allDependencies = [];
+		var _t$$inject;
 
-		if (t.$inject) {
-			allDependencies.concat(t.$inject);
-		}
+		t.$inject = t.$inject || [];
 
-		allDependencies.concat(dependencies);
-
-		t.$inject = allDependencies;
+		(_t$$inject = t.$inject).push.apply(_t$$inject, dependencies);
 	};
 }
