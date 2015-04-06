@@ -4,31 +4,41 @@ Angular 2, due to be released this year, offers a drastically different API for 
 
 ## Modules
 
-The standard `angular.module` does not understand the meta data attached to your classes or functions from this library's annotations. As such, you must use the provided Module class to create Angular modules:
+The standard `angular.module` does not understand the meta data attached to your classes or functions from this library's annotations. As such, you must use the provided Module class to create Angular modules. Using it is very similar to `angular.module`:
 
 ```js
+// Create a new module:
 let myModule = new Module('my-module', ['ui.bootrap', 'ui.router']);
+
+// Reference a pre-existing module:
+let otherModule = new Module('my-module');
 ```
 
 Registering an annotated component is easy:
 
 ```js
-myModule.register(AnnotatedClass);
+myModule.add(AnnotatedClass);
 ```
 
-When you've finished registering your ES6 annotated components, publish the module to create a regular Angular module:
+If you need to directly access the generated `angular.module`, just use the publish method:
 
 ```js
-myModule.publish();
+let angularModule = myModule.add(AnnotatedClass).publish();
 ```
 
-If you need to add ES6 annotated components to a pre-existing Angular module, you can use the static `Module.addToExisting` method:
+Note: You do not need to publish a module to add it as a dependency to another module:
 
 ```js
-let myModule = angular.module('my-module', []);
-
-Module.addToExisting(myModule, AnnotatedClass);
+let myModule = new Module('my-module', []);
+let otherModule = new Module('other-module', [ myModule ]);
 ```
+
+This works for traditional AngularJS modules and vice versa:
+```js
+let otherModule = angular.module('other-module', []);
+let myModule = new Module('my-module', [ otherModule ]);
+let lastModule = angular.module('last-module', [ myModule.name ]);
+``
 
 ## Annotations
 

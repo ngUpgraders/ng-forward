@@ -1,52 +1,25 @@
 let _parsers = {};
 
 export class Module{
-	constructor(name, modules){
-		this.$es6 = true;
+	constructor(name, modules = false){
 		this.name = name;
-		this.modules = Module.moduleList(modules);
-		this.providers = [];
-		this.bundled = false;
-	}
 
-	register(...providers){
-		if(! this.bundled )
+		if(modules)
 		{
-			this.providers.push(...providers);
+			this._module = angular.module(name, modules);
 		}
 		else
 		{
-			throw new Error(`${this.name} has already been bundled`);
+			this._module = angular.module(name);
 		}
-
-		return this;
 	}
 
-	publish(){
-		return this.bundle();
-	}
-
-	bundle(){
-		if(! this.bundled )
+	add(...providers){
+		for(let i = 0; i < providers.length; i++)
 		{
-			let module = angular.module(this.name, this.modules);
-			console.log(this.providers);
+			let parser = _parsers[providers[i].$provider.type];
 
-			for(let i = 0; i < this.providers.length; i++)
-			{
-
-				let parser = _parsers[this.providers[i].$provider.type];
-
-				parser(this.providers[i], module);
-			}
-
-			this.bundled = true;
-
-			return module;
-		}
-		else
-		{
-			throw new Error(`${this.name} has already been bundled`);
+			parser(providers[i], this._module);
 		}
 	}
 
@@ -56,15 +29,8 @@ export class Module{
 
 	}
 
-	static addToExisting(module, ...providers){
-		for(let i = 0; i < providers.length; i++)
-		{
-			let parser = _parsers[providers[i].$provider.type];
-
-			parser(providers[i], module);
-		}
-
-		return module;
+	publish(){
+		return this._module;
 	}
 
 	static moduleList(modules){
@@ -72,15 +38,9 @@ export class Module{
 
 		if(modules){
 			for(let i = 0; i < modules.length; i++){
-				if(modules[i].$es6)
+				if(modules[i].name)
 				{
-					let bundled = modules[i].bundle();
-
-					realModuleList.push(bundled.name);
-				}
-				else if(modules[i].name)
-				{
-					realModuleList.push(module.name);
+					realModuleList.push(modules[i].name);
 				}
 				else if(typeof modules[i] == 'string')
 				{
