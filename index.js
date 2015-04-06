@@ -1,22 +1,25 @@
-import {Component} from './annotations/component';
-import {Controller} from './annotations/controller';
-import {Decorator} from './annotations/decorator';
-import {Factory} from './annotations/factory';
-import {Inject} from './annotations/inject';
-import {Require} from './annotations/require';
-import {Service} from './annotations/service';
-import {Template} from './annotations/template';
-import {Module} from './module/module';
+'use strict';
 
+Object.defineProperty(exports, '__esModule', {
+	value: true
+});
 
-export {
-	Component,
-	Controller,
-	Decorator,
-	Factory,
-	Inject,
-	Require,
-	Service,
-	Template,
-	Module
-};
+var _Component = require('./dist/annotations/component');
+var _Controller = require('./dist/annotations/controller');
+var _Decorator = require('./dist/annotations/decorator');
+var _Factory = require('./dist/annotations/factory');
+var _Inject = require('./dist/annotations/inject');
+var _Require = require('./dist/annotations/require');
+var _Service = require('./dist/annotations/service');
+var _Template = require('./dist/annotations/template');
+var _Module = require('./dist/module/module');
+
+exports.Component = _Component.Component;
+exports.Controller = _Controller.Controller;
+exports.Decorator = _Decorator.Decorator;
+exports.Factory = _Factory.Factory;
+exports.Inject = _Inject.Inject;
+exports.Require = _Require.Require;
+exports.Service = _Service.Service;
+exports.Template = _Template.Template;
+exports.Module = _Module.Module;

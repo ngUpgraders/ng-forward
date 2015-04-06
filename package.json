@@ -16,6 +16,8 @@
   "author": "Mike Ryan",
   "license": "ISC",
   "devDependencies": {
-    "gulp": "^3.8.11"
+    "babel": "^5.0.8",
+    "gulp": "^3.8.11",
+    "gulp-babel": "^5.0.0"
   }
 }
