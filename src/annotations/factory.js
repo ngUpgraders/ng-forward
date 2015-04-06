@@ -1,9 +1,9 @@
 import {Module} from '../module/module';
 
-export let Factory = t => {
+export let Factory = name => t => {
 	t.$provider = t.$provider || {};
 
-	t.$provider.name = `${t.name}Factory`;
+	t.$provider.name = name;
 	t.$provider.type = 'factory';
 };
 

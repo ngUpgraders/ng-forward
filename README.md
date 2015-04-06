@@ -255,9 +255,9 @@ class Post{
 and you wanted to make a factory that created a `Post` with a provided title and content, you could do the following:
 
 ```js
-@Factory
+@Factory('PostFactory')
+@Inject('$http')
 class Post{
-	@Inject('$http')
 	constructor($http, title, content){
 
 	}
@@ -267,8 +267,8 @@ class Post{
 Then, in some other component you would be able to access the factory like this:
 
 ```js
+@inject('PostFactory')
 class NewPostService{
-	@inject('PostFactory')
 	constructor(PostFactory){
 		let post = PostFactory('Title', 'Some content');
 	}
@@ -278,9 +278,9 @@ class NewPostService{
 If you want more control over the factory function, just add a static create method to your factory class:
 
 ```js
-@Factory
+@Factory('CommentFactory')
+@Inject('$http', '$q')
 class Comment{
-	@Inject('$http', '$q')
 	constructor($http, $q, postID, comment){
 
 	}
