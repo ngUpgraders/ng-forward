@@ -1,6 +1,4 @@
-Note: this library is currently in development and is not ready for use
-
-# angular-decorators
+# angular-decorators [![Build Status](https://travis-ci.org/MikeRyan52/angular-decorators.svg?branch=master)](https://travis-ci.org/MikeRyan52/angular-decorators)
 
 Angular 2, due to be released this year, offers a drastically different API for creating applications in comparison to Angular 1.x. angular-decorators provides annotations and utilities that allow you to write AngularJS 1.x apps in a similar way to this new API. By taking advantage of these annotations and utilities, porting your existing AngularJS 1.x apps to Angular 2 will be a quicker, less painful process.
 
