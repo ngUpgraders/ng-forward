@@ -10,11 +10,13 @@ Object.defineProperty(exports, '__esModule', {
 
 var _Module = require('../module/module');
 
-var Factory = function Factory(t) {
-	t.$provider = t.$provider || {};
+var Factory = function Factory(name) {
+	return function (t) {
+		t.$provider = t.$provider || {};
 
-	t.$provider.name = '' + t.name + 'Factory';
-	t.$provider.type = 'factory';
+		t.$provider.name = name;
+		t.$provider.type = 'factory';
+	};
 };
 
 exports.Factory = Factory;

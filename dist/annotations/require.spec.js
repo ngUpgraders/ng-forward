@@ -45,6 +45,6 @@ describe('@Require annotation for requiring directive controllers', function () 
 			return MyComponent;
 		})();
 
-		MyComponent.link(null, null, null, ['Parent asf', 'Sibling Controller']);
+		MyComponent.link(0, 0, 0, ['Parent Controller', 'Sibling Controller']);
 	});
 });
