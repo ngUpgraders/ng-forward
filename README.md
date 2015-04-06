@@ -70,10 +70,10 @@ MyService.$inject = ['$q', '$http'];
 
 ### Component
 
-The `@Component` annotation transforms a class into a directive:
+The `@Component` annotation transforms a class into a directive, where the class becomes the directive's controller and the `controllerAs` property is the name of the class:
 
 ```js
-let myModule = new Module('my-component-module');
+let myModule = new Module('my-component-module', []);
 
 @Component({ 
 	selector : 'my-component',
@@ -81,8 +81,8 @@ let myModule = new Module('my-component-module');
 })
 @Template({ url : '/path/to/template.html' })
 @Require('requiredComponent')
+@Inject('$element', '$attrs')
 class MyComponentCtrl{
-	@Inject('$element', '$attrs')
 	constructor($element, $attrs){
 
 	}
@@ -92,10 +92,10 @@ class MyComponentCtrl{
 	}
 }
 
-myModule.register(MyComponentCtrl).publish();
+myModule.add(MyComponentCtrl);
 ```
 
-would become:
+Becomes:
 
 ```js
 function MyComponentCtrl($element, $attrs){
@@ -129,7 +129,7 @@ angular.module('my-component-module', [
 ```
 
 ##### Component Inheritance
-One major benefit of structuring your components this way is that it now becomes much easier to extend components, creating specialized varianets:
+One major benefit of structuring your components this way is that it now becomes much easier to extend components:
 
 ```js
 @Component({ selector : 'animal', bind : { name : '@' } })
@@ -143,6 +143,7 @@ class Animal{
 
 
 @Component({ selector : 'frog' })
+@Inject('RibbitFactory')
 class Frog extends Animal{
 	constructor($q, RibbitFactory){
 		this.type = 'Frog';
@@ -160,7 +161,7 @@ Then in your HTML:
 Output: `Kermit the Frog`
 
 ##### About the Require Annotation
-In AngularJS, when your directive requires multiple other directive controllers, they are passed to your link function as an array:
+In AngularJS, when your directive requires multiple other directive controllers they are passed to your link function as an array:
 
 ```js
 myModule.directive('myComponent', function(){
@@ -174,7 +175,7 @@ myModule.directive('myComponent', function(){
 });
 ```
 
-As a convenience, when you use the `@Require` annotation your class is decorated with an `unpackRequiredComponents` method to make it easy to reference your required components:
+As a convenience, when you use the `@Require` annotation your class is decorated with an `unpackRequires` method to make it easy to reference your required components:
 
 ```js
 @Component({ selector : 'my-component' })
@@ -196,6 +197,13 @@ class MyAttrCtrl{
 
 	}
 }
+
+@Decorator({ selector : '.my-class' })
+class MyClassCtrl{
+	constructor(){
+
+	}
+}
 ```
 
 
@@ -212,7 +220,7 @@ class MyService{
 	}
 }
 
-myServiceModule.register(MyService).publish();
+myServiceModule.add(MyService);
 ```
 
 becomes:
