@@ -6,10 +6,10 @@ export function decorateDirective(t, name, type, binder){
 
 	t.$provider.name = name;
 	t.$provider.type = 'directive';
+	t.$component.restrict = type;
 
 	if(binder)
 	{
-		t.$component.restrict = type;
 		t.$component.bindToController = true;
 		t.$component.scope = binder;
 	}
