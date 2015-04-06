@@ -1,10 +1,6 @@
 var gulp = require('gulp');
 var babel = require('gulp-babel');
-var karma = require('karma').server;
-var jasmine = require('gulp-jasmine');
-var reporters = require('jasmine-reporters');
 var mocha = require('gulp-mocha');
-var chai = require('chai');
  
 gulp.task('build', function () {
 	return gulp.src('src/**/*.js')
