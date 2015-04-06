@@ -54,11 +54,10 @@ describe('@Controller annotation', function () {
 
 		parser(MyController, module);
 
-		_expect.expect(module.controller.called).to.be['true'];
-
 		var name = module.controller.args[0][0];
 		var controller = module.controller.args[0][1];
 
+		_expect.expect(module.controller.called).to.be['true'];
 		_expect.expect(name).to.equal('MyController');
 		_expect.expect(controller).to.eql(MyController);
 	});
