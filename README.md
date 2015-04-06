@@ -38,7 +38,7 @@ This works for traditional AngularJS modules and vice versa:
 let otherModule = angular.module('other-module', []);
 let myModule = new Module('my-module', [ otherModule ]);
 let lastModule = angular.module('last-module', [ myModule.name ]);
-``
+```
 
 ## Annotations
 
@@ -300,10 +300,9 @@ export function Route(config){
 }
 
 // Then we need to setup the parser:
-import {ProviderParser} from 'angular-es6';
+import {Module} from 'angular-decorators';
 
-@ProviderParser('routeController')
-function parseRouteController(provider, module){
+Module.registerProvider('routeController', (provider, module) => {
 	// Provider parsers accept the anotated provider class/function 
 	// and the target angular module
 
@@ -313,7 +312,7 @@ function parseRouteController(provider, module){
 			return new provider(...dependencies);
 		}
 	]);
-}
+});
 
 // Now we can use our Router annotation:
 @Route({ path : '/', component : 'home' })
