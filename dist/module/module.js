@@ -38,6 +38,8 @@ var DecoratedModule = (function () {
 
 				parser(providers[i], this._module);
 			}
+
+			return this;
 		}
 	}, {
 		key: 'bootstrap',

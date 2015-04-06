@@ -21,6 +21,8 @@ class DecoratedModule{
 
 			parser(providers[i], this._module);
 		}
+
+		return this;
 	}
 
 	bootstrap(){
