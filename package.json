@@ -1,6 +1,6 @@
 {
   "name": "angular-decorators",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "A collection of utilities and annotations that make it easier to write Angular 2 style code in AngularJS 1.x",
   "main": "index.js",
   "repository" : {

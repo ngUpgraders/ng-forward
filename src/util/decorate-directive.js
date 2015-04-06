@@ -27,8 +27,6 @@ Module.registerProvider('directive', (provider, module) => {
 	component.link = controller.link || angular.noop;
 	component.compile = controller.compile || angular.noop;
 
-	console.log(component);
-
 	module.directive(name, function(){
 		return component;
 	});
