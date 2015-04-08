@@ -1,4 +1,4 @@
-export let Template = options => t => {
+export const Template = options => t => {
 	t.$component = t.$component || {};
 
 	if(options.url)

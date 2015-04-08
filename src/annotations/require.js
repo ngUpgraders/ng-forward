@@ -1,4 +1,4 @@
-export let Require = (...components) => t => {
+export const Require = (...components) => t => {
 	t.$component = t.$component || {};
 
 	t.$component.require = components;

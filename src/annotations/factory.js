@@ -1,6 +1,6 @@
 import {Module} from '../module/module';
 
-export let Factory = name => t => {
+export const Factory = name => t => {
 	t.$provider = t.$provider || {};
 
 	t.$provider.name = name;

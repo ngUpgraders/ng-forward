@@ -17,7 +17,11 @@ function decorateDirective(t, name, type, binder) {
 
 	if (binder) {
 		t.$component.bindToController = true;
-		t.$component.scope = binder;
+		t.$component.scope = t.$component.scope || {};
+
+		for (var bind in binder) {
+			t.$component.scope[bind] = binder[bind];
+		}
 	}
 }
 
@@ -30,8 +34,8 @@ _Module.Module.registerProvider('directive', function (provider, module) {
 
 	component.controllerAs = component.controllerAs || controller.name;
 	component.controller = controller;
-	component.link = controller.link || angular.noop;
-	component.compile = controller.compile || angular.noop;
+	component.link = controller.link || function () {};
+	component.compile = controller.compile || function () {};
 
 	module.directive(name, function () {
 		return component;

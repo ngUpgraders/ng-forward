@@ -3,9 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.Inject = Inject;
-
-function Inject() {
+var Inject = function Inject() {
 	for (var _len = arguments.length, dependencies = Array(_len), _key = 0; _key < _len; _key++) {
 		dependencies[_key] = arguments[_key];
 	}
@@ -17,4 +15,5 @@ function Inject() {
 
 		(_t$$inject = t.$inject).push.apply(_t$$inject, dependencies);
 	};
-}
+};
+exports.Inject = Inject;
