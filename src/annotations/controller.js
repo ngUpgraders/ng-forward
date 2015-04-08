@@ -1,6 +1,6 @@
 import {Module} from '../module/module';
 
-export function Controller(t){
+export const Controller = t => {
 	t.$provider = t.$provider || {};
 
 	t.$provider.name = t.name;

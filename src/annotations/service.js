@@ -1,6 +1,6 @@
 import {Module} from '../module/module';
 
-export let Service = t => {
+export const Service = t => {
 	t.$provider = t.$provider || {};
 
 	t.$provider.name = Service.name;

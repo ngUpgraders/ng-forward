@@ -1,7 +1,7 @@
 import {decorateDirective} from '../util/decorate-directive';
 import {parseComponentSelector} from '../util/parse-component-selector';
 
-export let Component = options => t => {
+export const Component = options => t => {
 	if(! options.selector ) throw new Error('Must provide a selector')
 	let info = parseComponentSelector(options.selector);
 
