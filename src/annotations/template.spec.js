@@ -1,4 +1,4 @@
-import {Template} from './Template';
+import {Template} from './template';
 import {expect} from 'chai';
 
 describe('@Template Annotation', function(){

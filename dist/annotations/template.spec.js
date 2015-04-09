@@ -4,7 +4,7 @@ var _inherits = function (subClass, superClass) { if (typeof superClass !== 'fun
 
 var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
 
-var _Template = require('./Template');
+var _Template = require('./template');
 
 var _expect = require('chai');
 
