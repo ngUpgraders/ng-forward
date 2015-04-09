@@ -2,6 +2,11 @@ import {expect} from 'chai';
 import {decorateDirective} from './decorate-directive';
 import {Module} from '../module/module';
 import sinon from 'sinon';
+import extend from 'extend';
+
+const Decorate = (name, type, binder) => t => {
+	decorateDirective(t, name, type, binder);
+}
 
 describe('Directive decorator', function(){
 	it('should decorate a target with the given name and type', function(){
@@ -40,8 +45,24 @@ describe('Directive decorator', function(){
 		class NewExample extends Example{ }
 		decorateDirective(NewExample, 'test', 'A', { 'newAttr' : '&' });
 
-		expect(NewExample.$component.scope).to.have.property('myAttr', '=');
-		expect(NewExample.$component.scope).to.have.property('newAttr', '&');
+		expect(Example.$component.scope).to.eql({
+			myAttr : '='
+		});
+
+		expect(NewExample.$component.scope).to.eql({
+			myAttr : '=',
+			newAttr : '&'
+		});
+	});
+
+	it('should respect inheritance', function(){
+		@Decorate('baseComponent', 'E')
+		class BaseComponent{ }
+
+		@Decorate('newComponent', 'E')
+		class NewComponent extends BaseComponent{ }
+
+		expect(BaseComponent.$provider.name).to.equal('baseComponent');
 	});
 
 	describe('parser', function(){
@@ -74,7 +95,6 @@ describe('Directive decorator', function(){
 			let provider = module.directive.args[0][1];
 			let directive = provider();
 			let controller = directive.controller;
-			delete controller.$provider;
 			delete controller.$component;
 
 			expect(name).to.equal('myComponent');
@@ -87,9 +107,6 @@ describe('Directive decorator', function(){
 				compile : MyComponent.compile,
 				controllerAs: 'MyComponent'
 			});
-
-			expect(directive.controller).to.not.have.property('$component');
-			expect(directive.controller).to.not.have.property('$provider');
 		});
 	});
 });

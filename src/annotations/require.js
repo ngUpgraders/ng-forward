@@ -1,7 +1,11 @@
-export const Require = (...components) => t => {
-	t.$component = t.$component || {};
+import annotate from '../util/annotate';
+import clone from 'clone'
 
-	t.$component.require = components;
+export const Require = (...components) => t => {
+	annotate(t, '$component', {});
+
+	t.$component.require = t.$component.require ? clone(t.$component.require) : [];
+	t.$component.require.push(...components);
 
 	t.unpackRequires = function(resolved){
 		let unpacked = {};

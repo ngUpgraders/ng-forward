@@ -1,14 +1,14 @@
 import {Module} from '../module/module';
+import annotate from '../util/annotate';
+
+const type = 'factory';
 
 export const Factory = name => t => {
-	t.$provider = t.$provider || {};
-
-	t.$provider.name = name;
-	t.$provider.type = 'factory';
+	annotate(t, '$provider', { name, type });
 };
 
 
-Module.registerProvider('factory', (provider, module) => {
+Module.registerProvider(type, (provider, module) => {
 	let create = provider.create || function(dependencies, ...params){
 		return new provider(...dependencies, ...params);
 	};

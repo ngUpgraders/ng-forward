@@ -23,6 +23,7 @@ describe('@Inject annotation', function(){
 		@Inject('d', 'e', 'f')
 		class SubClass extends MyClass{ }
 
+		expect(MyClass.$inject).to.eql(['a', 'b', 'c']);
 		expect(SubClass.$inject).to.eql(['a', 'b', 'c', 'd', 'e', 'f']);
 	});
 });
