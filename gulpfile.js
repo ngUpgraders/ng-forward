@@ -14,3 +14,7 @@ gulp.task('test', ['build'], function (done) {
 	return gulp.src('dist/**/*.spec.js')
 		.pipe(mocha({ reporter : 'spec' }));
 });
+
+gulp.task('default', function(){
+	gulp.watch('./src/**/*.js', ['test']);
+});

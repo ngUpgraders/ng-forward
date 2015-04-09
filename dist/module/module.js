@@ -18,9 +18,10 @@ var DecoratedModule = (function () {
 		_classCallCheck(this, DecoratedModule);
 
 		this.name = name;
+		this.moduleList(modules);
 
 		if (modules) {
-			this._module = angular.module(name, Module.moduleList(modules));
+			this._module = angular.module(name, this._dependencies);
 		} else {
 			this._module = angular.module(name);
 		}
@@ -50,6 +51,23 @@ var DecoratedModule = (function () {
 		key: 'publish',
 		value: function publish() {
 			return this._module;
+		}
+	}, {
+		key: 'moduleList',
+		value: function moduleList(modules) {
+			this._dependencies = [];
+
+			if (modules && modules.length !== 0) {
+				for (var i = 0; i < modules.length; i++) {
+					if (modules[i] && modules[i].name) {
+						this._dependencies.push(modules[i].name);
+					} else if (typeof modules[i] === 'string') {
+						this._dependencies.push(modules[i]);
+					} else {
+						throw new Error('Cannot read module: Unknown module in ' + this.name);
+					}
+				}
+			}
 		}
 	}]);
 

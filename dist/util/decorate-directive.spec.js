@@ -18,6 +18,16 @@ var _sinon = require('sinon');
 
 var _sinon2 = _interopRequireWildcard(_sinon);
 
+var _extend = require('extend');
+
+var _extend2 = _interopRequireWildcard(_extend);
+
+var Decorate = function Decorate(name, type, binder) {
+	return function (t) {
+		_decorateDirective.decorateDirective(t, name, type, binder);
+	};
+};
+
 describe('Directive decorator', function () {
 	it('should decorate a target with the given name and type', function () {
 		var Example = function Example() {
@@ -77,8 +87,42 @@ describe('Directive decorator', function () {
 
 		_decorateDirective.decorateDirective(NewExample, 'test', 'A', { newAttr: '&' });
 
-		_expect.expect(NewExample.$component.scope).to.have.property('myAttr', '=');
-		_expect.expect(NewExample.$component.scope).to.have.property('newAttr', '&');
+		_expect.expect(Example.$component.scope).to.eql({
+			myAttr: '='
+		});
+
+		_expect.expect(NewExample.$component.scope).to.eql({
+			myAttr: '=',
+			newAttr: '&'
+		});
+	});
+
+	it('should respect inheritance', function () {
+		var BaseComponent = (function () {
+			function BaseComponent() {
+				_classCallCheck(this, BaseComponent);
+			}
+
+			BaseComponent = Decorate('baseComponent', 'E')(BaseComponent) || BaseComponent;
+			return BaseComponent;
+		})();
+
+		var NewComponent = (function (_BaseComponent) {
+			function NewComponent() {
+				_classCallCheck(this, NewComponent);
+
+				if (_BaseComponent != null) {
+					_BaseComponent.apply(this, arguments);
+				}
+			}
+
+			_inherits(NewComponent, _BaseComponent);
+
+			NewComponent = Decorate('newComponent', 'E')(NewComponent) || NewComponent;
+			return NewComponent;
+		})(BaseComponent);
+
+		_expect.expect(BaseComponent.$provider.name).to.equal('baseComponent');
 	});
 
 	describe('parser', function () {
@@ -118,7 +162,6 @@ describe('Directive decorator', function () {
 			var provider = module.directive.args[0][1];
 			var directive = provider();
 			var controller = directive.controller;
-			delete controller.$provider;
 			delete controller.$component;
 
 			_expect.expect(name).to.equal('myComponent');
@@ -131,9 +174,6 @@ describe('Directive decorator', function () {
 				compile: MyComponent.compile,
 				controllerAs: 'MyComponent'
 			});
-
-			_expect.expect(directive.controller).to.not.have.property('$component');
-			_expect.expect(directive.controller).to.not.have.property('$provider');
 		});
 	});
 });

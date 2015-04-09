@@ -23,4 +23,16 @@ describe('@Require annotation for requiring directive controllers', function(){
 
 		MyComponent.link(0, 0, 0, ['Parent Controller', 'Sibling Controller']);
 	});
+
+	it('should adhere to inheritance', function(){
+		@Require('^parent')
+		class Test{ }
+
+		@Require('sibling')
+		class NewTest extends Test{ }
+
+		expect(Test.$component.require).to.eql(['^parent']);
+
+		expect(NewTest.$component.require).to.eql(['^parent', 'sibling']);
+	});
 });

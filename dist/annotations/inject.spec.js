@@ -60,6 +60,7 @@ describe('@Inject annotation', function () {
 			return SubClass;
 		})(MyClass);
 
+		_expect.expect(MyClass.$inject).to.eql(['a', 'b', 'c']);
 		_expect.expect(SubClass.$inject).to.eql(['a', 'b', 'c', 'd', 'e', 'f']);
 	});
 });

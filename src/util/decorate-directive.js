@@ -1,21 +1,17 @@
 import {Module} from '../module/module';
+import annotate from './annotate';
 
-export function decorateDirective(t, name, type, binder){
-	t.$component = t.$component || {};
-	t.$provider = t.$provider || {};
+export function decorateDirective(t, name, restrict, scope){
+	annotate(t, '$provider', {
+		name,
+		type : 'directive'
+	});
 
-	t.$provider.name = name;
-	t.$provider.type = 'directive';
-	t.$component.restrict = type;
+	annotate(t, '$component', { restrict });
 
-	if(binder)
-	{
-		t.$component.bindToController = true;
-		t.$component.scope = t.$component.scope || {};
-
-		for(let bind in binder){
-			t.$component.scope[bind] = binder[bind];
-		}
+	if(scope){
+		annotate(t, '$component', { bindToController : true });
+		annotate(t.$component, 'scope', scope);
 	}
 }
 
@@ -24,7 +20,6 @@ Module.registerProvider('directive', (provider, module) => {
 	let controller = provider;
 	let component = controller.$component;
 	delete controller.$component;
-	delete controller.$provider;
 
 	component.controllerAs = component.controllerAs || controller.name;
 	component.controller = controller;

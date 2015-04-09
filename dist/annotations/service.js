@@ -1,29 +1,24 @@
 'use strict';
 
+var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+
 Object.defineProperty(exports, '__esModule', {
 	value: true
 });
 
 var _Module = require('../module/module');
 
-var Service = (function (_Service) {
-	function Service(_x) {
-		return _Service.apply(this, arguments);
-	}
+var _annotate = require('../util/annotate');
 
-	Service.toString = function () {
-		return Service.toString();
-	};
+var _annotate2 = _interopRequireWildcard(_annotate);
 
-	return Service;
-})(function (t) {
-	t.$provider = t.$provider || {};
+var type = 'service';
 
-	t.$provider.name = Service.name;
-	t.$provider.type = 'service';
-});
+var Service = function Service(t) {
+	_annotate2['default'](t, '$provider', { name: t.name, type: type });
+};
 
 exports.Service = Service;
-_Module.Module.registerProvider('service', function (provider, module) {
+_Module.Module.registerProvider(type, function (provider, module) {
 	module.service(provider.$provider.name, provider);
 });

@@ -38,4 +38,16 @@ describe('@Controller annotation', function(){
 		expect(name).to.equal('MyController');
 		expect(controller).to.eql(MyController);
 	});
+
+	it('should define the $provider property on the prototype of the target', function(){
+		@Controller
+		class MyController{ }
+
+		@Controller
+		class NewController extends MyController{ }
+
+		expect(MyController.$provider.name).not.to.equal('NewController');
+		expect(MyController.$provider.name).to.equal('MyController');
+		expect(NewController.$provider.name).to.equal('NewController');
+	});
 });

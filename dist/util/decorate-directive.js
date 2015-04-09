@@ -1,5 +1,7 @@
 'use strict';
 
+var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+
 Object.defineProperty(exports, '__esModule', {
 	value: true
 });
@@ -7,21 +9,21 @@ exports.decorateDirective = decorateDirective;
 
 var _Module = require('../module/module');
 
-function decorateDirective(t, name, type, binder) {
-	t.$component = t.$component || {};
-	t.$provider = t.$provider || {};
+var _annotate = require('./annotate');
 
-	t.$provider.name = name;
-	t.$provider.type = 'directive';
-	t.$component.restrict = type;
+var _annotate2 = _interopRequireWildcard(_annotate);
 
-	if (binder) {
-		t.$component.bindToController = true;
-		t.$component.scope = t.$component.scope || {};
+function decorateDirective(t, name, restrict, scope) {
+	_annotate2['default'](t, '$provider', {
+		name: name,
+		type: 'directive'
+	});
 
-		for (var bind in binder) {
-			t.$component.scope[bind] = binder[bind];
-		}
+	_annotate2['default'](t, '$component', { restrict: restrict });
+
+	if (scope) {
+		_annotate2['default'](t, '$component', { bindToController: true });
+		_annotate2['default'](t.$component, 'scope', scope);
 	}
 }
 
@@ -30,7 +32,6 @@ _Module.Module.registerProvider('directive', function (provider, module) {
 	var controller = provider;
 	var component = controller.$component;
 	delete controller.$component;
-	delete controller.$provider;
 
 	component.controllerAs = component.controllerAs || controller.name;
 	component.controller = controller;

@@ -1,16 +1,22 @@
 'use strict';
 
+var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+
 Object.defineProperty(exports, '__esModule', {
 	value: true
 });
 
 var _Module = require('../module/module');
 
-var Controller = function Controller(t) {
-	t.$provider = t.$provider || {};
+var _annotate = require('../util/annotate');
 
-	t.$provider.name = t.name;
-	t.$provider.type = 'controller';
+var _annotate2 = _interopRequireWildcard(_annotate);
+
+var Controller = function Controller(t) {
+	_annotate2['default'](t, '$provider', {
+		name: t.name,
+		type: 'controller'
+	});
 };
 
 exports.Controller = Controller;

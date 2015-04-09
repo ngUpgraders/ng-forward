@@ -2,6 +2,8 @@
 
 var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
 
+var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+
 var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
 
 var _sinon = require('sinon');
@@ -60,5 +62,35 @@ describe('@Controller annotation', function () {
 		_expect.expect(module.controller.called).to.be['true'];
 		_expect.expect(name).to.equal('MyController');
 		_expect.expect(controller).to.eql(MyController);
+	});
+
+	it('should define the $provider property on the prototype of the target', function () {
+		var MyController = (function () {
+			function MyController() {
+				_classCallCheck(this, MyController);
+			}
+
+			MyController = _Controller.Controller(MyController) || MyController;
+			return MyController;
+		})();
+
+		var NewController = (function (_MyController) {
+			function NewController() {
+				_classCallCheck(this, NewController);
+
+				if (_MyController != null) {
+					_MyController.apply(this, arguments);
+				}
+			}
+
+			_inherits(NewController, _MyController);
+
+			NewController = _Controller.Controller(NewController) || NewController;
+			return NewController;
+		})(MyController);
+
+		_expect.expect(MyController.$provider.name).not.to.equal('NewController');
+		_expect.expect(MyController.$provider.name).to.equal('MyController');
+		_expect.expect(NewController.$provider.name).to.equal('NewController');
 	});
 });
