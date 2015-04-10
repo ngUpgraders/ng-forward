@@ -3,11 +3,8 @@ import clone from 'clone'
 
 export const Require = (...components) => t => {
 	annotate(t, '$component', {});
-
-	t.$component.require = t.$component.require ? clone(t.$component.require) : [];
-	t.$component.require.push(...components);
-
-	t.unpackRequires = function(resolved){
+	annotate(t.$component, 'require', components);
+	annotate(t, 'unpackRequires', function unpackRequires(resolved){
 		let unpacked = {};
 
 		if(components.length > 1)
@@ -23,7 +20,7 @@ export const Require = (...components) => t => {
 		}
 
 		return unpacked;
-	};
+	});
 }
 
 function name(component){
