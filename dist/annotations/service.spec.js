@@ -20,9 +20,10 @@ describe('@Service Annotation', function () {
 	it('should annotate a class', function () {
 		var MyService = (function () {
 			function MyService() {
-				_classCallCheck(this, MyService);
+				_classCallCheck(this, _MyService);
 			}
 
+			var _MyService = MyService;
 			MyService = _Service.Service(MyService) || MyService;
 			return MyService;
 		})();
@@ -35,24 +36,26 @@ describe('@Service Annotation', function () {
 	it('should adhere to inheritance', function () {
 		var BaseClass = (function () {
 			function BaseClass() {
-				_classCallCheck(this, BaseClass);
+				_classCallCheck(this, _BaseClass);
 			}
 
+			var _BaseClass = BaseClass;
 			BaseClass = _Service.Service(BaseClass) || BaseClass;
 			return BaseClass;
 		})();
 
-		var MyClass = (function (_BaseClass) {
+		var MyClass = (function (_BaseClass2) {
 			function MyClass() {
-				_classCallCheck(this, MyClass);
+				_classCallCheck(this, _MyClass);
 
-				if (_BaseClass != null) {
-					_BaseClass.apply(this, arguments);
+				if (_BaseClass2 != null) {
+					_BaseClass2.apply(this, arguments);
 				}
 			}
 
-			_inherits(MyClass, _BaseClass);
+			_inherits(MyClass, _BaseClass2);
 
+			var _MyClass = MyClass;
 			MyClass = _Service.Service(MyClass) || MyClass;
 			return MyClass;
 		})(BaseClass);
@@ -79,9 +82,10 @@ describe('@Service Annotation', function () {
 		it('should parse an annotated class into an ng service', function () {
 			var MyService = (function () {
 				function MyService() {
-					_classCallCheck(this, MyService);
+					_classCallCheck(this, _MyService2);
 				}
 
+				var _MyService2 = MyService;
 				MyService = _Service.Service(MyService) || MyService;
 				return MyService;
 			})();

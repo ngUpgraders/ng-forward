@@ -100,24 +100,26 @@ describe('Directive decorator', function () {
 	it('should respect inheritance', function () {
 		var BaseComponent = (function () {
 			function BaseComponent() {
-				_classCallCheck(this, BaseComponent);
+				_classCallCheck(this, _BaseComponent);
 			}
 
+			var _BaseComponent = BaseComponent;
 			BaseComponent = Decorate('baseComponent', 'E')(BaseComponent) || BaseComponent;
 			return BaseComponent;
 		})();
 
-		var NewComponent = (function (_BaseComponent) {
+		var NewComponent = (function (_BaseComponent2) {
 			function NewComponent() {
-				_classCallCheck(this, NewComponent);
+				_classCallCheck(this, _NewComponent);
 
-				if (_BaseComponent != null) {
-					_BaseComponent.apply(this, arguments);
+				if (_BaseComponent2 != null) {
+					_BaseComponent2.apply(this, arguments);
 				}
 			}
 
-			_inherits(NewComponent, _BaseComponent);
+			_inherits(NewComponent, _BaseComponent2);
 
+			var _NewComponent = NewComponent;
 			NewComponent = Decorate('newComponent', 'E')(NewComponent) || NewComponent;
 			return NewComponent;
 		})(BaseComponent);

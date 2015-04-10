@@ -12,9 +12,10 @@ describe('@Template Annotation', function () {
 	it('should add a template option to a component', function () {
 		var MyClass = (function () {
 			function MyClass() {
-				_classCallCheck(this, MyClass);
+				_classCallCheck(this, _MyClass);
 			}
 
+			var _MyClass = MyClass;
 			MyClass = _Template.Template({ inline: 'test' })(MyClass) || MyClass;
 			return MyClass;
 		})();
@@ -26,9 +27,10 @@ describe('@Template Annotation', function () {
 	it('should support inline templates', function () {
 		var MyClass = (function () {
 			function MyClass() {
-				_classCallCheck(this, MyClass);
+				_classCallCheck(this, _MyClass2);
 			}
 
+			var _MyClass2 = MyClass;
 			MyClass = _Template.Template({ inline: 'test' })(MyClass) || MyClass;
 			return MyClass;
 		})();
@@ -39,9 +41,10 @@ describe('@Template Annotation', function () {
 	it('should support template URLs', function () {
 		var MyClass = (function () {
 			function MyClass() {
-				_classCallCheck(this, MyClass);
+				_classCallCheck(this, _MyClass3);
 			}
 
+			var _MyClass3 = MyClass;
 			MyClass = _Template.Template({ url: '/path/to/it' })(MyClass) || MyClass;
 			return MyClass;
 		})();
@@ -52,39 +55,42 @@ describe('@Template Annotation', function () {
 	it('should overwrite previously set template options via inheritance', function () {
 		var MyClass = (function () {
 			function MyClass() {
-				_classCallCheck(this, MyClass);
+				_classCallCheck(this, _MyClass4);
 			}
 
+			var _MyClass4 = MyClass;
 			MyClass = _Template.Template({ inline: 'test' })(MyClass) || MyClass;
 			return MyClass;
 		})();
 
-		var NewClass = (function (_MyClass) {
+		var NewClass = (function (_MyClass5) {
 			function NewClass() {
-				_classCallCheck(this, NewClass);
+				_classCallCheck(this, _NewClass);
 
-				if (_MyClass != null) {
-					_MyClass.apply(this, arguments);
+				if (_MyClass5 != null) {
+					_MyClass5.apply(this, arguments);
 				}
 			}
 
-			_inherits(NewClass, _MyClass);
+			_inherits(NewClass, _MyClass5);
 
+			var _NewClass = NewClass;
 			NewClass = _Template.Template({ url: '/path/to/it' })(NewClass) || NewClass;
 			return NewClass;
 		})(MyClass);
 
-		var TestClass = (function (_NewClass) {
+		var TestClass = (function (_NewClass2) {
 			function TestClass() {
-				_classCallCheck(this, TestClass);
+				_classCallCheck(this, _TestClass);
 
-				if (_NewClass != null) {
-					_NewClass.apply(this, arguments);
+				if (_NewClass2 != null) {
+					_NewClass2.apply(this, arguments);
 				}
 			}
 
-			_inherits(TestClass, _NewClass);
+			_inherits(TestClass, _NewClass2);
 
+			var _TestClass = TestClass;
 			TestClass = _Template.Template({ inline: 'new test' })(TestClass) || TestClass;
 			return TestClass;
 		})(NewClass);

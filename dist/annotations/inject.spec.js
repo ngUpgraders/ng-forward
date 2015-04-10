@@ -12,9 +12,10 @@ describe('@Inject annotation', function () {
 	it('should decorate a function with the $inject array', function () {
 		var MyClass = (function () {
 			function MyClass() {
-				_classCallCheck(this, MyClass);
+				_classCallCheck(this, _MyClass);
 			}
 
+			var _MyClass = MyClass;
 			MyClass = _Inject.Inject('a', 'b', 'c')(MyClass) || MyClass;
 			return MyClass;
 		})();
@@ -25,9 +26,10 @@ describe('@Inject annotation', function () {
 	it('should add injected dependencies to the $inject array', function () {
 		var MyClass = (function () {
 			function MyClass() {
-				_classCallCheck(this, MyClass);
+				_classCallCheck(this, _MyClass2);
 			}
 
+			var _MyClass2 = MyClass;
 			MyClass = _Inject.Inject('a', 'b', 'c')(MyClass) || MyClass;
 			return MyClass;
 		})();
@@ -38,24 +40,26 @@ describe('@Inject annotation', function () {
 	it('should adhere to inheritance', function () {
 		var MyClass = (function () {
 			function MyClass() {
-				_classCallCheck(this, MyClass);
+				_classCallCheck(this, _MyClass3);
 			}
 
+			var _MyClass3 = MyClass;
 			MyClass = _Inject.Inject('a', 'b', 'c')(MyClass) || MyClass;
 			return MyClass;
 		})();
 
-		var SubClass = (function (_MyClass) {
+		var SubClass = (function (_MyClass4) {
 			function SubClass() {
-				_classCallCheck(this, SubClass);
+				_classCallCheck(this, _SubClass);
 
-				if (_MyClass != null) {
-					_MyClass.apply(this, arguments);
+				if (_MyClass4 != null) {
+					_MyClass4.apply(this, arguments);
 				}
 			}
 
-			_inherits(SubClass, _MyClass);
+			_inherits(SubClass, _MyClass4);
 
+			var _SubClass = SubClass;
 			SubClass = _Inject.Inject('d', 'e', 'f')(SubClass) || SubClass;
 			return SubClass;
 		})(MyClass);

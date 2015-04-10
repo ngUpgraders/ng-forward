@@ -1,7 +1,6 @@
 import clone from 'clone';
+import annotate from '../util/annotate';
 
 export const Inject = ( ...dependencies ) => t => {
-	t.$inject = t.$inject ? clone(t.$inject) : [];
-
-	t.$inject.push(...dependencies);
+	annotate(t, '$inject', dependencies);
 }

@@ -20,14 +20,9 @@ var Require = function Require() {
 	}
 
 	return function (t) {
-		var _t$$component$require;
-
 		_annotate2['default'](t, '$component', {});
-
-		t.$component.require = t.$component.require ? _clone2['default'](t.$component.require) : [];
-		(_t$$component$require = t.$component.require).push.apply(_t$$component$require, components);
-
-		t.unpackRequires = function (resolved) {
+		_annotate2['default'](t.$component, 'require', components);
+		_annotate2['default'](t, 'unpackRequires', function unpackRequires(resolved) {
 			var unpacked = {};
 
 			if (components.length > 1) {
@@ -39,7 +34,7 @@ var Require = function Require() {
 			}
 
 			return unpacked;
-		};
+		});
 	};
 };
 

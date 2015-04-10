@@ -10,9 +10,10 @@ describe('@Component annotation', function () {
 	it('should decorate a class with the $provider and $component metadata', function () {
 		var MyClass = (function () {
 			function MyClass() {
-				_classCallCheck(this, MyClass);
+				_classCallCheck(this, _MyClass);
 			}
 
+			var _MyClass = MyClass;
 			MyClass = _Component.Component({ selector: 'my-component' })(MyClass) || MyClass;
 			return MyClass;
 		})();
@@ -24,9 +25,10 @@ describe('@Component annotation', function () {
 	it('should correctly add restrict : "E"', function () {
 		var MyClass = (function () {
 			function MyClass() {
-				_classCallCheck(this, MyClass);
+				_classCallCheck(this, _MyClass2);
 			}
 
+			var _MyClass2 = MyClass;
 			MyClass = _Component.Component({ selector: 'my-component' })(MyClass) || MyClass;
 			return MyClass;
 		})();
@@ -42,9 +44,10 @@ describe('@Component annotation', function () {
 			(function () {
 				var MyClass = (function () {
 					function MyClass() {
-						_classCallCheck(this, MyClass);
+						_classCallCheck(this, _MyClass3);
 					}
 
+					var _MyClass3 = MyClass;
 					MyClass = _Component.Component({ selector: '[my-attr]' })(MyClass) || MyClass;
 					return MyClass;
 				})();
@@ -57,9 +60,10 @@ describe('@Component annotation', function () {
 			(function () {
 				var MyClass = (function () {
 					function MyClass() {
-						_classCallCheck(this, MyClass);
+						_classCallCheck(this, _MyClass4);
 					}
 
+					var _MyClass4 = MyClass;
 					MyClass = _Component.Component({ selector: '.my-class' })(MyClass) || MyClass;
 					return MyClass;
 				})();
@@ -75,9 +79,10 @@ describe('@Component annotation', function () {
 	it('should accept a binding property', function () {
 		var MyClass = (function () {
 			function MyClass() {
-				_classCallCheck(this, MyClass);
+				_classCallCheck(this, _MyClass5);
 			}
 
+			var _MyClass5 = MyClass;
 			MyClass = _Component.Component({
 				selector: 'my-component',
 				bind: { myAttr: '@' }

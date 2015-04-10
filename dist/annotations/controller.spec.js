@@ -20,9 +20,10 @@ describe('@Controller annotation', function () {
 	it('should decorate a class with $provider meta data', function () {
 		var MyController = (function () {
 			function MyController() {
-				_classCallCheck(this, MyController);
+				_classCallCheck(this, _MyController);
 			}
 
+			var _MyController = MyController;
 			MyController = _Controller.Controller(MyController) || MyController;
 			return MyController;
 		})();
@@ -41,9 +42,10 @@ describe('@Controller annotation', function () {
 	it('should correctly parse a controller', function () {
 		var MyController = (function () {
 			function MyController() {
-				_classCallCheck(this, MyController);
+				_classCallCheck(this, _MyController2);
 			}
 
+			var _MyController2 = MyController;
 			MyController = _Controller.Controller(MyController) || MyController;
 			return MyController;
 		})();
@@ -67,24 +69,26 @@ describe('@Controller annotation', function () {
 	it('should define the $provider property on the prototype of the target', function () {
 		var MyController = (function () {
 			function MyController() {
-				_classCallCheck(this, MyController);
+				_classCallCheck(this, _MyController3);
 			}
 
+			var _MyController3 = MyController;
 			MyController = _Controller.Controller(MyController) || MyController;
 			return MyController;
 		})();
 
-		var NewController = (function (_MyController) {
+		var NewController = (function (_MyController4) {
 			function NewController() {
-				_classCallCheck(this, NewController);
+				_classCallCheck(this, _NewController);
 
-				if (_MyController != null) {
-					_MyController.apply(this, arguments);
+				if (_MyController4 != null) {
+					_MyController4.apply(this, arguments);
 				}
 			}
 
-			_inherits(NewController, _MyController);
+			_inherits(NewController, _MyController4);
 
+			var _NewController = NewController;
 			NewController = _Controller.Controller(NewController) || NewController;
 			return NewController;
 		})(MyController);

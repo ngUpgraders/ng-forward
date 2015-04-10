@@ -20,9 +20,10 @@ describe('@Factory Annotation', function () {
 	it('should decorate a class with $provider meta information', function () {
 		var ExampleClass = (function () {
 			function ExampleClass() {
-				_classCallCheck(this, ExampleClass);
+				_classCallCheck(this, _ExampleClass);
 			}
 
+			var _ExampleClass = ExampleClass;
 			ExampleClass = _Factory.Factory('MyFactory')(ExampleClass) || ExampleClass;
 			return ExampleClass;
 		})();
@@ -50,7 +51,7 @@ describe('@Factory Annotation', function () {
 
 			var ExampleClass = (function () {
 				function ExampleClass() {
-					_classCallCheck(this, ExampleClass);
+					_classCallCheck(this, _ExampleClass2);
 				}
 
 				_createClass(ExampleClass, null, [{
@@ -60,6 +61,7 @@ describe('@Factory Annotation', function () {
 					}
 				}]);
 
+				var _ExampleClass2 = ExampleClass;
 				ExampleClass = _Factory.Factory('MyFactory')(ExampleClass) || ExampleClass;
 				return ExampleClass;
 			})();
@@ -78,7 +80,7 @@ describe('@Factory Annotation', function () {
 
 			var ExampleClass = (function () {
 				function ExampleClass() {
-					_classCallCheck(this, ExampleClass);
+					_classCallCheck(this, _ExampleClass3);
 				}
 
 				_createClass(ExampleClass, null, [{
@@ -89,6 +91,7 @@ describe('@Factory Annotation', function () {
 					}
 				}]);
 
+				var _ExampleClass3 = ExampleClass;
 				ExampleClass = _Factory.Factory('MyFactory')(ExampleClass) || ExampleClass;
 				return ExampleClass;
 			})();
@@ -105,7 +108,7 @@ describe('@Factory Annotation', function () {
 		it('should generate a factory function for a class', function () {
 			var ExampleClass = (function () {
 				function ExampleClass(depA, depB, depC, propA, propB, propC) {
-					_classCallCheck(this, ExampleClass);
+					_classCallCheck(this, _ExampleClass4);
 
 					this.depA = depA;
 					this.depB = depB;
@@ -116,6 +119,7 @@ describe('@Factory Annotation', function () {
 					this.propC = propC;
 				}
 
+				var _ExampleClass4 = ExampleClass;
 				ExampleClass = _Factory.Factory('MyFactory')(ExampleClass) || ExampleClass;
 				return ExampleClass;
 			})();
