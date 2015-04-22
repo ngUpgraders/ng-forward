@@ -38,6 +38,8 @@ function annotate(obj, property) {
 		obj[property] = value;
 	} else if (_is2['default'].fn(value)) {
 		obj[property] = value;
+	} else if (_is2['default'].bool(value)) {
+		obj[property] = value;
 	} else if (_is2['default'].object(value)) {
 		install(obj, property, {});
 

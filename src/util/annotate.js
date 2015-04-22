@@ -21,6 +21,10 @@ export default function annotate(obj, property, value = {}){
 	{
 		obj[property] = value;
 	}
+	else if(is.bool(value))
+	{
+		obj[property] = value;
+	}
 	else if(is.object(value))
 	{
 		install(obj, property, {});
