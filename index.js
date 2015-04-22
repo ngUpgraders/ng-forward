@@ -12,6 +12,7 @@ var _Inject = require('./dist/annotations/inject');
 var _Require = require('./dist/annotations/require');
 var _Service = require('./dist/annotations/service');
 var _Template = require('./dist/annotations/template');
+var _Transclude = require('./dist/annotations/transclude');
 var _Module = require('./dist/module/module');
 
 exports.Component = _Component.Component;
@@ -22,4 +23,5 @@ exports.Inject = _Inject.Inject;
 exports.Require = _Require.Require;
 exports.Service = _Service.Service;
 exports.Template = _Template.Template;
+exports.Transclude = _Transclude.Transclude;
 exports.Module = _Module.Module;
