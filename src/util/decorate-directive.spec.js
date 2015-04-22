@@ -108,5 +108,29 @@ describe('Directive decorator', function(){
 				controllerAs: 'MyComponent'
 			});
 		});
+
+		it('should allow for a static link function on the class', function(){
+			let parser = Module.getParser('directive');
+			let module = {
+				directive : sinon.spy()
+			};
+			let testLink = false;
+
+			class MyComponent{
+				static link(){
+					testLink = true;
+				}
+			}
+
+			decorateDirective(MyComponent, 'myComponent', 'E', {  });
+			parser(MyComponent, module);
+
+
+			let directive = module.directive.args[0][1]();
+
+			directive.link();
+
+			expect(testLink).to.be.ok;
+		});
 	});
 });
