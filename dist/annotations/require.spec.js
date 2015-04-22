@@ -31,7 +31,9 @@ describe('@Require annotation for requiring directive controllers', function () 
 				_classCallCheck(this, _MyComponent2);
 			}
 
-			_createClass(MyComponent, null, [{
+			var _MyComponent2 = MyComponent;
+
+			_createClass(_MyComponent2, null, [{
 				key: 'link',
 				value: function link(scope, element, attrs, ctrls) {
 					var _MyComponent$unpackRequires = MyComponent.unpackRequires(ctrls);
@@ -44,7 +46,6 @@ describe('@Require annotation for requiring directive controllers', function () 
 				}
 			}]);
 
-			var _MyComponent2 = MyComponent;
 			MyComponent = _Require.Require('^parentCtrl', 'siblingCtrl')(MyComponent) || MyComponent;
 			return MyComponent;
 		})();
