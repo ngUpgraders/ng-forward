@@ -177,5 +177,37 @@ describe('Directive decorator', function () {
 				controllerAs: 'MyComponent'
 			});
 		});
+
+		it('should allow for a static link function on the class', function () {
+			var parser = _Module.Module.getParser('directive');
+			var module = {
+				directive: _sinon2['default'].spy()
+			};
+			var testLink = false;
+
+			var MyComponent = (function () {
+				function MyComponent() {
+					_classCallCheck(this, MyComponent);
+				}
+
+				_createClass(MyComponent, null, [{
+					key: 'link',
+					value: function link() {
+						testLink = true;
+					}
+				}]);
+
+				return MyComponent;
+			})();
+
+			_decorateDirective.decorateDirective(MyComponent, 'myComponent', 'E', {});
+			parser(MyComponent, module);
+
+			var directive = module.directive.args[0][1]();
+
+			directive.link();
+
+			_expect.expect(testLink).to.be.ok;
+		});
 	});
 });
