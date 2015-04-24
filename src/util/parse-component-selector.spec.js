@@ -1,29 +1,29 @@
 import {parseComponentSelector} from './parse-component-selector';
-import {expect} from 'chai';
+import chai from './tests';
 
 describe('Component selector parser', function(){
 	it('should correctly parse element selectors', function(){
 		let info = parseComponentSelector('my-component-selector');
 
-		expect(info).to.have.property('name', 'myComponentSelector');
-		expect(info).to.have.property('type', 'E');
+		info.should.have.property('name', 'myComponentSelector');
+		info.should.have.property('type', 'E');
 
 		info = parseComponentSelector('component');
 
-		expect(info.name).to.equal('component');
+		info.name.should.equal('component');
 	});
 
 	it('should correctly parse attribute selectors', function(){
 		let info = parseComponentSelector('[my-attr]');
 
-		expect(info.name).to.equal('myAttr');
-		expect(info.type).to.equal('A');
+		info.name.should.equal('myAttr');
+		info.type.should.equal('A');
 	});
 
 	it('should correctly parse class selectors', function(){
 		let info = parseComponentSelector('.my-class');
 
-		expect(info.name).to.equal('myClass');
-		expect(info.type).to.equal('C');
+		info.name.should.equal('myClass');
+		info.type.should.equal('C');
 	});
 });

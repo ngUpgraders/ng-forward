@@ -1,16 +1,15 @@
-import {expect} from 'chai';
 import {Factory} from './factory';
 import {Module} from '../module/module';
-import sinon from 'sinon';
+import {sinon} from '../util/tests';
 
 describe('@Factory Annotation', function(){
 	it('should decorate a class with $provider meta information', function(){
 		@Factory('MyFactory')
 		class ExampleClass{ }
 
-		expect(ExampleClass).to.have.property('$provider');
-		expect(ExampleClass.$provider).to.have.property('name', 'MyFactory');
-		expect(ExampleClass.$provider).to.have.property('type', 'factory');
+		ExampleClass.should.have.property('$provider');
+		ExampleClass.$provider.should.have.property('name', 'MyFactory');
+		ExampleClass.$provider.should.have.property('type', 'factory');
 	});
 
 	describe('Parser', function(){
@@ -22,7 +21,7 @@ describe('@Factory Annotation', function(){
 		});
 
 		it('should register itself with Module', function(){
-			expect(parser).to.be.defined;
+			parser.should.be.defined;
 		});
 
 		it('should use the static create method on a class as the factory function', function(){
@@ -40,7 +39,7 @@ describe('@Factory Annotation', function(){
 
 			factoryProvider()();
 
-			expect(called).to.be.true;
+			called.should.be.true;
 		});
 
 		it('should pass dependencies to the create method', function(){
@@ -59,8 +58,8 @@ describe('@Factory Annotation', function(){
 
 			factoryProvider(1, 2)();
 
-			expect(a).to.equal(1);
-			expect(b).to.equal(2);
+			a.should.equal(1);
+			b.should.equal(2);
 		});
 
 		it('should generate a factory function for a class', function(){
@@ -81,16 +80,16 @@ describe('@Factory Annotation', function(){
 
 			let factoryName = module.factory.args[0][0];
 			let factoryProvider = module.factory.args[0][1];
-			expect(factoryName).to.equal('MyFactory');
-			expect(factoryProvider).to.be.defined;
+			factoryName.should.equal('MyFactory');
+			factoryProvider.should.be.defined;
 
 			let factory = factoryProvider('a', 'b', 'c');
-			expect(factory).to.be.defined;
+			factory.should.be.defined;
 
 			let instance = factory('1', '2', '3');
-			expect(instance).to.have.property('propA', '1');
-			expect(instance).to.have.property('propB', '2');
-			expect(instance).to.have.property('propC', '3');
+			instance.should.have.property('propA', '1');
+			instance.should.have.property('propB', '2');
+			instance.should.have.property('propC', '3');
 		});
 	});
 });
