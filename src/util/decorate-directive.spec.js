@@ -1,8 +1,6 @@
-import {expect} from 'chai';
 import {decorateDirective} from './decorate-directive';
 import {Module} from '../module/module';
-import sinon from 'sinon';
-import extend from 'extend';
+import {sinon} from './tests'
 
 const Decorate = (name, type, binder) => t => {
 	decorateDirective(t, name, type, binder);
@@ -14,11 +12,11 @@ describe('Directive decorator', function(){
 
 		decorateDirective(Example, 'test', 'E');
 
-		expect(Example).to.have.property('$component');
-		expect(Example).to.have.property('$provider');
-		expect(Example.$provider.name).to.equal('test');
-		expect(Example.$provider.type).to.equal('directive');
-		expect(Example.$component.restrict).to.equal('E');
+		Example.should.have.property('$component');
+		Example.should.have.property('$provider');
+		Example.$provider.name.should.equal('test');
+		Example.$provider.type.should.equal('directive');
+		Example.$component.restrict.should.equal('E');
 	});
 
 	it('should attach a scope binding expression if a binder is provided', function(){
@@ -26,8 +24,8 @@ describe('Directive decorator', function(){
 
 		decorateDirective(Example, 'test', 'E', { 'myAttr' : '=' });
 
-		expect(Example.$component).to.have.property('scope');
-		expect(Example.$component.scope).to.have.property('myAttr', '=');
+		Example.$component.should.have.property('scope');
+		Example.$component.scope.should.have.property('myAttr', '=');
 	});
 
 	it('should set bindToController:true; if a binder is provided', function(){
@@ -35,7 +33,7 @@ describe('Directive decorator', function(){
 
 		decorateDirective(Example, 'test', 'E', { 'myAttr' : '=' });
 
-		expect(Example.$component).to.have.property('bindToController', true);
+		Example.$component.should.have.property('bindToController', true);
 	});
 
 	it('should merge binders if used on a subclass', function(){
@@ -45,11 +43,11 @@ describe('Directive decorator', function(){
 		class NewExample extends Example{ }
 		decorateDirective(NewExample, 'test', 'A', { 'newAttr' : '&' });
 
-		expect(Example.$component.scope).to.eql({
+		Example.$component.scope.should.eql({
 			myAttr : '='
 		});
 
-		expect(NewExample.$component.scope).to.eql({
+		NewExample.$component.scope.should.eql({
 			myAttr : '=',
 			newAttr : '&'
 		});
@@ -62,14 +60,14 @@ describe('Directive decorator', function(){
 		@Decorate('newComponent', 'E')
 		class NewComponent extends BaseComponent{ }
 
-		expect(BaseComponent.$provider.name).to.equal('baseComponent');
+		BaseComponent.$provider.name.should.equal('baseComponent');
 	});
 
 	describe('parser', function(){
 		it('should be registered with Module', function(){
 			let parser = Module.getParser('directive');
 
-			expect(parser).to.be.defined;
+			parser.should.be.defined;
 		});
 		
 		it('should register a directive on a module', function(){
@@ -97,8 +95,8 @@ describe('Directive decorator', function(){
 			let controller = directive.controller;
 			delete controller.$component;
 
-			expect(name).to.equal('myComponent');
-			expect(directive).to.eql({
+			name.should.equal('myComponent');
+			directive.should.eql({
 				restrict : 'E',
 				bindToController : true,
 				scope : { 'myAttr' : '=' },
@@ -130,7 +128,7 @@ describe('Directive decorator', function(){
 
 			directive.link();
 
-			expect(testLink).to.be.ok;
+			testLink.should.be.ok;
 		});
 	});
 });

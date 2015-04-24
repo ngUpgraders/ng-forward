@@ -1,26 +1,16 @@
 'use strict';
 
-var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
-
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
 
 var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
 
-var _expect = require('chai');
-
 var _decorateDirective = require('./decorate-directive');
 
 var _Module = require('../module/module');
 
-var _sinon = require('sinon');
-
-var _sinon2 = _interopRequireWildcard(_sinon);
-
-var _extend = require('extend');
-
-var _extend2 = _interopRequireWildcard(_extend);
+var _sinon = require('./tests');
 
 var Decorate = function Decorate(name, type, binder) {
 	return function (t) {
@@ -36,11 +26,11 @@ describe('Directive decorator', function () {
 
 		_decorateDirective.decorateDirective(Example, 'test', 'E');
 
-		_expect.expect(Example).to.have.property('$component');
-		_expect.expect(Example).to.have.property('$provider');
-		_expect.expect(Example.$provider.name).to.equal('test');
-		_expect.expect(Example.$provider.type).to.equal('directive');
-		_expect.expect(Example.$component.restrict).to.equal('E');
+		Example.should.have.property('$component');
+		Example.should.have.property('$provider');
+		Example.$provider.name.should.equal('test');
+		Example.$provider.type.should.equal('directive');
+		Example.$component.restrict.should.equal('E');
 	});
 
 	it('should attach a scope binding expression if a binder is provided', function () {
@@ -50,8 +40,8 @@ describe('Directive decorator', function () {
 
 		_decorateDirective.decorateDirective(Example, 'test', 'E', { myAttr: '=' });
 
-		_expect.expect(Example.$component).to.have.property('scope');
-		_expect.expect(Example.$component.scope).to.have.property('myAttr', '=');
+		Example.$component.should.have.property('scope');
+		Example.$component.scope.should.have.property('myAttr', '=');
 	});
 
 	it('should set bindToController:true; if a binder is provided', function () {
@@ -61,7 +51,7 @@ describe('Directive decorator', function () {
 
 		_decorateDirective.decorateDirective(Example, 'test', 'E', { myAttr: '=' });
 
-		_expect.expect(Example.$component).to.have.property('bindToController', true);
+		Example.$component.should.have.property('bindToController', true);
 	});
 
 	it('should merge binders if used on a subclass', function () {
@@ -87,11 +77,11 @@ describe('Directive decorator', function () {
 
 		_decorateDirective.decorateDirective(NewExample, 'test', 'A', { newAttr: '&' });
 
-		_expect.expect(Example.$component.scope).to.eql({
+		Example.$component.scope.should.eql({
 			myAttr: '='
 		});
 
-		_expect.expect(NewExample.$component.scope).to.eql({
+		NewExample.$component.scope.should.eql({
 			myAttr: '=',
 			newAttr: '&'
 		});
@@ -124,20 +114,20 @@ describe('Directive decorator', function () {
 			return NewComponent;
 		})(BaseComponent);
 
-		_expect.expect(BaseComponent.$provider.name).to.equal('baseComponent');
+		BaseComponent.$provider.name.should.equal('baseComponent');
 	});
 
 	describe('parser', function () {
 		it('should be registered with Module', function () {
 			var parser = _Module.Module.getParser('directive');
 
-			_expect.expect(parser).to.be.defined;
+			parser.should.be.defined;
 		});
 
 		it('should register a directive on a module', function () {
 			var parser = _Module.Module.getParser('directive');
 			var module = {
-				directive: _sinon2['default'].spy()
+				directive: _sinon.sinon.spy()
 			};
 
 			var MyComponent = (function () {
@@ -166,8 +156,8 @@ describe('Directive decorator', function () {
 			var controller = directive.controller;
 			delete controller.$component;
 
-			_expect.expect(name).to.equal('myComponent');
-			_expect.expect(directive).to.eql({
+			name.should.equal('myComponent');
+			directive.should.eql({
 				restrict: 'E',
 				bindToController: true,
 				scope: { myAttr: '=' },
@@ -181,7 +171,7 @@ describe('Directive decorator', function () {
 		it('should allow for a static link function on the class', function () {
 			var parser = _Module.Module.getParser('directive');
 			var module = {
-				directive: _sinon2['default'].spy()
+				directive: _sinon.sinon.spy()
 			};
 			var testLink = false;
 
@@ -207,7 +197,7 @@ describe('Directive decorator', function () {
 
 			directive.link();
 
-			_expect.expect(testLink).to.be.ok;
+			testLink.should.be.ok;
 		});
 	});
 });

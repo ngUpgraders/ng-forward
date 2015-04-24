@@ -1,16 +1,10 @@
 'use strict';
 
-var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
-
 var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
 
 var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
 
-var _sinon = require('sinon');
-
-var _sinon2 = _interopRequireWildcard(_sinon);
-
-var _expect = require('chai');
+var _sinon = require('../util/tests');
 
 var _Controller = require('./controller');
 
@@ -28,15 +22,15 @@ describe('@Controller annotation', function () {
 			return MyController;
 		})();
 
-		_expect.expect(MyController).to.have.property('$provider');
-		_expect.expect(MyController.$provider.name).to.equal('MyController');
-		_expect.expect(MyController.$provider.type).to.equal('controller');
+		MyController.should.have.property('$provider');
+		MyController.$provider.name.should.equal('MyController');
+		MyController.$provider.type.should.equal('controller');
 	});
 
 	it('should register a controller parser with the Module class', function () {
 		var parser = _Module.Module.getParser('controller');
 
-		_expect.expect(parser).to.exist;
+		parser.should.exist;
 	});
 
 	it('should correctly parse a controller', function () {
@@ -51,7 +45,7 @@ describe('@Controller annotation', function () {
 		})();
 
 		var module = {
-			controller: _sinon2['default'].spy()
+			controller: _sinon.sinon.spy()
 		};
 
 		var parser = _Module.Module.getParser('controller');
@@ -61,9 +55,9 @@ describe('@Controller annotation', function () {
 		var name = module.controller.args[0][0];
 		var controller = module.controller.args[0][1];
 
-		_expect.expect(module.controller.called).to.be['true'];
-		_expect.expect(name).to.equal('MyController');
-		_expect.expect(controller).to.eql(MyController);
+		module.controller.called.should.be['true'];
+		name.should.equal('MyController');
+		controller.should.eql(MyController);
 	});
 
 	it('should define the $provider property on the prototype of the target', function () {
@@ -93,8 +87,8 @@ describe('@Controller annotation', function () {
 			return NewController;
 		})(MyController);
 
-		_expect.expect(MyController.$provider.name).not.to.equal('NewController');
-		_expect.expect(MyController.$provider.name).to.equal('MyController');
-		_expect.expect(NewController.$provider.name).to.equal('NewController');
+		MyController.$provider.name.should.not.equal('NewController');
+		MyController.$provider.name.should.equal('MyController');
+		NewController.$provider.name.should.equal('NewController');
 	});
 });

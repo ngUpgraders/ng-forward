@@ -1,10 +1,14 @@
 'use strict';
 
+var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+
 var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
 
 var _Transclude = require('./transclude');
 
-var _expect = require('chai');
+var _chai = require('../util/tests');
+
+var _chai2 = _interopRequireWildcard(_chai);
 
 describe('@Transclude annotation', function () {
 	it('should decorate a function with the $component object', function () {
@@ -18,7 +22,7 @@ describe('@Transclude annotation', function () {
 			return MyComponent;
 		})();
 
-		_expect.expect(MyComponent).to.have.property('$component');
+		MyComponent.should.have.property('$component');
 	});
 
 	it('should set transclude to true on the $component', function () {
@@ -32,7 +36,7 @@ describe('@Transclude annotation', function () {
 			return MyClass;
 		})();
 
-		_expect.expect(MyClass.$component.transclude).to.be.ok;
+		MyClass.$component.transclude.should.be.ok;
 	});
 
 	it('should set transclude to a string if a string was provided to the annotation', function () {
@@ -46,6 +50,6 @@ describe('@Transclude annotation', function () {
 			return MyComponent;
 		})();
 
-		_expect.expect(MyComponent.$component.transclude).to.eql('element');
+		MyComponent.$component.transclude.should.eql('element');
 	});
 });

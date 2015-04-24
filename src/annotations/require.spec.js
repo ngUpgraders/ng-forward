@@ -1,4 +1,4 @@
-import {expect} from 'chai';
+import chai from '../util/tests';
 import {Require} from './require';
 
 describe('@Require annotation for requiring directive controllers', function(){
@@ -6,7 +6,7 @@ describe('@Require annotation for requiring directive controllers', function(){
 		@Require('^parentCtrl', 'siblingCtrl')
 		class MyComponent{ }
 
-		expect(MyComponent.$component.require).to.eql(['^parentCtrl', 'siblingCtrl']);
+		MyComponent.$component.require.should.eql(['^parentCtrl', 'siblingCtrl']);
 	});
 
 	it('should add a convience static method for unpacking requires', function(){
@@ -16,8 +16,8 @@ describe('@Require annotation for requiring directive controllers', function(){
 			static link(scope, element, attrs, ctrls){
 				let {parentCtrl, siblingCtrl} = MyComponent.unpackRequires(ctrls);
 
-				expect(parentCtrl).to.eql('Parent Controller');
-				expect(siblingCtrl).to.eql('Sibling Controller');
+				parentCtrl.should.eql('Parent Controller');
+				siblingCtrl.should.eql('Sibling Controller');
 			}
 		}
 
@@ -31,8 +31,8 @@ describe('@Require annotation for requiring directive controllers', function(){
 		@Require('sibling')
 		class NewTest extends Test{ }
 
-		expect(Test.$component.require).to.eql(['^parent']);
+		Test.$component.require.should.eql(['^parent']);
 
-		expect(NewTest.$component.require).to.eql(['^parent', 'sibling']);
+		NewTest.$component.require.should.eql(['^parent', 'sibling']);
 	});
 });

@@ -1,20 +1,14 @@
 'use strict';
 
-var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
-
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
-
-var _expect = require('chai');
 
 var _Factory = require('./factory');
 
 var _Module = require('../module/module');
 
-var _sinon = require('sinon');
-
-var _sinon2 = _interopRequireWildcard(_sinon);
+var _sinon = require('../util/tests');
 
 describe('@Factory Annotation', function () {
 	it('should decorate a class with $provider meta information', function () {
@@ -28,9 +22,9 @@ describe('@Factory Annotation', function () {
 			return ExampleClass;
 		})();
 
-		_expect.expect(ExampleClass).to.have.property('$provider');
-		_expect.expect(ExampleClass.$provider).to.have.property('name', 'MyFactory');
-		_expect.expect(ExampleClass.$provider).to.have.property('type', 'factory');
+		ExampleClass.should.have.property('$provider');
+		ExampleClass.$provider.should.have.property('name', 'MyFactory');
+		ExampleClass.$provider.should.have.property('type', 'factory');
 	});
 
 	describe('Parser', function () {
@@ -38,12 +32,12 @@ describe('@Factory Annotation', function () {
 		    module = undefined;
 
 		beforeEach(function () {
-			module = { factory: _sinon2['default'].spy() };
+			module = { factory: _sinon.sinon.spy() };
 			parser = _Module.Module.getParser('factory');
 		});
 
 		it('should register itself with Module', function () {
-			_expect.expect(parser).to.be.defined;
+			parser.should.be.defined;
 		});
 
 		it('should use the static create method on a class as the factory function', function () {
@@ -72,7 +66,7 @@ describe('@Factory Annotation', function () {
 
 			factoryProvider()();
 
-			_expect.expect(called).to.be['true'];
+			called.should.be['true'];
 		});
 
 		it('should pass dependencies to the create method', function () {
@@ -103,8 +97,8 @@ describe('@Factory Annotation', function () {
 
 			factoryProvider(1, 2)();
 
-			_expect.expect(a).to.equal(1);
-			_expect.expect(b).to.equal(2);
+			a.should.equal(1);
+			b.should.equal(2);
 		});
 
 		it('should generate a factory function for a class', function () {
@@ -130,16 +124,16 @@ describe('@Factory Annotation', function () {
 
 			var factoryName = module.factory.args[0][0];
 			var factoryProvider = module.factory.args[0][1];
-			_expect.expect(factoryName).to.equal('MyFactory');
-			_expect.expect(factoryProvider).to.be.defined;
+			factoryName.should.equal('MyFactory');
+			factoryProvider.should.be.defined;
 
 			var factory = factoryProvider('a', 'b', 'c');
-			_expect.expect(factory).to.be.defined;
+			factory.should.be.defined;
 
 			var instance = factory('1', '2', '3');
-			_expect.expect(instance).to.have.property('propA', '1');
-			_expect.expect(instance).to.have.property('propB', '2');
-			_expect.expect(instance).to.have.property('propC', '3');
+			instance.should.have.property('propA', '1');
+			instance.should.have.property('propB', '2');
+			instance.should.have.property('propC', '3');
 		});
 	});
 });

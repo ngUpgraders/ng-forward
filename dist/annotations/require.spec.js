@@ -1,12 +1,16 @@
 'use strict';
 
+var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+
 var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
 
-var _expect = require('chai');
+var _chai = require('../util/tests');
+
+var _chai2 = _interopRequireWildcard(_chai);
 
 var _Require = require('./require');
 
@@ -22,7 +26,7 @@ describe('@Require annotation for requiring directive controllers', function () 
 			return MyComponent;
 		})();
 
-		_expect.expect(MyComponent.$component.require).to.eql(['^parentCtrl', 'siblingCtrl']);
+		MyComponent.$component.require.should.eql(['^parentCtrl', 'siblingCtrl']);
 	});
 
 	it('should add a convience static method for unpacking requires', function () {
@@ -41,8 +45,8 @@ describe('@Require annotation for requiring directive controllers', function () 
 					var parentCtrl = _MyComponent$unpackRequires.parentCtrl;
 					var siblingCtrl = _MyComponent$unpackRequires.siblingCtrl;
 
-					_expect.expect(parentCtrl).to.eql('Parent Controller');
-					_expect.expect(siblingCtrl).to.eql('Sibling Controller');
+					parentCtrl.should.eql('Parent Controller');
+					siblingCtrl.should.eql('Sibling Controller');
 				}
 			}]);
 
@@ -80,8 +84,8 @@ describe('@Require annotation for requiring directive controllers', function () 
 			return NewTest;
 		})(Test);
 
-		_expect.expect(Test.$component.require).to.eql(['^parent']);
+		Test.$component.require.should.eql(['^parent']);
 
-		_expect.expect(NewTest.$component.require).to.eql(['^parent', 'sibling']);
+		NewTest.$component.require.should.eql(['^parent', 'sibling']);
 	});
 });

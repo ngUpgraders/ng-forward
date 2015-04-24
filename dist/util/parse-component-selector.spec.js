@@ -1,32 +1,36 @@
 'use strict';
 
+var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+
 var _parseComponentSelector = require('./parse-component-selector');
 
-var _expect = require('chai');
+var _chai = require('./tests');
+
+var _chai2 = _interopRequireWildcard(_chai);
 
 describe('Component selector parser', function () {
 	it('should correctly parse element selectors', function () {
 		var info = _parseComponentSelector.parseComponentSelector('my-component-selector');
 
-		_expect.expect(info).to.have.property('name', 'myComponentSelector');
-		_expect.expect(info).to.have.property('type', 'E');
+		info.should.have.property('name', 'myComponentSelector');
+		info.should.have.property('type', 'E');
 
 		info = _parseComponentSelector.parseComponentSelector('component');
 
-		_expect.expect(info.name).to.equal('component');
+		info.name.should.equal('component');
 	});
 
 	it('should correctly parse attribute selectors', function () {
 		var info = _parseComponentSelector.parseComponentSelector('[my-attr]');
 
-		_expect.expect(info.name).to.equal('myAttr');
-		_expect.expect(info.type).to.equal('A');
+		info.name.should.equal('myAttr');
+		info.type.should.equal('A');
 	});
 
 	it('should correctly parse class selectors', function () {
 		var info = _parseComponentSelector.parseComponentSelector('.my-class');
 
-		_expect.expect(info.name).to.equal('myClass');
-		_expect.expect(info.type).to.equal('C');
+		info.name.should.equal('myClass');
+		info.type.should.equal('C');
 	});
 });

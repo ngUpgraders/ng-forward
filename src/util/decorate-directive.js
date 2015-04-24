@@ -23,8 +23,8 @@ Module.registerProvider('directive', (provider, module) => {
 
 	component.controllerAs = component.controllerAs || controller.name;
 	component.controller = controller;
-	component.link = controller.link || function(){};
-	component.compile = controller.compile || function(){};
+	component.link = provider.link;
+	component.compile = provider.compile;
 
 	module.directive(name, function(){
 		return component;

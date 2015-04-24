@@ -1,10 +1,14 @@
 'use strict';
 
+var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+
 var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
 
 var _Component = require('./component');
 
-var _expect = require('chai');
+var _chai = require('../util/tests');
+
+var _chai2 = _interopRequireWildcard(_chai);
 
 describe('@Component annotation', function () {
 	it('should decorate a class with the $provider and $component metadata', function () {
@@ -18,8 +22,8 @@ describe('@Component annotation', function () {
 			return MyClass;
 		})();
 
-		_expect.expect(MyClass).to.have.property('$provider');
-		_expect.expect(MyClass).to.have.property('$component');
+		MyClass.should.have.property('$provider');
+		MyClass.should.have.property('$component');
 	});
 
 	it('should correctly add restrict : "E"', function () {
@@ -33,7 +37,7 @@ describe('@Component annotation', function () {
 			return MyClass;
 		})();
 
-		_expect.expect(MyClass.$component).to.have.property('restrict', 'E');
+		MyClass.$component.should.have.property('restrict', 'E');
 	});
 
 	it('should throw an error if the selector is not an element', function () {
@@ -72,8 +76,8 @@ describe('@Component annotation', function () {
 			caughtClass = true;
 		}
 
-		_expect.expect(caughtAttr).to.be.ok;
-		_expect.expect(caughtClass).to.be.ok;
+		caughtAttr.should.be.ok;
+		caughtClass.should.be.ok;
 	});
 
 	it('should accept a binding property', function () {
@@ -90,7 +94,7 @@ describe('@Component annotation', function () {
 			return MyClass;
 		})();
 
-		_expect.expect(MyClass.$component.scope).to.have.property('myAttr', '@');
-		_expect.expect(MyClass.$component.bindToController).to.be.ok;
+		MyClass.$component.scope.should.have.property('myAttr', '@');
+		MyClass.$component.bindToController.should.be.ok;
 	});
 });

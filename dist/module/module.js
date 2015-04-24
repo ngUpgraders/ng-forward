@@ -82,24 +82,6 @@ function Module() {
 	return new (_bind.apply(DecoratedModule, [null].concat(params)))();
 }
 
-Module.moduleList = function (modules) {
-	var realModuleList = [];
-
-	if (modules) {
-		for (var i = 0; i < modules.length; i++) {
-			if (modules[i].name) {
-				realModuleList.push(modules[i].name);
-			} else if (typeof modules[i] === 'string') {
-				realModuleList.push(modules[i]);
-			} else {
-				throw new Error('Cannot create submodule: unknown module type');
-			}
-		}
-	}
-
-	return realModuleList;
-};
-
 Module.registerProvider = function (providerType, parser) {
 	_parsers[providerType] = parser;
 };

@@ -1,20 +1,20 @@
 import {Component} from './component';
-import {expect} from 'chai';
+import chai from '../util/tests';
 
 describe('@Component annotation', function(){
 	it('should decorate a class with the $provider and $component metadata', function(){
 		@Component({ selector : 'my-component' })
 		class MyClass{ }
 
-		expect(MyClass).to.have.property('$provider');
-		expect(MyClass).to.have.property('$component');
+		MyClass.should.have.property('$provider');
+		MyClass.should.have.property('$component');
 	});
 
 	it('should correctly add restrict : "E"', function(){
 		@Component({ selector : 'my-component' })
 		class MyClass{ }
 
-		expect(MyClass.$component).to.have.property('restrict', 'E');
+		MyClass.$component.should.have.property('restrict', 'E');
 	});
 
 	it('should throw an error if the selector is not an element', function(){
@@ -37,8 +37,8 @@ describe('@Component annotation', function(){
 			caughtClass = true;
 		}
 
-		expect(caughtAttr).to.be.ok;
-		expect(caughtClass).to.be.ok;
+		caughtAttr.should.be.ok;
+		caughtClass.should.be.ok;
 	});
 
 	it('should accept a binding property', function(){
@@ -48,7 +48,7 @@ describe('@Component annotation', function(){
 		})
 		class MyClass{ }
 
-		expect(MyClass.$component.scope).to.have.property('myAttr', '@');
-		expect(MyClass.$component.bindToController).to.be.ok;
+		MyClass.$component.scope.should.have.property('myAttr', '@');
+		MyClass.$component.bindToController.should.be.ok;
 	});
 });
