@@ -3,6 +3,7 @@ import { Controller } from './annotations/controller';
 import { Decorator } from './annotations/decorator';
 import { Factory } from './annotations/factory';
 import { Inject } from './annotations/inject';
+import { Provider } from './annotations/provider';
 import { Require } from './annotations/require';
 import { Service } from './annotations/service';
 import { Template } from './annotations/template';
@@ -15,6 +16,7 @@ export {
 	Decorator,
 	Factory,
 	Inject,
+	Provider,
 	Require,
 	Service,
 	Template,
