@@ -5,6 +5,7 @@ import {
 	Decorator,
 	Factory,
 	Inject,
+	Provider,
 	Require,
 	Service,
 	Template,
@@ -18,6 +19,7 @@ describe('Angular Decorators', function(){
 	it('should export Decorator', () => Decorator.should.be.defined );
 	it('should export Factory', () => Factory.should.be.defined );
 	it('should export Inject', () => Inject.should.be.defined );
+	it('should export Provider', () => Provider.should.be.defined);
 	it('should export Require', () => Require.should.be.defined );
 	it('should export Service', () => Service.should.be.defined );
 	it('should export Template', () => Template.should.be.defined );
