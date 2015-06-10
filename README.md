@@ -2,9 +2,13 @@
 
 Angular 2, due to be released this year, offers a drastically different API for creating applications in comparison to Angular 1.x. angular-decorators provides annotations and utilities that allow you to write AngularJS 1.x apps in a similar way to this new API. By taking advantage of these annotations and utilities, porting your existing AngularJS 1.x apps to Angular 2 will be a quicker, less painful process.
 
-## Installation
+## Installation via npm
 
 `npm install angular-decorators --save-dev`
+
+## Installation via jspm
+
+`jspm install angular-decorators`
 
 ## Modules
 
