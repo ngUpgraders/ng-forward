@@ -1,14 +1,14 @@
 'use strict';
 
-var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _Transclude = require('./transclude');
+var _transclude = require('./transclude');
 
-var _chai = require('../util/tests');
+var _utilTests = require('../util/tests');
 
-var _chai2 = _interopRequireWildcard(_chai);
+var _utilTests2 = _interopRequireDefault(_utilTests);
 
 describe('@Transclude annotation', function () {
 	it('should decorate a function with the $component object', function () {
@@ -18,7 +18,7 @@ describe('@Transclude annotation', function () {
 			}
 
 			var _MyComponent = MyComponent;
-			MyComponent = _Transclude.Transclude(MyComponent) || MyComponent;
+			MyComponent = (0, _transclude.Transclude)(MyComponent) || MyComponent;
 			return MyComponent;
 		})();
 
@@ -32,7 +32,7 @@ describe('@Transclude annotation', function () {
 			}
 
 			var _MyClass = MyClass;
-			MyClass = _Transclude.Transclude(MyClass) || MyClass;
+			MyClass = (0, _transclude.Transclude)(MyClass) || MyClass;
 			return MyClass;
 		})();
 
@@ -46,7 +46,7 @@ describe('@Transclude annotation', function () {
 			}
 
 			var _MyComponent2 = MyComponent;
-			MyComponent = _Transclude.Transclude('element')(MyComponent) || MyComponent;
+			MyComponent = (0, _transclude.Transclude)('element')(MyComponent) || MyComponent;
 			return MyComponent;
 		})();
 

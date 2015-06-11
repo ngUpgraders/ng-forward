@@ -1,14 +1,14 @@
 'use strict';
 
-var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _sinon = require('../util/tests');
+var _utilTests = require('../util/tests');
 
-var _Controller = require('./controller');
+var _controller = require('./controller');
 
-var _Module = require('../module/module');
+var _moduleModule = require('../module/module');
 
 describe('@Controller annotation', function () {
 	it('should decorate a class with $provider meta data', function () {
@@ -18,7 +18,7 @@ describe('@Controller annotation', function () {
 			}
 
 			var _MyController = MyController;
-			MyController = _Controller.Controller(MyController) || MyController;
+			MyController = (0, _controller.Controller)(MyController) || MyController;
 			return MyController;
 		})();
 
@@ -28,7 +28,7 @@ describe('@Controller annotation', function () {
 	});
 
 	it('should register a controller parser with the Module class', function () {
-		var parser = _Module.Module.getParser('controller');
+		var parser = _moduleModule.Module.getParser('controller');
 
 		parser.should.exist;
 	});
@@ -40,15 +40,15 @@ describe('@Controller annotation', function () {
 			}
 
 			var _MyController2 = MyController;
-			MyController = _Controller.Controller(MyController) || MyController;
+			MyController = (0, _controller.Controller)(MyController) || MyController;
 			return MyController;
 		})();
 
 		var module = {
-			controller: _sinon.sinon.spy()
+			controller: _utilTests.sinon.spy()
 		};
 
-		var parser = _Module.Module.getParser('controller');
+		var parser = _moduleModule.Module.getParser('controller');
 
 		parser(MyController, module);
 
@@ -67,7 +67,7 @@ describe('@Controller annotation', function () {
 			}
 
 			var _MyController3 = MyController;
-			MyController = _Controller.Controller(MyController) || MyController;
+			MyController = (0, _controller.Controller)(MyController) || MyController;
 			return MyController;
 		})();
 
@@ -83,7 +83,7 @@ describe('@Controller annotation', function () {
 			_inherits(NewController, _MyController4);
 
 			var _NewController = NewController;
-			NewController = _Controller.Controller(NewController) || NewController;
+			NewController = (0, _controller.Controller)(NewController) || NewController;
 			return NewController;
 		})(MyController);
 

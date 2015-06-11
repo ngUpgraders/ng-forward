@@ -1,14 +1,14 @@
 'use strict';
 
-var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _Component = require('./component');
+var _component = require('./component');
 
-var _chai = require('../util/tests');
+var _utilTests = require('../util/tests');
 
-var _chai2 = _interopRequireWildcard(_chai);
+var _utilTests2 = _interopRequireDefault(_utilTests);
 
 describe('@Component annotation', function () {
 	it('should decorate a class with the $provider and $component metadata', function () {
@@ -18,7 +18,7 @@ describe('@Component annotation', function () {
 			}
 
 			var _MyClass = MyClass;
-			MyClass = _Component.Component({ selector: 'my-component' })(MyClass) || MyClass;
+			MyClass = (0, _component.Component)({ selector: 'my-component' })(MyClass) || MyClass;
 			return MyClass;
 		})();
 
@@ -33,7 +33,7 @@ describe('@Component annotation', function () {
 			}
 
 			var _MyClass2 = MyClass;
-			MyClass = _Component.Component({ selector: 'my-component' })(MyClass) || MyClass;
+			MyClass = (0, _component.Component)({ selector: 'my-component' })(MyClass) || MyClass;
 			return MyClass;
 		})();
 
@@ -52,7 +52,7 @@ describe('@Component annotation', function () {
 					}
 
 					var _MyClass3 = MyClass;
-					MyClass = _Component.Component({ selector: '[my-attr]' })(MyClass) || MyClass;
+					MyClass = (0, _component.Component)({ selector: '[my-attr]' })(MyClass) || MyClass;
 					return MyClass;
 				})();
 			})();
@@ -68,7 +68,7 @@ describe('@Component annotation', function () {
 					}
 
 					var _MyClass4 = MyClass;
-					MyClass = _Component.Component({ selector: '.my-class' })(MyClass) || MyClass;
+					MyClass = (0, _component.Component)({ selector: '.my-class' })(MyClass) || MyClass;
 					return MyClass;
 				})();
 			})();
@@ -87,9 +87,9 @@ describe('@Component annotation', function () {
 			}
 
 			var _MyClass5 = MyClass;
-			MyClass = _Component.Component({
+			MyClass = (0, _component.Component)({
 				selector: 'my-component',
-				bind: { myAttr: '@' }
+				bind: { 'myAttr': '@' }
 			})(MyClass) || MyClass;
 			return MyClass;
 		})();

@@ -2,13 +2,13 @@
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _Factory = require('./factory');
+var _factory = require('./factory');
 
-var _Module = require('../module/module');
+var _moduleModule = require('../module/module');
 
-var _sinon = require('../util/tests');
+var _utilTests = require('../util/tests');
 
 describe('@Factory Annotation', function () {
 	it('should decorate a class with $provider meta information', function () {
@@ -18,7 +18,7 @@ describe('@Factory Annotation', function () {
 			}
 
 			var _ExampleClass = ExampleClass;
-			ExampleClass = _Factory.Factory('MyFactory')(ExampleClass) || ExampleClass;
+			ExampleClass = (0, _factory.Factory)('MyFactory')(ExampleClass) || ExampleClass;
 			return ExampleClass;
 		})();
 
@@ -32,8 +32,8 @@ describe('@Factory Annotation', function () {
 		    module = undefined;
 
 		beforeEach(function () {
-			module = { factory: _sinon.sinon.spy() };
-			parser = _Module.Module.getParser('factory');
+			module = { factory: _utilTests.sinon.spy() };
+			parser = _moduleModule.Module.getParser('factory');
 		});
 
 		it('should register itself with Module', function () {
@@ -57,7 +57,7 @@ describe('@Factory Annotation', function () {
 					}
 				}]);
 
-				ExampleClass = _Factory.Factory('MyFactory')(ExampleClass) || ExampleClass;
+				ExampleClass = (0, _factory.Factory)('MyFactory')(ExampleClass) || ExampleClass;
 				return ExampleClass;
 			})();
 
@@ -88,7 +88,7 @@ describe('@Factory Annotation', function () {
 					}
 				}]);
 
-				ExampleClass = _Factory.Factory('MyFactory')(ExampleClass) || ExampleClass;
+				ExampleClass = (0, _factory.Factory)('MyFactory')(ExampleClass) || ExampleClass;
 				return ExampleClass;
 			})();
 
@@ -116,7 +116,7 @@ describe('@Factory Annotation', function () {
 				}
 
 				var _ExampleClass4 = ExampleClass;
-				ExampleClass = _Factory.Factory('MyFactory')(ExampleClass) || ExampleClass;
+				ExampleClass = (0, _factory.Factory)('MyFactory')(ExampleClass) || ExampleClass;
 				return ExampleClass;
 			})();
 

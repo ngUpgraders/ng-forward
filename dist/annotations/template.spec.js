@@ -1,16 +1,16 @@
 'use strict';
 
-var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _Template = require('./template');
+var _template = require('./template');
 
-var _chai = require('../util/tests');
+var _utilTests = require('../util/tests');
 
-var _chai2 = _interopRequireWildcard(_chai);
+var _utilTests2 = _interopRequireDefault(_utilTests);
 
 describe('@Template Annotation', function () {
 	it('should add a template option to a component', function () {
@@ -20,7 +20,7 @@ describe('@Template Annotation', function () {
 			}
 
 			var _MyClass = MyClass;
-			MyClass = _Template.Template({ inline: 'test' })(MyClass) || MyClass;
+			MyClass = (0, _template.Template)({ inline: 'test' })(MyClass) || MyClass;
 			return MyClass;
 		})();
 
@@ -35,7 +35,7 @@ describe('@Template Annotation', function () {
 			}
 
 			var _MyClass2 = MyClass;
-			MyClass = _Template.Template({ inline: 'test' })(MyClass) || MyClass;
+			MyClass = (0, _template.Template)({ inline: 'test' })(MyClass) || MyClass;
 			return MyClass;
 		})();
 
@@ -49,7 +49,7 @@ describe('@Template Annotation', function () {
 			}
 
 			var _MyClass3 = MyClass;
-			MyClass = _Template.Template({ url: '/path/to/it' })(MyClass) || MyClass;
+			MyClass = (0, _template.Template)({ url: '/path/to/it' })(MyClass) || MyClass;
 			return MyClass;
 		})();
 
@@ -63,7 +63,7 @@ describe('@Template Annotation', function () {
 			}
 
 			var _MyClass4 = MyClass;
-			MyClass = _Template.Template({ inline: 'test' })(MyClass) || MyClass;
+			MyClass = (0, _template.Template)({ inline: 'test' })(MyClass) || MyClass;
 			return MyClass;
 		})();
 
@@ -79,7 +79,7 @@ describe('@Template Annotation', function () {
 			_inherits(NewClass, _MyClass5);
 
 			var _NewClass = NewClass;
-			NewClass = _Template.Template({ url: '/path/to/it' })(NewClass) || NewClass;
+			NewClass = (0, _template.Template)({ url: '/path/to/it' })(NewClass) || NewClass;
 			return NewClass;
 		})(MyClass);
 
@@ -95,7 +95,7 @@ describe('@Template Annotation', function () {
 			_inherits(TestClass, _NewClass2);
 
 			var _TestClass = TestClass;
-			TestClass = _Template.Template({ inline: 'new test' })(TestClass) || TestClass;
+			TestClass = (0, _template.Template)({ inline: 'new test' })(TestClass) || TestClass;
 			return TestClass;
 		})(NewClass);
 

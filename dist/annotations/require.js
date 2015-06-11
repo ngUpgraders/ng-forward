@@ -1,18 +1,18 @@
 'use strict';
 
-var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
-
 Object.defineProperty(exports, '__esModule', {
 	value: true
 });
 
-var _annotate = require('../util/annotate');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _annotate2 = _interopRequireWildcard(_annotate);
+var _utilAnnotate = require('../util/annotate');
+
+var _utilAnnotate2 = _interopRequireDefault(_utilAnnotate);
 
 var _clone = require('clone');
 
-var _clone2 = _interopRequireWildcard(_clone);
+var _clone2 = _interopRequireDefault(_clone);
 
 var Require = function Require() {
 	for (var _len = arguments.length, components = Array(_len), _key = 0; _key < _len; _key++) {
@@ -20,9 +20,9 @@ var Require = function Require() {
 	}
 
 	return function (t) {
-		_annotate2['default'](t, '$component', {});
-		_annotate2['default'](t.$component, 'require', components);
-		_annotate2['default'](t, 'unpackRequires', function unpackRequires(resolved) {
+		(0, _utilAnnotate2['default'])(t, '$component', {});
+		(0, _utilAnnotate2['default'])(t.$component, 'require', components);
+		(0, _utilAnnotate2['default'])(t, 'unpackRequires', function unpackRequires(resolved) {
 			var unpacked = {};
 
 			if (components.length > 1) {

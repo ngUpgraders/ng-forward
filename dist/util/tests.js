@@ -1,22 +1,22 @@
 'use strict';
 
-var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
-
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
 var _chai = require('chai');
 
-var _chai2 = _interopRequireWildcard(_chai);
+var _chai2 = _interopRequireDefault(_chai);
 
 var _sinonChai = require('sinon-chai');
 
-var _sinonChai2 = _interopRequireWildcard(_sinonChai);
+var _sinonChai2 = _interopRequireDefault(_sinonChai);
 
 var _sinon = require('sinon');
 
-var _sinon2 = _interopRequireWildcard(_sinon);
+var _sinon2 = _interopRequireDefault(_sinon);
 
 _chai2['default'].use(_sinonChai2['default']);
 

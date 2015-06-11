@@ -1,14 +1,14 @@
 'use strict';
 
-var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _Module = require('../module/module');
+var _moduleModule = require('../module/module');
 
-var _Service = require('./service');
+var _service = require('./service');
 
-var _sinon = require('../util/tests');
+var _utilTests = require('../util/tests');
 
 describe('@Service Annotation', function () {
 	it('should annotate a class', function () {
@@ -18,7 +18,7 @@ describe('@Service Annotation', function () {
 			}
 
 			var _MyService = MyService;
-			MyService = _Service.Service(MyService) || MyService;
+			MyService = (0, _service.Service)(MyService) || MyService;
 			return MyService;
 		})();
 
@@ -34,7 +34,7 @@ describe('@Service Annotation', function () {
 			}
 
 			var _BaseClass = BaseClass;
-			BaseClass = _Service.Service(BaseClass) || BaseClass;
+			BaseClass = (0, _service.Service)(BaseClass) || BaseClass;
 			return BaseClass;
 		})();
 
@@ -50,7 +50,7 @@ describe('@Service Annotation', function () {
 			_inherits(MyClass, _BaseClass2);
 
 			var _MyClass = MyClass;
-			MyClass = _Service.Service(MyClass) || MyClass;
+			MyClass = (0, _service.Service)(MyClass) || MyClass;
 			return MyClass;
 		})(BaseClass);
 
@@ -63,9 +63,9 @@ describe('@Service Annotation', function () {
 		    module = undefined;
 
 		beforeEach(function () {
-			parser = _Module.Module.getParser('service');
+			parser = _moduleModule.Module.getParser('service');
 			module = {
-				service: _sinon.sinon.spy()
+				service: _utilTests.sinon.spy()
 			};
 		});
 
@@ -80,7 +80,7 @@ describe('@Service Annotation', function () {
 				}
 
 				var _MyService2 = MyService;
-				MyService = _Service.Service(MyService) || MyService;
+				MyService = (0, _service.Service)(MyService) || MyService;
 				return MyService;
 			})();
 

@@ -1,16 +1,16 @@
 'use strict';
 
-var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _Inject = require('./inject');
+var _inject = require('./inject');
 
-var _chai = require('../util/tests');
+var _utilTests = require('../util/tests');
 
-var _chai2 = _interopRequireWildcard(_chai);
+var _utilTests2 = _interopRequireDefault(_utilTests);
 
 describe('@Inject annotation', function () {
 	it('should decorate a function with the $inject array', function () {
@@ -20,7 +20,7 @@ describe('@Inject annotation', function () {
 			}
 
 			var _MyClass = MyClass;
-			MyClass = _Inject.Inject('a', 'b', 'c')(MyClass) || MyClass;
+			MyClass = (0, _inject.Inject)('a', 'b', 'c')(MyClass) || MyClass;
 			return MyClass;
 		})();
 
@@ -34,7 +34,7 @@ describe('@Inject annotation', function () {
 			}
 
 			var _MyClass2 = MyClass;
-			MyClass = _Inject.Inject('a', 'b', 'c')(MyClass) || MyClass;
+			MyClass = (0, _inject.Inject)('a', 'b', 'c')(MyClass) || MyClass;
 			return MyClass;
 		})();
 
@@ -48,7 +48,7 @@ describe('@Inject annotation', function () {
 			}
 
 			var _MyClass3 = MyClass;
-			MyClass = _Inject.Inject('a', 'b', 'c')(MyClass) || MyClass;
+			MyClass = (0, _inject.Inject)('a', 'b', 'c')(MyClass) || MyClass;
 			return MyClass;
 		})();
 
@@ -64,7 +64,7 @@ describe('@Inject annotation', function () {
 			_inherits(SubClass, _MyClass4);
 
 			var _SubClass = SubClass;
-			SubClass = _Inject.Inject('d', 'e', 'f')(SubClass) || SubClass;
+			SubClass = (0, _inject.Inject)('d', 'e', 'f')(SubClass) || SubClass;
 			return SubClass;
 		})(MyClass);
 

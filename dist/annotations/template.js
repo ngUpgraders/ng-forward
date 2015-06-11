@@ -1,19 +1,19 @@
 'use strict';
 
-var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
-
 Object.defineProperty(exports, '__esModule', {
 	value: true
 });
 
-var _annotate = require('../util/annotate');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _annotate2 = _interopRequireWildcard(_annotate);
+var _utilAnnotate = require('../util/annotate');
+
+var _utilAnnotate2 = _interopRequireDefault(_utilAnnotate);
 
 var Template = function Template() {
 	var options = arguments[0] === undefined ? {} : arguments[0];
 	return function (t) {
-		_annotate2['default'](t, '$component');
+		(0, _utilAnnotate2['default'])(t, '$component');
 
 		if (t.$component.templateUrl) {
 			delete t.$component.templateUrl;

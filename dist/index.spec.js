@@ -1,45 +1,45 @@
 'use strict';
 
-var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _chai = require('./util/tests');
+var _utilTests = require('./util/tests');
 
-var _chai2 = _interopRequireWildcard(_chai);
+var _utilTests2 = _interopRequireDefault(_utilTests);
 
-var _Component$Controller$Decorator$Factory$Inject$Provider$Require$Service$Template$Transclude$Module = require('./index');
+var _index = require('./index');
 
 describe('Angular Decorators', function () {
 	it('should export Component', function () {
-		return _Component$Controller$Decorator$Factory$Inject$Provider$Require$Service$Template$Transclude$Module.Component.should.be.defined;
+		return _index.Component.should.be.defined;
 	});
 	it('should export Controller', function () {
-		return _Component$Controller$Decorator$Factory$Inject$Provider$Require$Service$Template$Transclude$Module.Controller.should.be.defined;
+		return _index.Controller.should.be.defined;
 	});
 	it('should export Decorator', function () {
-		return _Component$Controller$Decorator$Factory$Inject$Provider$Require$Service$Template$Transclude$Module.Decorator.should.be.defined;
+		return _index.Decorator.should.be.defined;
 	});
 	it('should export Factory', function () {
-		return _Component$Controller$Decorator$Factory$Inject$Provider$Require$Service$Template$Transclude$Module.Factory.should.be.defined;
+		return _index.Factory.should.be.defined;
 	});
 	it('should export Inject', function () {
-		return _Component$Controller$Decorator$Factory$Inject$Provider$Require$Service$Template$Transclude$Module.Inject.should.be.defined;
+		return _index.Inject.should.be.defined;
 	});
 	it('should export Provider', function () {
-		return _Component$Controller$Decorator$Factory$Inject$Provider$Require$Service$Template$Transclude$Module.Provider.should.be.defined;
+		return _index.Provider.should.be.defined;
 	});
 	it('should export Require', function () {
-		return _Component$Controller$Decorator$Factory$Inject$Provider$Require$Service$Template$Transclude$Module.Require.should.be.defined;
+		return _index.Require.should.be.defined;
 	});
 	it('should export Service', function () {
-		return _Component$Controller$Decorator$Factory$Inject$Provider$Require$Service$Template$Transclude$Module.Service.should.be.defined;
+		return _index.Service.should.be.defined;
 	});
 	it('should export Template', function () {
-		return _Component$Controller$Decorator$Factory$Inject$Provider$Require$Service$Template$Transclude$Module.Template.should.be.defined;
+		return _index.Template.should.be.defined;
 	});
 	it('should export Transclude', function () {
-		return _Component$Controller$Decorator$Factory$Inject$Provider$Require$Service$Template$Transclude$Module.Transclude.should.be.defined;
+		return _index.Transclude.should.be.defined;
 	});
 	it('should export Module', function () {
-		return _Component$Controller$Decorator$Factory$Inject$Provider$Require$Service$Template$Transclude$Module.Module.should.be.defined;
+		return _index.Module.should.be.defined;
 	});
 });
