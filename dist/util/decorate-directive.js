@@ -13,7 +13,7 @@ var _annotate = require('./annotate');
 
 var _annotate2 = _interopRequireDefault(_annotate);
 
-function decorateDirective(t, name, restrict, scope) {
+function decorateDirective(t, name, restrict, scope, controllerAs) {
 	(0, _annotate2['default'])(t, '$provider', {
 		name: name,
 		type: 'directive'
@@ -24,6 +24,10 @@ function decorateDirective(t, name, restrict, scope) {
 	if (scope) {
 		(0, _annotate2['default'])(t, '$component', { bindToController: true });
 		(0, _annotate2['default'])(t.$component, 'scope', scope);
+	}
+
+	if (controllerAs) {
+		(0, _annotate2['default'])(t.$component, 'controllerAs', controllerAs);
 	}
 }
 

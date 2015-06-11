@@ -54,6 +54,16 @@ describe('Directive decorator', function () {
 		Example.$component.should.have.property('bindToController', true);
 	});
 
+	it('should set controllerAs parameter if provided', function () {
+		var Example = function Example() {
+			_classCallCheck(this, Example);
+		};
+
+		(0, _decorateDirective.decorateDirective)(Example, 'test', 'E', {}, 'exampleController');
+
+		Example.$component.should.have.property('controllerAs', 'exampleController');
+	});
+
 	it('should merge binders if used on a subclass', function () {
 		var Example = function Example() {
 			_classCallCheck(this, Example);
@@ -146,7 +156,7 @@ describe('Directive decorator', function () {
 				return MyComponent;
 			})();
 
-			(0, _decorateDirective.decorateDirective)(MyComponent, 'myComponent', 'E', { 'myAttr': '=' });
+			(0, _decorateDirective.decorateDirective)(MyComponent, 'myComponent', 'E', { 'myAttr': '=' }, 'MyComponentController');
 
 			parser(MyComponent, module);
 
@@ -164,7 +174,7 @@ describe('Directive decorator', function () {
 				link: MyComponent.link,
 				controller: controller,
 				compile: MyComponent.compile,
-				controllerAs: 'MyComponent'
+				controllerAs: 'MyComponentController'
 			});
 		});
 
