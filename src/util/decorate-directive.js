@@ -1,7 +1,7 @@
 import {Module} from '../module/module';
 import annotate from './annotate';
 
-export function decorateDirective(t, name, restrict, scope){
+export function decorateDirective(t, name, restrict, scope, controllerAs){
 	annotate(t, '$provider', {
 		name,
 		type : 'directive'
@@ -12,6 +12,10 @@ export function decorateDirective(t, name, restrict, scope){
 	if(scope){
 		annotate(t, '$component', { bindToController : true });
 		annotate(t.$component, 'scope', scope);
+	}
+	
+	if(controllerAs) {
+		annotate(t.$component, 'controllerAs', controllerAs);
 	}
 }
 
