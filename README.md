@@ -78,13 +78,16 @@ MyService.$inject = ['$q', '$http'];
 
 ### Component
 
-The `@Component` annotation transforms a class into a directive, where the class becomes the directive's controller and the `controllerAs` property is the name of the class:
+The `@Component` annotation transforms a class into a directive, where the class becomes the directive's controller and the `controllerAs` property is the name of the class.
+
+You could also set the name of controller used for component template using `controllerAs` parameter. It could be very handy in case you wrap your Angular 1.x directives with `@Component` decorator and don't want to change every template.
 
 ```js
 let myModule = Module('my-component-module', []);
 
 @Component({ 
 	selector : 'my-component',
+	controllerAs : 'vm',
 	bind : { 'myAttrA' : '=', 'myAttrB' : '&' }
 })
 @Template({ url : '/path/to/template.html' })
@@ -124,7 +127,7 @@ angular.module('my-component-module', [
 	return {
 		restrict : 'E',
 		controller : MyComponentCtrl,
-		controllerAs : 'MyComponentCtrl',
+		controllerAs : 'vm',
 		templateUrl : '/path/to/template.html',
 		link: MyComponentCtrl.link,
 		scope : {
