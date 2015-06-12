@@ -3,8 +3,17 @@ import annotate from '../util/annotate';
 
 const type = 'service';
 
-export const Service = t => {
-	annotate(t, '$provider', { name : t.name, type })
+export const Service = maybeT => {
+	if(typeof maybeT === 'string')
+	{
+		return t => {
+			annotate(t, '$provider', { name : maybeT, type });
+		}
+	}
+	else
+	{
+		annotate(maybeT, '$provider', { name : maybeT.name, type });
+	}
 };
 
 Module.registerProvider(type, (provider, module) => {

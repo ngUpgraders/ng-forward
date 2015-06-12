@@ -23,6 +23,14 @@ describe('@Service Annotation', function(){
 		MyClass.$provider.name.should.equal('MyClass');
 	});
 
+	it('should let you specify a name for the service', function(){
+		@Service('Renamed')
+		class BaseClass{ }
+
+		BaseClass.$provider.name.should.eql('Renamed');
+		BaseClass.$provider.type.should.eql('service');
+	});
+
 	describe('Parser', function(){
 		let parser, module;
 
