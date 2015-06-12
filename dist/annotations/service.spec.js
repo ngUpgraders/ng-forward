@@ -58,6 +58,21 @@ describe('@Service Annotation', function () {
 		MyClass.$provider.name.should.equal('MyClass');
 	});
 
+	it('should let you specify a name for the service', function () {
+		var BaseClass = (function () {
+			function BaseClass() {
+				_classCallCheck(this, _BaseClass3);
+			}
+
+			var _BaseClass3 = BaseClass;
+			BaseClass = (0, _service.Service)('Renamed')(BaseClass) || BaseClass;
+			return BaseClass;
+		})();
+
+		BaseClass.$provider.name.should.eql('Renamed');
+		BaseClass.$provider.type.should.eql('service');
+	});
+
 	describe('Parser', function () {
 		var parser = undefined,
 		    module = undefined;
