@@ -1,4 +1,4 @@
-export function parseComponentSelector(selector){
+export default function(selector){
 	let selectorArray;
 	let type;
 

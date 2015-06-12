@@ -1,22 +1,22 @@
 import chai from './util/tests';
-import {
-	Component,
-	Controller,
-	Decorator,
-	Factory,
-	Inject,
-	Provider,
-	Require,
-	Service,
-	Template,
-	Transclude,
-	Module
-} from './index';
+// import {
+// 	Component,
+// 	Controller,
+// 	Directive,
+// 	Factory,
+// 	Inject,
+// 	Provider,
+// 	Require,
+// 	Service,
+// 	Template,
+// 	Transclude,
+// 	Module
+// } from './decorators';
 
-describe('Angular Decorators', function(){
+xdescribe('Angular Decorators', function(){
 	it('should export Component', () => Component.should.be.defined );
 	it('should export Controller', () => Controller.should.be.defined );
-	it('should export Decorator', () => Decorator.should.be.defined );
+	it('should export Directive', () => Directive.should.be.defined );
 	it('should export Factory', () => Factory.should.be.defined );
 	it('should export Inject', () => Inject.should.be.defined );
 	it('should export Provider', () => Provider.should.be.defined);

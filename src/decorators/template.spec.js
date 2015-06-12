@@ -1,7 +1,6 @@
-import {Template} from './template';
 import chai from '../util/tests';
 
-describe('@Template Annotation', function(){
+xdescribe('@Template Annotation', function(){
 	it('should add a template option to a component', function(){
 		@Template({ inline : 'test' })
 		class MyClass{ }
