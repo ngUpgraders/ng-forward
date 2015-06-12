@@ -31,9 +31,6 @@
     "sinon-chai": "^2.7.0"
   },
   "dependencies": {
-    "clone": "^1.0.2",
-    "extend": "^2.0.0",
-    "foreach": "^2.0.5",
-    "is-js": "^0.1.1"
+    "metawriter": "^1.0.0"
   }
 }
