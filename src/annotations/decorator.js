@@ -5,7 +5,7 @@ export const Decorator = options => t => {
 	if(! options.selector ) throw new Error('Must provide a selector');
 	let info = parseComponentSelector(options.selector);
 
-	decorateDirective(t, info.name, info.type, options.bind);
+	decorateDirective(t, info.name, info.type, options.bind, options.controllerAs);
 
 	if(info.type === 'E')
 	{

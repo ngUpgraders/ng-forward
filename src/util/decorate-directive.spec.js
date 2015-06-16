@@ -39,9 +39,9 @@ describe('Directive decorator', function(){
 	it('should set controllerAs parameter if provided', function(){
 		class Example{ }
 
-                decorateDirective(Example, 'test', 'E', { }, 'exampleController');
+		decorateDirective(Example, 'test', 'E', { }, 'exampleController');
 
-                Example.$component.should.have.property('controllerAs', 'exampleController');
+		Example.$component.should.have.property('controllerAs', 'exampleController');
 	});
 
 	it('should merge binders if used on a subclass', function(){
