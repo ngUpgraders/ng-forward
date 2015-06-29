@@ -1,6 +1,6 @@
 // import {Module} from '../module/module';
 // import {Service} from './service';
-import {sinon} from '../util/tests';
+import {sinon} from '../../util/tests';
 
 xdescribe('@Service Annotation', function(){
 	it('should annotate a class', function(){

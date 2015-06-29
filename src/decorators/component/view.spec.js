@@ -1,4 +1,4 @@
-import chai from '../util/tests';
+import chai from '../../util/tests';
 
 xdescribe('@Template Annotation', function(){
 	it('should add a template option to a component', function(){
