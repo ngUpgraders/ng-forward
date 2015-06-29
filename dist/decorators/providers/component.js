@@ -20,7 +20,7 @@ var _utilDecorateDirective2 = _interopRequireDefault(_utilDecorateDirective);
 
 var _writers = require('../../writers');
 
-var TYPE = 'component';
+var TYPE = 'directive';
 
 var Component = function Component(config) {
 	return function (t) {
@@ -41,6 +41,7 @@ var Component = function Component(config) {
 		_writers.providerWriter.set('type', TYPE, t);
 
 		// Sensible defaults for components
+		_writers.componentWriter.set('restrict', type, t);
 		_writers.componentWriter.set('scope', {}, t);
 		_writers.componentWriter.set('bindToController', true, t);
 

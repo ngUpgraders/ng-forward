@@ -16,6 +16,8 @@ var _utilParseSelector2 = _interopRequireDefault(_utilParseSelector);
 
 var _writers = require('../../writers');
 
+var TYPE = 'directive';
+
 var Directive = function Directive(config) {
 	return function (t) {
 		if (!config.selector) {
@@ -28,7 +30,7 @@ var Directive = function Directive(config) {
 		var type = _parseSelector.type;
 
 		if (type === 'E') {
-			throw new Error('Directives cannot be elements. Perhaps you meant Component?');
+			throw new Error('Directives cannot be elements. Perhaps you meant to use @Component?');
 		}
 
 		_writers.providerWriter.set('name', name, t);
@@ -36,6 +38,7 @@ var Directive = function Directive(config) {
 
 		// Sensible defaults for attribute directives
 		_writers.componentWriter.set('scope', false, t);
+		_writers.componentWriter.set('restrict', type);
 
 		(0, _utilDecorateDirective2['default'])(config, t);
 	};

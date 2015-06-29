@@ -2,6 +2,8 @@ import decorateDirective from '../../util/decorate-directive';
 import parseSelector from '../../util/parse-selector';
 import {providerWriter, componentWriter} from '../../writers';
 
+const TYPE = 'directive';
+
 export const Directive = config => t => {
 	if(! config.selector )
 	{
@@ -12,7 +14,7 @@ export const Directive = config => t => {
 
 	if(type === 'E')
 	{
-		throw new Error('Directives cannot be elements. Perhaps you meant Component?');
+		throw new Error('Directives cannot be elements. Perhaps you meant to use @Component?');
 	}
 
 	providerWriter.set('name', name, t);
@@ -20,6 +22,7 @@ export const Directive = config => t => {
 
 	// Sensible defaults for attribute directives
 	componentWriter.set('scope', false, t);
+	componentWriter.set('restrict', type, )
 
 	decorateDirective(config, t);	
 }
