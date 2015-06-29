@@ -3,7 +3,7 @@ import parseSelector from '../../util/parse-selector';
 import decorateDirective from '../../util/decorate-directive';
 import {providerWriter, componentWriter} from '../../writers';
 
-const TYPE = 'component';
+const TYPE = 'directive';
 
 export const Component = config => t => {
 	if(! config.selector)
@@ -22,6 +22,7 @@ export const Component = config => t => {
 	providerWriter.set('type', TYPE, t);
 
 	// Sensible defaults for components
+	componentWriter.set('restrict', type, t);
 	componentWriter.set('scope', {}, t);
 	componentWriter.set('bindToController', true, t);
 
