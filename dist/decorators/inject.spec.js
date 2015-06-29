@@ -8,13 +8,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var _inject = require('./inject');
 
-// import {hasMeta, getMeta} from '../util/metadata';
+var _writers = require('../writers');
 
 var _utilTests = require('../util/tests');
 
 var _utilTests2 = _interopRequireDefault(_utilTests);
 
-xdescribe('@Inject annotation', function () {
+describe('@Inject annotation', function () {
 	it('should decorate a function with the $inject array', function () {
 		var MyClass = (function () {
 			function MyClass() {
@@ -26,7 +26,7 @@ xdescribe('@Inject annotation', function () {
 			return MyClass;
 		})();
 
-		hasMeta('$inject', MyClass).should.be.ok;
+		_writers.baseWriter.has('$inject', MyClass).should.be.ok;
 	});
 
 	it('should add injected dependencies to the $inject array', function () {
@@ -40,7 +40,7 @@ xdescribe('@Inject annotation', function () {
 			return MyClass;
 		})();
 
-		getMeta('$inject', MyClass).should.eql(['a', 'b', 'c']);
+		_writers.baseWriter.get('$inject', MyClass).should.eql(['a', 'b', 'c']);
 	});
 
 	it('should adhere to inheritance', function () {
@@ -70,7 +70,7 @@ xdescribe('@Inject annotation', function () {
 			return SubClass;
 		})(MyClass);
 
-		getMeta('$inject', MyClass).should.eql(['a', 'b', 'c']);
-		getMeta('$inject', SubClass).should.eql(['a', 'b', 'c', 'd', 'e', 'f']);
+		_writers.baseWriter.get('$inject', MyClass).should.eql(['a', 'b', 'c']);
+		_writers.baseWriter.get('$inject', SubClass).should.eql(['d', 'e', 'f', 'a', 'b', 'c']);
 	});
 });

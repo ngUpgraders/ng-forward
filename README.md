@@ -1,12 +1,14 @@
 # angular-decorators [![Build Status](https://travis-ci.org/MikeRyan52/angular-decorators.svg?branch=master)](https://travis-ci.org/MikeRyan52/angular-decorators)
 
-Angular 2, due to be released this year, offers a drastically different API for creating applications in comparison to Angular 1.x. angular-decorators provides annotations and utilities that allow you to write AngularJS 1.x apps in a similar way to this new API. By taking advantage of these annotations and utilities, porting your existing AngularJS 1.x apps to Angular 2 will be a quicker, less painful process.
+Angular 2, due to be released this year, offers a drastically different API for creating applications in comparison to Angular 1.x. angular-decorators provides decorators and utilities that allow you to write AngularJS 1.x apps in a similar way to this new API. By taking advantage of these decorators and utilities, porting your existing AngularJS 1.x apps to Angular 2 will be a quicker, less painful process.
 
 ## Modules
 
-The standard `angular.module` does not understand the meta data attached to your classes or functions from this library's annotations. As such, you must use the provided Module class to create Angular modules. Using it is very similar to `angular.module`:
+The standard `angular.module` does not understand the metadata attached to your classes or functions from this library's decorators. You must use the provided Module class to create Angular modules. Using it is very similar to `angular.module`:
 
 ```js
+import {Module} from 'angular-decorators';
+
 // Create a new module:
 let myModule = Module('my-module', ['ui.bootrap', 'ui.router']);
 
@@ -14,119 +16,159 @@ let myModule = Module('my-module', ['ui.bootrap', 'ui.router']);
 let otherModule = Module('my-module');
 ```
 
-Registering an annotated component is easy:
+### Adding Decorated Classes
 
 ```js
-myModule.add(AnnotatedClass);
+import {Service, Module} from 'angular-decorators';
+
+@Service('MyService')
+class MyService{ }
+
+Module('my-module', []).add(MyService);
 ```
 
-If you need to directly access the generated `angular.module`, just use the publish method:
+### Accessing Internal AngularJS Module
 
 ```js
 let angularModule = myModule.add(AnnotatedClass).publish();
 ```
 
-Note: You do not need to publish a module to add it as a dependency to another module:
+### Module Dependencies
+
+You do not need to publish a module to add it as a dependency to another module:
 
 ```js
 let myModule = Module('my-module', []);
 let otherModule = Module('other-module', [ myModule ]);
 ```
 
-This works for traditional AngularJS modules and vice versa:
+This works for traditional AngularJS modules:
 ```js
 let otherModule = angular.module('other-module', []);
 let myModule = Module('my-module', [ otherModule ]);
 let lastModule = angular.module('last-module', [ myModule.name ]);
 ```
 
-## Annotations
+## decorators
 
-The annotations provided in this package follow [this proposal](https://github.com/jonathandturner/brainstorming/blob/master/README.md). They work by adding meta information to your classes and functions under the `$component` and `$provider` namespaces. 
+The decorators provided in this package follow [this proposal](https://github.com/jonathandturner/brainstorming/blob/master/README.md). They work by adding metadata to your classes and functions under the `$ng-decs` namespace. 
 
 ### Inject
 
-The `@Inject` annotation provides a shorthand for adding the `$inject` property to your classes and functions. This is really convenient for classes as you can specify your injected dependencies on the constructor:
+The `@Inject` decorator let's you specify dependencies to Angular's dependency injector:
 
 ```js
+@Inject('$q', '$http')
 class MyService{
-	@Inject('$q', '$http')
 	constructor($q, $http){
 
 	}
 }
 ```
 
-becomes:
+When used with inheritance, child dependencies are placed before parent dependencies letting you easily capture parent dependencies using a rest parameter:
 
 ```js
-function MyService($q, $http){
-	
+@Inject('$q', '$http')
+class Parent{
+	constructor($q, $http){
+
+	}
 }
 
-MyService.$inject = ['$q', '$http'];
-
+@Inject('$timeout')
+class Child extends Parent{
+	constructor($timeout, ...parentDependencies){
+		super(...parentDependencies);
+	}
+}
 ```
 
 ### Component
 
-The `@Component` annotation transforms a class into a directive, where the class becomes the directive's controller and the `controllerAs` property is the name of the class:
+The `@Component` decorator let's you easily create components in AngularJS by wrapping the directive API and setting you up with sensible defaults:
 
 ```js
-let myModule = Module('my-component-module', []);
+import {Component, Module} from 'angular-decorators';
 
-@Component({ 
-	selector : 'my-component',
-	bind : { 'myAttrA' : '=', 'myAttrB' : '&' }
-})
-@Template({ url : '/path/to/template.html' })
-@Require('requiredComponent')
-@Inject('$element', '$attrs')
+@Component({ selector : 'my-component' })
 class MyComponentCtrl{
-	constructor($element, $attrs){
-
-	}
-
-	static link(scope, element, attrs, requiredComponent){
-
-	}
+	constructor(){ }
 }
 
-myModule.add(MyComponentCtrl);
+Module('my-component-module', []).add(MyComponentCtrl);
 ```
 
 Becomes:
 
 ```js
-function MyComponentCtrl($element, $attrs){
-	
-}
-
-MyComponentCtrl.$inject = ['$element', '$attrs'];
-
-MyComponentCtrl.link = function(scope, element, attrs, requiredComponent){
-
-}
-
-angular.module('my-component-module', [
-
-])
+angular.module('my-component-module', [ ])
 
 .directive('myComponent', function(){
 	return {
 		restrict : 'E',
-		controller : MyComponentCtrl,
-		controllerAs : 'MyComponentCtrl',
-		templateUrl : '/path/to/template.html',
-		link: MyComponentCtrl.link,
-		scope : {
-			'myAttrA' : '=',
-			'myAttrB' : '&'
-		},
+		controller : function MyComponentCtrl{ },
+		controllerAs : 'myComponent',
+		scope : { },
 		bindToController: true
 	};
 });
 ```
+
+#### Binding Element Attributes to the Controller
+
+Supply an array to properties key of your config object using Angular 2 property syntax:
+
+```js
+@Component({
+	selector: 'my-component',
+	properties: [
+		'myProp: =renamedProp',
+		'@anotherAttribute'
+	]
+})
+class MyComponentCtrl
+```
+
+This becomes:
+
+```js
+.directive('myComponent', function(){
+	return {
+		restrict: 'E',
+		controller: function MyComponentCtrl{ },
+		controllerAs: 'myComponent',
+		scope: {},
+		bindToController: {
+			'myProp' : '=renamedProp',
+			'anotherAttribute' : '@'
+		}
+	}
+})
+```
+
+#### Renaming `controllerAs`
+
+By default, the `controllerAs` property is set to a camel-cased version of your selector (i.e. `my-own-component`'s `controllerAs` would be `myOwnComponent`'). Changing it is easy:
+
+```js
+@Component({
+	selector: 'my-component',
+	controllerAs: 'vm'
+})
+```
+
+#### Changing Scope
+
+By default, isolate scopes are created for each component. It is strongly recommended that you structure your components to always create isolate scopes, but if you need to change this it can be specified in the component config object:
+
+```js
+@Component({
+	selector: 'my-component',
+	scope: false
+})
+```
+
 
 ##### Component Inheritance
 One major benefit of structuring your components this way is that it now becomes much easier to extend components:
@@ -160,7 +202,7 @@ Then in your HTML:
 
 Output: `Kermit the Frog`
 
-##### About the Require Annotation
+##### About the Require decorator
 In AngularJS, when your directive requires multiple other directive controllers they are passed to your link function as an array:
 
 ```js
@@ -175,7 +217,7 @@ myModule.directive('myComponent', function(){
 });
 ```
 
-As a convenience, when you use the `@Require` annotation your class is decorated with an `unpackRequires` method to make it easy to reference your required components:
+As a convenience, when you use the `@Require` decorator your class is decorated with an `unpackRequires` method to make it easy to reference your required components:
 
 ```js
 @Component({ selector : 'my-component' })
@@ -188,7 +230,7 @@ class MyComponent{
 ```
 
 ### Decorator
-The `@Decorator` annotation is identical to the `@Component` annotation, except you use `@Decorator` for directives that you want to restrict to a class or attribute:
+The `@Decorator` decorator is identical to the `@Component` decorator, except you use `@Decorator` for directives that you want to restrict to a class or attribute:
 
 ```js
 @Decorator({ selector : '[my-attr]' })
@@ -208,7 +250,7 @@ class MyClassCtrl{
 
 
 ### Service
-The `@Service` annotation simply turns your class/function into a service:
+The `@Service` decorator simply turns your class/function into a service:
 
 ```js
 let myServiceModule = new Module('my-service');
@@ -237,7 +279,7 @@ var myServiceModule = angular.module('my-service', [
 ```
 
 ### Factory
-The factory annotation is a complex annotation that assumes:
+The factory decorator is a complex decorator that assumes:
 
 1. You have a class that requires parameters on instantiation
 2. The parameters differ from injected AngularJS services
@@ -293,10 +335,10 @@ class Comment{
 
 ## Adding Your Own Providers
 
-Adding your own providers through annotations is very easy. To demonstrate, let's create a `@Route` annotation that lets you setup router configuration for Anguar 1.4's new router:
+Adding your own providers through decorators is very easy. To demonstrate, let's create a `@Route` decorator that lets you setup router configuration for Anguar 1.4's new router:
 
 ```js
-// First we setup the Router annotation function:
+// First we setup the Router decorator function:
 export function Route(config){
 	return function(target){
 		target.$routeConfig = config;
@@ -322,7 +364,7 @@ Module.registerProvider('routeController', (provider, module) => {
 	]);
 });
 
-// Now we can use our Router annotation:
+// Now we can use our Router decorator:
 @Route({ path : '/', component : 'home' })
 @Inject('$q')
 class HomeController{

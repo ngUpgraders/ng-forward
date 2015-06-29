@@ -77,19 +77,6 @@ var DecoratedModule = (function () {
 			return this._module;
 		}
 	}, {
-		key: 'config',
-		value: function config() {
-			var _module2;
-
-			for (var _len2 = arguments.length, params = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-				params[_key2] = arguments[_key2];
-			}
-
-			(_module2 = this._module).config.apply(_module2, params);
-
-			return this;
-		}
-	}, {
 		key: 'moduleList',
 		value: function moduleList(modules) {
 			this._dependencies = [];
@@ -106,14 +93,28 @@ var DecoratedModule = (function () {
 				}
 			}
 		}
+	}, {
+		key: 'config',
+		value: function config(configFunc) {
+			this._module.config(configFunc);
+
+			return this;
+		}
+	}, {
+		key: 'run',
+		value: function run(runFunc) {
+			this._module.run(runFunc);
+
+			return this;
+		}
 	}]);
 
 	return DecoratedModule;
 })();
 
 function Module() {
-	for (var _len3 = arguments.length, params = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-		params[_key3] = arguments[_key3];
+	for (var _len2 = arguments.length, params = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+		params[_key2] = arguments[_key2];
 	}
 
 	return new (_bind.apply(DecoratedModule, [null].concat(params)))();

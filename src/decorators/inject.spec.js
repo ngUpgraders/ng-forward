@@ -1,20 +1,20 @@
 import {Inject} from './inject';
-// import {hasMeta, getMeta} from '../util/metadata';
+import {baseWriter} from '../writers';
 import chai from '../util/tests';
 
-xdescribe('@Inject annotation', function(){
+describe('@Inject annotation', function(){
 	it('should decorate a function with the $inject array', function(){
 		@Inject('a', 'b', 'c')
 		class MyClass{ }
 
-		hasMeta('$inject', MyClass).should.be.ok;
+		baseWriter.has('$inject', MyClass).should.be.ok;
 	});
 
 	it('should add injected dependencies to the $inject array', function(){
 		@Inject('a', 'b', 'c')
 		class MyClass{ }
 
-		getMeta('$inject', MyClass).should.eql(['a', 'b', 'c']);
+		baseWriter.get('$inject', MyClass).should.eql(['a', 'b', 'c']);
 	});
 
 	it('should adhere to inheritance', function(){
@@ -24,7 +24,7 @@ xdescribe('@Inject annotation', function(){
 		@Inject('d', 'e', 'f')
 		class SubClass extends MyClass{ }
 
-		getMeta('$inject', MyClass).should.eql(['a', 'b', 'c']);
-		getMeta('$inject', SubClass).should.eql(['a', 'b', 'c', 'd', 'e', 'f']);
+		baseWriter.get('$inject', MyClass).should.eql(['a', 'b', 'c']);
+		baseWriter.get('$inject', SubClass).should.eql(['d', 'e', 'f', 'a', 'b', 'c']);
 	});
 });

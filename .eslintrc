@@ -1,0 +1,21 @@
+{
+	"parser" : "babel-eslint",
+	"rules" : {
+		"strict" : 0,
+		"quotes" : [1, "single"],
+		"new-cap" : 0,
+		"eol-last" : 0,
+		"no-shadow" : 0,
+		"no-trailing-spaces" : 0,
+		"no-underscore-dangle" : 0,
+		"no-unused-vars" : [2, {
+			"args" : "none"
+		}]
+	},
+	"globals" : {
+		"window" : false,
+		"mina" : false,
+		"protractor" : false,
+		"require" : false
+	}
+}
