@@ -1,5 +1,5 @@
 // import {Component} from './component';
-import chai from '../util/tests';
+import chai from '../../util/tests';
 
 xdescribe('@Component annotation', function(){
 	it('should decorate a class with the $provider and $component metadata', function(){

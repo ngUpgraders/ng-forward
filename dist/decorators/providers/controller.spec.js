@@ -4,7 +4,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _utilTests = require('../util/tests');
+var _utilTests = require('../../util/tests');
 
 // import {Controller} from './controller';
 // import {Module} from '../module/module';

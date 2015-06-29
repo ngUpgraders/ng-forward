@@ -5,7 +5,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _utilTests = require('../util/tests');
+var _utilTests = require('../../util/tests');
 
 var _utilTests2 = _interopRequireDefault(_utilTests);
 

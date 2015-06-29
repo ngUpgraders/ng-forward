@@ -6,20 +6,40 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-var _decorators = require('./decorators');
-
-var decorators = _interopRequireWildcard(_decorators);
-
 var _module2 = require('./module');
 
 var _module3 = _interopRequireDefault(_module2);
 
-var _utilDecorate = require('./util/decorate');
+var _decoratorsInject = require('./decorators/inject');
 
-var _utilDecorate2 = _interopRequireDefault(_utilDecorate);
+var _decoratorsProvidersComponent = require('./decorators/providers/component');
 
-exports.decorators = decorators;
-exports.decorate = _utilDecorate2['default'];
-exports.module = _module3['default'];
+var _decoratorsProvidersController = require('./decorators/providers/controller');
+
+var _decoratorsProvidersDirective = require('./decorators/providers/directive');
+
+var _decoratorsProvidersFactory = require('./decorators/providers/factory');
+
+var _decoratorsProvidersProvider = require('./decorators/providers/provider');
+
+var _decoratorsProvidersService = require('./decorators/providers/service');
+
+var _decoratorsProvidersFilter = require('./decorators/providers/filter');
+
+var _decoratorsComponentRequire = require('./decorators/component/require');
+
+var _decoratorsComponentView = require('./decorators/component/view');
+
+var _decoratorsComponentTransclude = require('./decorators/component/transclude');
+
+exports.Module = _module3['default'];
+exports.Component = _decoratorsProvidersComponent.Component;
+exports.Controller = _decoratorsProvidersController.Controller;
+exports.Directive = _decoratorsProvidersDirective.Directive;
+exports.Filter = _decoratorsProvidersFilter.Filter;
+exports.Provider = _decoratorsProvidersProvider.Provider;
+exports.Factory = _decoratorsProvidersFactory.Factory;
+exports.Service = _decoratorsProvidersService.Service;
+exports.Require = _decoratorsComponentRequire.Require;
+exports.View = _decoratorsComponentView.View;
+exports.Transclude = _decoratorsComponentTransclude.Transclude;

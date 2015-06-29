@@ -1,4 +1,4 @@
-import {sinon} from '../util/tests';
+import {sinon} from '../../util/tests';
 // import {Controller} from './controller';
 // import {Module} from '../module/module';
 // import {hasMeta, getMeta} from '../util/metadata';
