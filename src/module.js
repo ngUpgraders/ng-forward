@@ -38,12 +38,6 @@ class DecoratedModule{
 		return this._module;
 	}
 
-	config(...params){
-		this._module.config(...params);
-
-		return this;
-	}
-
 	moduleList(modules){
 		this._dependencies = [];
 
@@ -64,6 +58,18 @@ class DecoratedModule{
 				}
 			}
 		}
+	}
+
+	config(configFunc){
+		this._module.config(configFunc);
+
+		return this;
+	}
+
+	run(runFunc){
+		this._module.run(runFunc);
+
+		return this;
 	}
 }
 
