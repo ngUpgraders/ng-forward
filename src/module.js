@@ -1,3 +1,5 @@
+import {baseWriter, providerWriter} from './writers';
+
 let _parsers = {};
 
 class DecoratedModule{
@@ -16,20 +18,22 @@ class DecoratedModule{
 	}
 
 	add(...providers){
-		for(let i = 0; i < providers.length; i++)
+		for(let provider of providers)
 		{
-			let parser = _parsers[providers[i].$provider.type];
+			if( !providerWriter.has('type', provider) ){
+				throw new Error(`Cannot read provider metadata. Are you adding a class that hasn't been decorated yet?`);
+			}
 
-			parser(providers[i], this._module);
+			let type = providerWriter.get('type', provider);
+			let name = providerWriter.get('name', provider);
+			let inject = baseWriter.get('$inject', provider) || [];
+
+			_parsers[type](provider, name, inject, this._module);
 		}
 
 		return this;
 	}
-
-	bootstrap(){
-		if(! this.bundled ) this.bundle();
-	}
-
+	
 	publish(){
 		return this._module;
 	}
@@ -55,6 +59,18 @@ class DecoratedModule{
 			}
 		}
 	}
+
+	config(configFunc){
+		this._module.config(configFunc);
+
+		return this;
+	}
+
+	run(runFunc){
+		this._module.run(runFunc);
+
+		return this;
+	}
 }
 
 function Module(...params){
@@ -66,7 +82,7 @@ Module.registerProvider = function(providerType, parser){
 }
 
 Module.getParser = function(providerType){
-	return _parsers[providerType];
+	return _parsers[providerType]
 }
 
-export {Module};
+export default Module;
