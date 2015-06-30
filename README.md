@@ -108,7 +108,6 @@ The `@Component` decorator let's you easily create components in AngularJS by wr
 import {Component, Module} from 'angular-decorators';
 
 @Component({ selector : 'my-component' })
->>>>>>> feature/version-1
 class MyComponentCtrl{
 	constructor(){ }
 }
