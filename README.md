@@ -2,13 +2,15 @@
 
 angular-decorators is a library of ES7 decorators for writing Angular 2 style code in AngularJS.
 
-## Installation via npm
+#### Installation via npm
 
 `npm install angular-decorators --save-dev`
 
-## Installation via jspm
+#### Installation via jspm
 
 `jspm install angular-decorators`
+
+_[Looking for the 0.1x docs?](https://github.com/MikeRyan52/angular-decorators/blob/v0.1.x/README.md)_
 
 ## Modules
 
@@ -112,7 +114,7 @@ The `@Component` decorator let's you easily create components in AngularJS by wr
 import {Component, Module} from 'angular-decorators';
 
 <<<<<<< HEAD
-@Component({ 
+@Component({
 	selector : 'my-component',
 	controllerAs : 'vm',
 	bind : { 'myAttrA' : '=', 'myAttrB' : '&' }
@@ -375,11 +377,11 @@ export function Route(config){
 import {Module} from 'angular-decorators';
 
 Module.registerProvider('routeController', (provider, module) => {
-	// Provider parsers accept the anotated provider class/function 
+	// Provider parsers accept the anotated provider class/function
 	// and the target angular module
 
-	module.controller(provider.$provider.name, 
-		['$router', ...provider.$inject, 
+	module.controller(provider.$provider.name,
+		['$router', ...provider.$inject,
 		function($router, ...dependencies){
 			return new provider(...dependencies);
 		}
