@@ -3,46 +3,67 @@
 Object.defineProperty(exports, '__esModule', {
 	value: true
 });
-exports.decorateDirective = decorateDirective;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _moduleModule = require('../module/module');
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
 
-var _annotate = require('./annotate');
+var _module2 = require('../module');
 
-var _annotate2 = _interopRequireDefault(_annotate);
+var _module3 = _interopRequireDefault(_module2);
 
-function decorateDirective(t, name, restrict, scope, controllerAs) {
-	(0, _annotate2['default'])(t, '$provider', {
-		name: name,
-		type: 'directive'
-	});
+var _writers = require('../writers');
 
-	(0, _annotate2['default'])(t, '$component', { restrict: restrict });
+var _parseProperties = require('./parse-properties');
 
-	if (scope) {
-		(0, _annotate2['default'])(t, '$component', { bindToController: true });
-		(0, _annotate2['default'])(t.$component, 'scope', scope);
+var _parseProperties2 = _interopRequireDefault(_parseProperties);
+
+exports['default'] = function (config, t) {
+	// Support for legacy angular-decorators bind config
+	if (config.bind) {
+		_writers.componentWriter.set('scope', config.bind, t);
+		_writers.componentWriter.set('bindToController', true, t);
 	}
 
-	if (controllerAs) {
-		(0, _annotate2['default'])(t.$component, 'controllerAs', controllerAs);
+	// Check for scope
+	if (config.scope) {
+		_writers.componentWriter.set('scope', config.scope, t);
 	}
-}
 
-_moduleModule.Module.registerProvider('directive', function (provider, module) {
-	var name = provider.$provider.name;
-	var controller = provider;
-	var component = controller.$component;
-	delete controller.$component;
+	// Check for Angular 2 style properties
+	if (config.properties && Array.isArray(config.properties)) {
+		_writers.componentWriter.set('bindToController', (0, _parseProperties2['default'])(config.properties), t);
+	} else if (config.properties !== undefined) {
+		throw new TypeError('Component properties must be an array');
+	}
 
-	component.controllerAs = component.controllerAs || controller.name;
-	component.controller = controller;
-	component.link = provider.link;
-	component.compile = provider.compile;
+	// Allow for renaming the controllerAs
+	if (config.controllerAs) {
+		_writers.componentWriter.set('controllerAs', config.controllerAs, t);
+	}
 
-	module.directive(name, function () {
-		return component;
+	// Set a link function
+	if (t.link) {
+		_writers.componentWriter.set('link', t.link, t);
+	}
+
+	// Set a controller function
+	if (t.compile) {
+		_writers.componentWriter.set('compile', t.compile, t);
+	}
+};
+
+_module3['default'].registerProvider('directive', function (target, name, injects, ngModule) {
+	var ddo = {};
+
+	_writers.componentWriter.forEach(function (val, key) {
+		ddo[key] = val;
+	}, target);
+
+	ddo.controller = [].concat(_toConsumableArray(injects), [target]);
+
+	ngModule.directive(name, function () {
+		return ddo;
 	});
 });
+module.exports = exports['default'];

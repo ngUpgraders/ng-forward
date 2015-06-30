@@ -1,142 +1,121 @@
-import {decorateDirective} from './decorate-directive';
-import {Module} from '../module/module';
-import {sinon} from './tests'
+import decorateDirective from './decorate-directive';
+import Module from '../module';
+import {componentWriter} from '../writers';
+import {sinon} from './tests';
 
-const Decorate = (name, type, binder) => t => {
-	decorateDirective(t, name, type, binder);
-}
+describe('Directive Decorator', function(){
+	class Example{ }
 
-describe('Directive decorator', function(){
-	it('should decorate a target with the given name and type', function(){
-		class Example{ }
+	it('should let you bind attributes to the controller using a simple map', function(){
+		decorateDirective({ bind : {
+			'someProp' : '@'
+		}}, Example);
 
-		decorateDirective(Example, 'test', 'E');
-
-		Example.should.have.property('$component');
-		Example.should.have.property('$provider');
-		Example.$provider.name.should.equal('test');
-		Example.$provider.type.should.equal('directive');
-		Example.$component.restrict.should.equal('E');
+		componentWriter.get('scope', Example).should.eql({ someProp : '@' });
+		componentWriter.get('bindToController', Example).should.be.ok;
 	});
 
-	it('should attach a scope binding expression if a binder is provided', function(){
-		class Example{ }
+	it('should manually let you configure the scope', function(){
+		decorateDirective({
+			scope : true
+		}, Example);
 
-		decorateDirective(Example, 'test', 'E', { 'myAttr' : '=' });
-
-		Example.$component.should.have.property('scope');
-		Example.$component.scope.should.have.property('myAttr', '=');
+		componentWriter.get('scope', Example).should.be.ok;
 	});
 
-	it('should set bindToController:true; if a binder is provided', function(){
-		class Example{ }
+	it('should let you bind attributes to the controller using a properties array like Angular 2', function(){
+		decorateDirective({
+			properties: [
+				'someProp: @',
+				'anotherProp: ='
+			]
+		}, Example);
 
-		decorateDirective(Example, 'test', 'E', { 'myAttr' : '=' });
-
-		Example.$component.should.have.property('bindToController', true);
-	});
-
-	it('should set controllerAs parameter if provided', function(){
-		class Example{ }
-
-		decorateDirective(Example, 'test', 'E', { }, 'exampleController');
-
-		Example.$component.should.have.property('controllerAs', 'exampleController');
-	});
-
-	it('should merge binders if used on a subclass', function(){
-		class Example{ }
-		decorateDirective(Example, 'test', 'E', { 'myAttr' : '=' });
-
-		class NewExample extends Example{ }
-		decorateDirective(NewExample, 'test', 'A', { 'newAttr' : '&' });
-
-		Example.$component.scope.should.eql({
-			myAttr : '='
-		});
-
-		NewExample.$component.scope.should.eql({
-			myAttr : '=',
-			newAttr : '&'
+		componentWriter.get('bindToController', Example).should.eql({
+			'someProp' : '@',
+			'anotherProp' : '='
 		});
 	});
 
-	it('should respect inheritance', function(){
-		@Decorate('baseComponent', 'E')
-		class BaseComponent{ }
+	it('should throw an error if you do not pass an array to the properties field', function(){
+		let dec = (val) => () => decorateDirective({
+			properties : val
+		}, Example);
 
-		@Decorate('newComponent', 'E')
-		class NewComponent extends BaseComponent{ }
-
-		BaseComponent.$provider.name.should.equal('baseComponent');
+		dec('string').should.throw(TypeError);
+		dec({}).should.throw(TypeError);
+		dec(false).should.throw(TypeError);
+		dec(null).should.throw(TypeError);
+		dec(undefined).should.not.throw(TypeError);
 	});
 
-	describe('parser', function(){
-		it('should be registered with Module', function(){
-			let parser = Module.getParser('directive');
+	it('should set the controllerAs field if provided', function(){
+		decorateDirective({ controllerAs : 'hi' }, Example);
 
+		componentWriter.get('controllerAs', Example).should.eql('hi');
+	});
+
+	afterEach(function(){
+		componentWriter.clear(Example);
+	});
+
+	describe('Directive Parser', function(){
+		let parser, ngModule;
+
+		beforeEach(function(){
+			parser = Module.getParser('directive');
+			ngModule = { directive : sinon.spy() };
+		});
+
+		it('should be defined', function(){
 			parser.should.be.defined;
 		});
-		
-		it('should register a directive on a module', function(){
-			let parser = Module.getParser('directive');
-			let module = {
-				directive : sinon.spy()
-			};
 
-			class MyComponent{
-				static link(){
+		it('should correctly generate a simple DDO', function(){
+			class Test{ }
+			decorateDirective({}, Test);
 
-				}
+			parser(Test, 'testSelector', [], ngModule);
 
-				static compile(){
+			let [name, factory] = ngModule.directive.args[0];
 
-				}
-			}
-			decorateDirective(MyComponent, 'myComponent', 'E', { 'myAttr' : '=' }, 'MyComponentController');
-
-			parser(MyComponent, module);
-
-			let name = module.directive.args[0][0];
-			let provider = module.directive.args[0][1];
-			let directive = provider();
-			let controller = directive.controller;
-			delete controller.$component;
-
-			name.should.equal('myComponent');
-			directive.should.eql({
-				restrict : 'E',
-				bindToController : true,
-				scope : { 'myAttr' : '=' },
-				link : MyComponent.link,
-				controller : controller,
-				compile : MyComponent.compile,
-				controllerAs: 'MyComponentController'
+			name.should.eql('testSelector');
+			(typeof factory).should.eql('function');
+			factory().should.eql({
+				controller : [Test]
 			});
 		});
 
-		it('should allow for a static link function on the class', function(){
-			let parser = Module.getParser('directive');
-			let module = {
-				directive : sinon.spy()
-			};
-			let testLink = false;
-
-			class MyComponent{
-				static link(){
-					testLink = true;
-				}
+		it('should generate a complex DDO', function(){
+			class AnotherTest{
+				static link(){ }
+				static compile(){ }
 			}
 
-			decorateDirective(MyComponent, 'myComponent', 'E', {  });
-			parser(MyComponent, module);
+			decorateDirective({
+				scope: true,
+				properties: [
+					'attr: @',
+					'prop : ='
+				],
+				controllerAs: 'asdf'
+			}, AnotherTest);
 
+			parser(AnotherTest, 'testSelector', ['$q', '$timeout'], ngModule);
 
-			let directive = module.directive.args[0][1]();
+			let [name, factory] = ngModule.directive.args[0];
 
-			directive.link();
-
-			testLink.should.be.ok;
+			factory().should.eql({
+				scope: true,
+				bindToController: {
+					attr : '@',
+					prop : '='
+				},
+				controllerAs: 'asdf',
+				controller: ['$q', '$timeout', AnotherTest],
+				link: AnotherTest.link,
+				compile: AnotherTest.compile
+			});
 		});
 	});
 });

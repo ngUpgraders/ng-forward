@@ -2,150 +2,124 @@
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _slicedToArray(arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var _decorateDirective = require('./decorate-directive');
 
-var _moduleModule = require('../module/module');
+var _decorateDirective2 = _interopRequireDefault(_decorateDirective);
+
+var _module2 = require('../module');
+
+var _module3 = _interopRequireDefault(_module2);
+
+var _writers = require('../writers');
 
 var _tests = require('./tests');
 
-var Decorate = function Decorate(name, type, binder) {
-	return function (t) {
-		(0, _decorateDirective.decorateDirective)(t, name, type, binder);
+describe('Directive Decorator', function () {
+	var Example = function Example() {
+		_classCallCheck(this, Example);
 	};
-};
 
-describe('Directive decorator', function () {
-	it('should decorate a target with the given name and type', function () {
-		var Example = function Example() {
-			_classCallCheck(this, Example);
-		};
+	it('should let you bind attributes to the controller using a simple map', function () {
+		(0, _decorateDirective2['default'])({ bind: {
+				'someProp': '@'
+			} }, Example);
 
-		(0, _decorateDirective.decorateDirective)(Example, 'test', 'E');
-
-		Example.should.have.property('$component');
-		Example.should.have.property('$provider');
-		Example.$provider.name.should.equal('test');
-		Example.$provider.type.should.equal('directive');
-		Example.$component.restrict.should.equal('E');
+		_writers.componentWriter.get('scope', Example).should.eql({ someProp: '@' });
+		_writers.componentWriter.get('bindToController', Example).should.be.ok;
 	});
 
-	it('should attach a scope binding expression if a binder is provided', function () {
-		var Example = function Example() {
-			_classCallCheck(this, Example);
-		};
+	it('should manually let you configure the scope', function () {
+		(0, _decorateDirective2['default'])({
+			scope: true
+		}, Example);
 
-		(0, _decorateDirective.decorateDirective)(Example, 'test', 'E', { 'myAttr': '=' });
-
-		Example.$component.should.have.property('scope');
-		Example.$component.scope.should.have.property('myAttr', '=');
+		_writers.componentWriter.get('scope', Example).should.be.ok;
 	});
 
-	it('should set bindToController:true; if a binder is provided', function () {
-		var Example = function Example() {
-			_classCallCheck(this, Example);
-		};
+	it('should let you bind attributes to the controller using a properties array like Angular 2', function () {
+		(0, _decorateDirective2['default'])({
+			properties: ['someProp: @', 'anotherProp: =']
+		}, Example);
 
-		(0, _decorateDirective.decorateDirective)(Example, 'test', 'E', { 'myAttr': '=' });
-
-		Example.$component.should.have.property('bindToController', true);
-	});
-
-	it('should set controllerAs parameter if provided', function () {
-		var Example = function Example() {
-			_classCallCheck(this, Example);
-		};
-
-		(0, _decorateDirective.decorateDirective)(Example, 'test', 'E', {}, 'exampleController');
-
-		Example.$component.should.have.property('controllerAs', 'exampleController');
-	});
-
-	it('should merge binders if used on a subclass', function () {
-		var Example = function Example() {
-			_classCallCheck(this, Example);
-		};
-
-		(0, _decorateDirective.decorateDirective)(Example, 'test', 'E', { 'myAttr': '=' });
-
-		var NewExample = (function (_Example) {
-			function NewExample() {
-				_classCallCheck(this, NewExample);
-
-				if (_Example != null) {
-					_Example.apply(this, arguments);
-				}
-			}
-
-			_inherits(NewExample, _Example);
-
-			return NewExample;
-		})(Example);
-
-		(0, _decorateDirective.decorateDirective)(NewExample, 'test', 'A', { 'newAttr': '&' });
-
-		Example.$component.scope.should.eql({
-			myAttr: '='
-		});
-
-		NewExample.$component.scope.should.eql({
-			myAttr: '=',
-			newAttr: '&'
+		_writers.componentWriter.get('bindToController', Example).should.eql({
+			'someProp': '@',
+			'anotherProp': '='
 		});
 	});
 
-	it('should respect inheritance', function () {
-		var BaseComponent = (function () {
-			function BaseComponent() {
-				_classCallCheck(this, _BaseComponent);
-			}
+	it('should throw an error if you do not pass an array to the properties field', function () {
+		var dec = function dec(val) {
+			return function () {
+				return (0, _decorateDirective2['default'])({
+					properties: val
+				}, Example);
+			};
+		};
 
-			var _BaseComponent = BaseComponent;
-			BaseComponent = Decorate('baseComponent', 'E')(BaseComponent) || BaseComponent;
-			return BaseComponent;
-		})();
-
-		var NewComponent = (function (_BaseComponent2) {
-			function NewComponent() {
-				_classCallCheck(this, _NewComponent);
-
-				if (_BaseComponent2 != null) {
-					_BaseComponent2.apply(this, arguments);
-				}
-			}
-
-			_inherits(NewComponent, _BaseComponent2);
-
-			var _NewComponent = NewComponent;
-			NewComponent = Decorate('newComponent', 'E')(NewComponent) || NewComponent;
-			return NewComponent;
-		})(BaseComponent);
-
-		BaseComponent.$provider.name.should.equal('baseComponent');
+		dec('string').should['throw'](TypeError);
+		dec({}).should['throw'](TypeError);
+		dec(false).should['throw'](TypeError);
+		dec(null).should['throw'](TypeError);
+		dec(undefined).should.not['throw'](TypeError);
 	});
 
-	describe('parser', function () {
-		it('should be registered with Module', function () {
-			var parser = _moduleModule.Module.getParser('directive');
+	it('should set the controllerAs field if provided', function () {
+		(0, _decorateDirective2['default'])({ controllerAs: 'hi' }, Example);
 
+		_writers.componentWriter.get('controllerAs', Example).should.eql('hi');
+	});
+
+	afterEach(function () {
+		_writers.componentWriter.clear(Example);
+	});
+
+	describe('Directive Parser', function () {
+		var parser = undefined,
+		    ngModule = undefined;
+
+		beforeEach(function () {
+			parser = _module3['default'].getParser('directive');
+			ngModule = { directive: _tests.sinon.spy() };
+		});
+
+		it('should be defined', function () {
 			parser.should.be.defined;
 		});
 
-		it('should register a directive on a module', function () {
-			var parser = _moduleModule.Module.getParser('directive');
-			var module = {
-				directive: _tests.sinon.spy()
+		it('should correctly generate a simple DDO', function () {
+			var Test = function Test() {
+				_classCallCheck(this, Test);
 			};
 
-			var MyComponent = (function () {
-				function MyComponent() {
-					_classCallCheck(this, MyComponent);
+			(0, _decorateDirective2['default'])({}, Test);
+
+			parser(Test, 'testSelector', [], ngModule);
+
+			var _ngModule$directive$args$0 = _slicedToArray(ngModule.directive.args[0], 2);
+
+			var name = _ngModule$directive$args$0[0];
+			var factory = _ngModule$directive$args$0[1];
+
+			name.should.eql('testSelector');
+			(typeof factory).should.eql('function');
+			factory().should.eql({
+				controller: [Test]
+			});
+		});
+
+		it('should generate a complex DDO', function () {
+			var AnotherTest = (function () {
+				function AnotherTest() {
+					_classCallCheck(this, AnotherTest);
 				}
 
-				_createClass(MyComponent, null, [{
+				_createClass(AnotherTest, null, [{
 					key: 'link',
 					value: function link() {}
 				}, {
@@ -153,61 +127,33 @@ describe('Directive decorator', function () {
 					value: function compile() {}
 				}]);
 
-				return MyComponent;
+				return AnotherTest;
 			})();
 
-			(0, _decorateDirective.decorateDirective)(MyComponent, 'myComponent', 'E', { 'myAttr': '=' }, 'MyComponentController');
+			(0, _decorateDirective2['default'])({
+				scope: true,
+				properties: ['attr: @', 'prop : ='],
+				controllerAs: 'asdf'
+			}, AnotherTest);
 
-			parser(MyComponent, module);
+			parser(AnotherTest, 'testSelector', ['$q', '$timeout'], ngModule);
 
-			var name = module.directive.args[0][0];
-			var provider = module.directive.args[0][1];
-			var directive = provider();
-			var controller = directive.controller;
-			delete controller.$component;
+			var _ngModule$directive$args$02 = _slicedToArray(ngModule.directive.args[0], 2);
 
-			name.should.equal('myComponent');
-			directive.should.eql({
-				restrict: 'E',
-				bindToController: true,
-				scope: { 'myAttr': '=' },
-				link: MyComponent.link,
-				controller: controller,
-				compile: MyComponent.compile,
-				controllerAs: 'MyComponentController'
+			var name = _ngModule$directive$args$02[0];
+			var factory = _ngModule$directive$args$02[1];
+
+			factory().should.eql({
+				scope: true,
+				bindToController: {
+					attr: '@',
+					prop: '='
+				},
+				controllerAs: 'asdf',
+				controller: ['$q', '$timeout', AnotherTest],
+				link: AnotherTest.link,
+				compile: AnotherTest.compile
 			});
-		});
-
-		it('should allow for a static link function on the class', function () {
-			var parser = _moduleModule.Module.getParser('directive');
-			var module = {
-				directive: _tests.sinon.spy()
-			};
-			var testLink = false;
-
-			var MyComponent = (function () {
-				function MyComponent() {
-					_classCallCheck(this, MyComponent);
-				}
-
-				_createClass(MyComponent, null, [{
-					key: 'link',
-					value: function link() {
-						testLink = true;
-					}
-				}]);
-
-				return MyComponent;
-			})();
-
-			(0, _decorateDirective.decorateDirective)(MyComponent, 'myComponent', 'E', {});
-			parser(MyComponent, module);
-
-			var directive = module.directive.args[0][1]();
-
-			directive.link();
-
-			testLink.should.be.ok;
 		});
 	});
 });

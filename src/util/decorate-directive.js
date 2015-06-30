@@ -1,36 +1,52 @@
-import {Module} from '../module/module';
-import annotate from './annotate';
+import Module from '../module';
+import {componentWriter} from '../writers';
+import parseProperties from './parse-properties';
 
-export function decorateDirective(t, name, restrict, scope, controllerAs){
-	annotate(t, '$provider', {
-		name,
-		type : 'directive'
-	});
-
-	annotate(t, '$component', { restrict });
-
-	if(scope){
-		annotate(t, '$component', { bindToController : true });
-		annotate(t.$component, 'scope', scope);
+export default function(config, t){
+	// Support for legacy angular-decorators bind config
+	if(config.bind){
+		componentWriter.set('scope', config.bind, t);
+		componentWriter.set('bindToController', true, t);
 	}
-	
-	if(controllerAs) {
-		annotate(t.$component, 'controllerAs', controllerAs);
+
+	// Check for scope
+	if(config.scope){
+		componentWriter.set('scope', config.scope, t);
+	}
+
+
+	// Check for Angular 2 style properties
+	if(config.properties && Array.isArray(config.properties)){
+		componentWriter.set('bindToController', parseProperties(config.properties), t);
+	}
+	else if(config.properties !== undefined){
+		throw new TypeError('Component properties must be an array');
+	}
+
+	// Allow for renaming the controllerAs
+	if(config.controllerAs){
+		componentWriter.set('controllerAs', config.controllerAs, t);
+	}
+
+	// Set a link function
+	if(t.link){
+		componentWriter.set('link', t.link, t);
+	}
+
+	// Set a controller function
+	if(t.compile){
+		componentWriter.set('compile', t.compile, t);
 	}
 }
 
-Module.registerProvider('directive', (provider, module) => {
-	let name = provider.$provider.name;
-	let controller = provider;
-	let component = controller.$component;
-	delete controller.$component;
+Module.registerProvider('directive', (target, name, injects, ngModule) => {
+	let ddo = {};
 
-	component.controllerAs = component.controllerAs || controller.name;
-	component.controller = controller;
-	component.link = provider.link;
-	component.compile = provider.compile;
+	componentWriter.forEach((val, key) => {
+		ddo[key] = val;
+	}, target);
 
-	module.directive(name, function(){
-		return component;
-	});
+	ddo.controller = [...injects, target];
+
+	ngModule.directive(name, () => ddo);
 });
