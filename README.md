@@ -1,10 +1,10 @@
 # angular-decorators [![Build Status](https://travis-ci.org/MikeRyan52/angular-decorators.svg?branch=master)](https://travis-ci.org/MikeRyan52/angular-decorators)
 
-Angular 2, due to be released this year, offers a drastically different API for creating applications in comparison to Angular 1.x. angular-decorators provides decorators and utilities that allow you to write AngularJS 1.x apps in a similar way to this new API. By taking advantage of these decorators and utilities, porting your existing AngularJS 1.x apps to Angular 2 will be a quicker, less painful process.
+angular-decorators is a library of ES7 decorators for writing Angular 2 style code in AngularJS.
 
 ## Modules
 
-The standard `angular.module` does not understand the metadata attached to your classes or functions from this library's decorators. You must use the provided Module class to create Angular modules. Using it is very similar to `angular.module`:
+The standard `angular.module` does not understand the metadata attached to your classes from this library's decorators. Use the provided Module function to create Angular modules:
 
 ```js
 import {Module} from 'angular-decorators';
@@ -16,7 +16,7 @@ let myModule = Module('my-module', ['ui.bootrap', 'ui.router']);
 let otherModule = Module('my-module');
 ```
 
-### Adding Decorated Classes
+Adding decorated classes is easy:
 
 ```js
 import {Service, Module} from 'angular-decorators';
@@ -27,10 +27,16 @@ class MyService{ }
 Module('my-module', []).add(MyService);
 ```
 
-### Accessing Internal AngularJS Module
+As is accessing the internal `angular.module` (if you need it):
 
 ```js
 let angularModule = myModule.add(AnnotatedClass).publish();
+```
+
+It also supports `config` and `run` blocks:
+
+```js
+Module('example', []).config(...).run(...);
 ```
 
 ### Module Dependencies
@@ -42,20 +48,20 @@ let myModule = Module('my-module', []);
 let otherModule = Module('other-module', [ myModule ]);
 ```
 
-This works for traditional AngularJS modules:
+This works for vanilla AngularJS modules as well:
 ```js
 let otherModule = angular.module('other-module', []);
 let myModule = Module('my-module', [ otherModule ]);
 let lastModule = angular.module('last-module', [ myModule.name ]);
 ```
 
-## decorators
+## Decorators
 
-The decorators provided in this package follow [this proposal](https://github.com/jonathandturner/brainstorming/blob/master/README.md). They work by adding metadata to your classes and functions under the `$ng-decs` namespace. 
+The decorators provided in this package follow [this proposal](https://github.com/jonathandturner/brainstorming/blob/master/README.md). They work by adding metadata to your classes and functions under the `$ng-decs` namespace using the reflect-metadata polyfill.
 
 ### Inject
 
-The `@Inject` decorator let's you specify dependencies to Angular's dependency injector:
+The `@Inject` decorator let's you specify dependencies to AngularJS's dependency injector:
 
 ```js
 @Inject('$q', '$http')
@@ -169,78 +175,35 @@ By default, isolate scopes are created for each component. It is strongly recomm
 })
 ```
 
-
-##### Component Inheritance
-One major benefit of structuring your components this way is that it now becomes much easier to extend components:
-
-```js
-@Component({ selector : 'animal', bind : { name : '@' } })
-@Inject('$q')
-class Animal{
-	constructor($q){
-		this.type = 'Animal';
-		console.log(`${this.name} the ${this.type}`);
-	}
-}
-
-
-@Component({ selector : 'frog' })
-@Inject('RibbitFactory')
-class Frog extends Animal{
-	constructor($q, RibbitFactory){
-		this.type = 'Frog';
-		super($q);
-	}
-}
-```
-
-Then in your HTML:
-
-```html
-<frog name="Kermit"></frog>
-```
-
-Output: `Kermit the Frog`
-
-##### About the Require decorator
-In AngularJS, when your directive requires multiple other directive controllers they are passed to your link function as an array:
-
-```js
-myModule.directive('myComponent', function(){
-	return {
-		require : ['^parent', 'sibling'],
-		link : function(scope, element, attrs, controllers){
-			var parent = controllers[0];
-			var sibling = controllers[1];
-		}
-	};
-});
-```
-
-As a convenience, when you use the `@Require` decorator your class is decorated with an `unpackRequires` method to make it easy to reference your required components:
+##### Require decorator
+Use the `@Require` decorator to require directive controllers and access them using the static link function:
 
 ```js
 @Component({ selector : 'my-component' })
-@Require('^parent', 'sibling')
+@Require('^parent', 'myComponent')
 class MyComponent{
 	static link(scope, element, attrs, controllers){
-		let {parent, sibling} = MyComponent.unpackRequires(controllers);
+		let [parent, self] = controllers;
+
+		self.parent = parent;
 	}
 }
 ```
 
-### Decorator
-The `@Decorator` decorator is identical to the `@Component` decorator, except you use `@Decorator` for directives that you want to restrict to a class or attribute:
+### Directive
+The `@Directive` decorator is like the `@Component` decorator, except you use `@Directive` for directives that you want to restrict to a class or attribute:
 
 ```js
-@Decorator({ selector : '[my-attr]' })
+import {Directive} from 'angular-decorators';
+
+@Directive({ selector: '[my-attr]' })
 class MyAttrCtrl{
 	constructor(){
 
 	}
 }
 
-@Decorator({ selector : '.my-class' })
+@Directive({ selector: '.my-class' })
 class MyClassCtrl{
 	constructor(){
 
@@ -248,34 +211,42 @@ class MyClassCtrl{
 }
 ```
 
+It is important to note that unlike `@Component`, `@Directive` does not create a new, isolate scope by default nor does it expose your directive's controller on the scope.
 
-### Service
-The `@Service` decorator simply turns your class/function into a service:
+### Filter
+The `@Filter` decorator let's you write class-based filters similar to Angular 2's Pipes:
 
 ```js
-let myServiceModule = new Module('my-service');
+import {Filter, Module} from 'angular-decorators';
 
-@Service
-class MyService{
-	constructor(){
-
+@Filter('trim')
+class TrimFilter{
+	supports(input){
+		return (typeof input === 'string');
+	}
+	transform(input){
+		return input.trim();
 	}
 }
 
-myServiceModule.add(MyService);
+export default Module('trim-filter', []).add(TrimFilter);
 ```
 
-becomes:
+### Service
+The `@Service` decorator simply turns your class into a service:
 
 ```js
-var myServiceModule = angular.module('my-service', [
+import {Service, Inject, Module} from 'angular-decorators';
 
-])
+@Service('MyService')
+@Inject('$q')
+class MyService{
+	constructor($q){
+		this.$q = $q;
+	}
+}
 
-.service('MyService', function MyService(){
-	
-});
-
+export default Module('my-service', []).add(MyService);
 ```
 
 ### Factory
@@ -297,6 +268,8 @@ class Post{
 and you wanted to make a factory that created a `Post` with a provided title and content, you could do the following:
 
 ```js
+import {Factory, Inject, Module} from 'angular-decorators';
+
 @Factory('PostFactory')
 @Inject('$http')
 class Post{
@@ -304,22 +277,32 @@ class Post{
 
 	}
 }
+
+export default Module('post-factory', []).add(PostFactory);
 ```
 
-Then, in some other component you would be able to access the factory like this:
+When injected elsewhere use the factory like this:
 
 ```js
-@inject('PostFactory')
-class NewPostService{
+import {Inject, Service, Module} from 'angular-decorators';
+import PostFactory from './post-factory';
+
+@Service('SomeService')
+@Inject('PostFactory')
+class SomeService{
 	constructor(PostFactory){
 		let post = PostFactory('Title', 'Some content');
 	}
 }
+
+export default Module('some-service', [PostFactory]).add(SomeService);
 ```
 
-If you want more control over the factory function, just add a static create method to your factory class:
+You can override the default factory function by implementing a static create function:
 
 ```js
+import {Factory, Inject, Module} from 'angular-decorators';
+
 @Factory('CommentFactory')
 @Inject('$http', '$q')
 class Comment{
@@ -331,45 +314,10 @@ class Comment{
 		return new Comment(...dependencies, post.id, comment);
 	}
 }
+
+export default Module('comment-factory', []).add(Comment);
 ```
 
 ## Adding Your Own Providers
 
-Adding your own providers through decorators is very easy. To demonstrate, let's create a `@Route` decorator that lets you setup router configuration for Anguar 1.4's new router:
-
-```js
-// First we setup the Router decorator function:
-export function Route(config){
-	return function(target){
-		target.$routeConfig = config;
-
-		target.$provider = target.$provider || {};
-		target.$provider.type = 'routeController';
-		target.$provider.name = target.name;
-	}
-}
-
-// Then we need to setup the parser:
-import {Module} from 'angular-decorators';
-
-Module.registerProvider('routeController', (provider, module) => {
-	// Provider parsers accept the anotated provider class/function 
-	// and the target angular module
-
-	module.controller(provider.$provider.name, 
-		['$router', ...provider.$inject, 
-		function($router, ...dependencies){
-			return new provider(...dependencies);
-		}
-	]);
-});
-
-// Now we can use our Router decorator:
-@Route({ path : '/', component : 'home' })
-@Inject('$q')
-class HomeController{
-	constructor($q){
-
-	}
-}
-```
+Coming soon!
