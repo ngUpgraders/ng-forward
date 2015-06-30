@@ -102,27 +102,11 @@ class Child extends Parent{
 
 ### Component
 
-<<<<<<< HEAD
-The `@Component` annotation transforms a class into a directive, where the class becomes the directive's controller and the `controllerAs` property is the name of the class.
-
-You could also set the name of controller used for component template using `controllerAs` parameter. It could be very handy in case you wrap your Angular 1.x directives with `@Component` decorator and don't want to change every template.
-=======
 The `@Component` decorator let's you easily create components in AngularJS by wrapping the directive API and setting you up with sensible defaults:
->>>>>>> feature/version-1
 
 ```js
 import {Component, Module} from 'angular-decorators';
 
-<<<<<<< HEAD
-@Component({
-	selector : 'my-component',
-	controllerAs : 'vm',
-	bind : { 'myAttrA' : '=', 'myAttrB' : '&' }
-})
-@Template({ url : '/path/to/template.html' })
-@Require('requiredComponent')
-@Inject('$element', '$attrs')
-=======
 @Component({ selector : 'my-component' })
 >>>>>>> feature/version-1
 class MyComponentCtrl{
@@ -130,33 +114,6 @@ class MyComponentCtrl{
 }
 
 Module('my-component-module', []).add(MyComponentCtrl);
-```
-
-Becomes:
-
-```js
-angular.module('my-component-module', [ ])
-
-.directive('myComponent', function(){
-	return {
-		restrict : 'E',
-<<<<<<< HEAD
-		controller : MyComponentCtrl,
-		controllerAs : 'vm',
-		templateUrl : '/path/to/template.html',
-		link: MyComponentCtrl.link,
-		scope : {
-			'myAttrA' : '=',
-			'myAttrB' : '&'
-		},
-=======
-		controller : function MyComponentCtrl{ },
-		controllerAs : 'myComponent',
-		scope : { },
->>>>>>> feature/version-1
-		bindToController: true
-	};
-});
 ```
 
 #### Binding Element Attributes to the Controller
@@ -303,7 +260,7 @@ class Post{
 }
 ```
 
-and you wanted to make a factory that created a `Post` with a provided title and content, you could do the following:
+and you wanted to make a factory that created a `Post` with a parameters for title and content, you could do the following:
 
 ```js
 import {Factory, Inject, Module} from 'angular-decorators';
@@ -356,47 +313,5 @@ class Comment{
 export default Module('comment-factory', []).add(Comment);
 ```
 
-## Adding Your Own Providers
-
-<<<<<<< HEAD
-Adding your own providers through annotations is very easy. To demonstrate, let's create a `@Route` annotation that lets you setup router configuration for Anguar 1.4's new router:
-
-```js
-// First we setup the Router annotation function:
-export function Route(config){
-	return function(target){
-		target.$routeConfig = config;
-
-		target.$provider = target.$provider || {};
-		target.$provider.type = 'routeController';
-		target.$provider.name = target.name;
-	}
-}
-
-// Then we need to setup the parser:
-import {Module} from 'angular-decorators';
-
-Module.registerProvider('routeController', (provider, module) => {
-	// Provider parsers accept the anotated provider class/function
-	// and the target angular module
-
-	module.controller(provider.$provider.name,
-		['$router', ...provider.$inject,
-		function($router, ...dependencies){
-			return new provider(...dependencies);
-		}
-	]);
-});
-
-// Now we can use our Router annotation:
-@Route({ path : '/', component : 'home' })
-@Inject('$q')
-class HomeController{
-	constructor($q){
-
-	}
-}
-```
-=======
+## Adding Your Own Parsers
 Coming soon!
->>>>>>> feature/version-1
