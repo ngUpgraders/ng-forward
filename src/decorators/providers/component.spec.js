@@ -1,20 +1,25 @@
-// import {Component} from './component';
-import chai from '../../util/tests';
+import {Component} from './component';
+import '../../util/tests';
+import {providerWriter, componentWriter} from '../../writers';
 
-xdescribe('@Component annotation', function(){
-	it('should decorate a class with the $provider and $component metadata', function(){
+describe('@Component annotation', function(){
+	it('should decorate a class with correct $provider metadata', function(){
 		@Component({ selector : 'my-component' })
-		class MyClass{ }
+		class MyComponentCtrl{ }
 
-		MyClass.should.have.property('$provider');
-		MyClass.should.have.property('$component');
+		providerWriter.has('type', MyComponentCtrl).should.be.ok;
+		providerWriter.get('type', MyComponentCtrl).should.eql('directive');
+		providerWriter.has('name', MyComponentCtrl).should.be.ok;
+		providerWriter.get('name', MyComponentCtrl).should.eql('myComponent');
 	});
 
-	it('should correctly add restrict : "E"', function(){
-		@Component({ selector : 'my-component' })
-		class MyClass{ }
+	it('should set sensible defaults using $component metadata', function(){
+		@Component({ selector: 'my-component' })
+		class MyComponentCtrl{ }
 
-		MyClass.$component.should.have.property('restrict', 'E');
+		componentWriter.get('restrict', MyComponentCtrl).should.eql('E');
+		componentWriter.get('scope', MyComponentCtrl).should.eql({});
+		componentWriter.get('bindToController', MyComponentCtrl).should.be.ok;
 	});
 
 	it('should throw an error if the selector is not an element', function(){
@@ -39,16 +44,5 @@ xdescribe('@Component annotation', function(){
 
 		caughtAttr.should.be.ok;
 		caughtClass.should.be.ok;
-	});
-
-	it('should accept a binding property', function(){
-		@Component({
-			selector : 'my-component',
-			bind : { 'myAttr' : '@' }
-		})
-		class MyClass{ }
-
-		MyClass.$component.scope.should.have.property('myAttr', '@');
-		MyClass.$component.bindToController.should.be.ok;
 	});
 });

@@ -6,19 +6,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var _utilTests = require('../../util/tests');
 
-// import {Controller} from './controller';
-// import {Module} from '../module/module';
-// import {hasMeta, getMeta} from '../util/metadata';
+require('../../util/tests');
 
-xdescribe('@Controller annotation', function () {
-	it('should decorate a class with $provider meta data', function () {
+var _writers = require('../../writers');
+
+var _controller = require('./controller');
+
+describe('@Controller annotation', function () {
+	xit('should decorate a class with $provider meta data', function () {
 		var MyController = (function () {
 			function MyController() {
 				_classCallCheck(this, _MyController);
 			}
 
 			var _MyController = MyController;
-			MyController = Controller(MyController) || MyController;
+			MyController = (0, _controller.Controller)(MyController) || MyController;
 			return MyController;
 		})();
 
@@ -29,20 +31,20 @@ xdescribe('@Controller annotation', function () {
 		});
 	});
 
-	it('should register a controller parser with the Module class', function () {
+	xit('should register a controller parser with the Module class', function () {
 		var parser = Module.getParser('controller');
 
 		parser.should.exist;
 	});
 
-	it('should correctly parse a controller', function () {
+	xit('should correctly parse a controller', function () {
 		var MyController = (function () {
 			function MyController() {
 				_classCallCheck(this, _MyController2);
 			}
 
 			var _MyController2 = MyController;
-			MyController = Controller(MyController) || MyController;
+			MyController = (0, _controller.Controller)(MyController) || MyController;
 			return MyController;
 		})();
 
@@ -62,14 +64,14 @@ xdescribe('@Controller annotation', function () {
 		controller.should.eql([MyController]);
 	});
 
-	it('should define the $provider property on the prototype of the target', function () {
+	xit('should define the $provider property on the prototype of the target', function () {
 		var MyController = (function () {
 			function MyController() {
 				_classCallCheck(this, _MyController3);
 			}
 
 			var _MyController3 = MyController;
-			MyController = Controller(MyController) || MyController;
+			MyController = (0, _controller.Controller)(MyController) || MyController;
 			return MyController;
 		})();
 
@@ -85,7 +87,7 @@ xdescribe('@Controller annotation', function () {
 			_inherits(NewController, _MyController4);
 
 			var _NewController = NewController;
-			NewController = Controller(NewController) || NewController;
+			NewController = (0, _controller.Controller)(NewController) || NewController;
 			return NewController;
 		})(MyController);
 

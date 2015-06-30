@@ -38,7 +38,7 @@ var Directive = function Directive(config) {
 
 		// Sensible defaults for attribute directives
 		_writers.componentWriter.set('scope', false, t);
-		_writers.componentWriter.set('restrict', type);
+		_writers.componentWriter.set('restrict', type, t);
 
 		(0, _utilDecorateDirective2['default'])(config, t);
 	};

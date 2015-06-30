@@ -22,7 +22,7 @@ export const Directive = config => t => {
 
 	// Sensible defaults for attribute directives
 	componentWriter.set('scope', false, t);
-	componentWriter.set('restrict', type, )
+	componentWriter.set('restrict', type, t);
 
-	decorateDirective(config, t);	
+	decorateDirective(config, t);
 }

@@ -1,27 +1,27 @@
 import {sinon} from '../../util/tests';
-// import {Controller} from './controller';
-// import {Module} from '../module/module';
-// import {hasMeta, getMeta} from '../util/metadata';
+import '../../util/tests';
+import {providerWriter, componentWriter} from '../../writers';
+import {Controller} from './controller';
 
-xdescribe('@Controller annotation', function(){
-	it('should decorate a class with $provider meta data', function(){
+describe('@Controller annotation', function(){
+	xit('should decorate a class with $provider meta data', function(){
 		@Controller
 		class MyController{ }
 
 		hasMeta('$provider', MyController).should.be.ok;
-		getMeta('$provider', MyController).should.eql({ 
-			name : 'MyController', 
-			type : 'controller' 
+		getMeta('$provider', MyController).should.eql({
+			name : 'MyController',
+			type : 'controller'
 		});
 	});
 
-	it('should register a controller parser with the Module class', function(){
+	xit('should register a controller parser with the Module class', function(){
 		let parser = Module.getParser('controller');
 
 		parser.should.exist;
 	});
 
-	it('should correctly parse a controller', function(){
+	xit('should correctly parse a controller', function(){
 		@Controller
 		class MyController{ }
 
@@ -41,7 +41,7 @@ xdescribe('@Controller annotation', function(){
 		controller.should.eql([MyController]);
 	});
 
-	it('should define the $provider property on the prototype of the target', function(){
+	xit('should define the $provider property on the prototype of the target', function(){
 		@Controller
 		class MyController{ }
 
