@@ -4,7 +4,7 @@ angular-decorators is a library of ES7 decorators for writing Angular 2 style co
 
 #### Installation via npm
 
-`npm install angular-decorators --save-dev`
+`npm install angular-decorators@1.0.0-beta2 --save`
 
 #### Installation via jspm
 
