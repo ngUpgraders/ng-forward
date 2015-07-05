@@ -59,22 +59,14 @@ var register = function register(name, decorator) {
 exports.register = register;
 var registerFactory = function registerFactory(name, decoratorFactory) {
 	D.prototype[name] = function () {
-		for (var _len = arguments.length, params = Array(_len), _key = 0; _key < _len; _key++) {
-			params[_key] = arguments[_key];
-		}
-
-		this.decorators.push(decoratorFactory.apply(undefined, params));
+		this.decorators.push(decoratorFactory.apply(undefined, arguments));
 		return this;
 	};
 
 	d[name] = function () {
 		var _ref;
 
-		for (var _len2 = arguments.length, params = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-			params[_key2] = arguments[_key2];
-		}
-
-		return (_ref = new D())[name].apply(_ref, params);
+		return (_ref = new D())[name].apply(_ref, arguments);
 	};
 };
 exports.registerFactory = registerFactory;

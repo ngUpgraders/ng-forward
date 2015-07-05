@@ -1,17 +1,24 @@
-// import {Factory} from './factory';
-// import {Module} from '../module/module';
-// import {sinon} from '../util/tests';
-// import {hasMeta, getMeta} from '../util/metadata';
-
 'use strict';
+
+var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-function _slicedToArray(arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-xdescribe('@Factory Annotation', function () {
+var _factory = require('./factory');
+
+var _module2 = require('../../module');
+
+var _module3 = _interopRequireDefault(_module2);
+
+var _testsFrameworks = require('../../tests/frameworks');
+
+var _writers = require('../../writers');
+
+describe('@Factory Annotation', function () {
 	it('should decorate a class with $provider meta information', function () {
 		var ExampleClass = (function () {
 			function ExampleClass() {
@@ -19,14 +26,12 @@ xdescribe('@Factory Annotation', function () {
 			}
 
 			var _ExampleClass = ExampleClass;
-			ExampleClass = Factory('MyFactory')(ExampleClass) || ExampleClass;
+			ExampleClass = (0, _factory.Factory)('MyFactory')(ExampleClass) || ExampleClass;
 			return ExampleClass;
 		})();
 
-		getMeta('$provider', ExampleClass).should.eql({
-			name: 'MyFactory',
-			type: 'factory'
-		});
+		_writers.providerWriter.get('type', ExampleClass).should.eql('factory');
+		_writers.providerWriter.get('name', ExampleClass).should.eql('MyFactory');
 	});
 
 	describe('Parser', function () {
@@ -34,8 +39,8 @@ xdescribe('@Factory Annotation', function () {
 		    module = undefined;
 
 		beforeEach(function () {
-			module = { factory: sinon.spy() };
-			parser = Module.getParser('factory');
+			module = { factory: _testsFrameworks.sinon.spy() };
+			parser = _module3['default'].getParser('factory');
 		});
 
 		it('should register itself with Module', function () {
@@ -59,11 +64,11 @@ xdescribe('@Factory Annotation', function () {
 					}
 				}]);
 
-				ExampleClass = Factory('MyFactory')(ExampleClass) || ExampleClass;
+				ExampleClass = (0, _factory.Factory)('MyFactory')(ExampleClass) || ExampleClass;
 				return ExampleClass;
 			})();
 
-			parser(ExampleClass, module);
+			parser(ExampleClass, 'MyFactory', [], module);
 			var factoryProvider = module.factory.args[0][1][0];
 
 			factoryProvider()();
@@ -92,11 +97,11 @@ xdescribe('@Factory Annotation', function () {
 					}
 				}]);
 
-				ExampleClass = Factory('MyFactory')(ExampleClass) || ExampleClass;
+				ExampleClass = (0, _factory.Factory)('MyFactory')(ExampleClass) || ExampleClass;
 				return ExampleClass;
 			})();
 
-			parser(ExampleClass, module);
+			parser(ExampleClass, 'MyFactory', [], module);
 			var factoryProvider = module.factory.args[0][1][0];
 
 			factoryProvider(1, 2)();
@@ -120,11 +125,11 @@ xdescribe('@Factory Annotation', function () {
 				}
 
 				var _ExampleClass4 = ExampleClass;
-				ExampleClass = Factory('MyFactory')(ExampleClass) || ExampleClass;
+				ExampleClass = (0, _factory.Factory)('MyFactory')(ExampleClass) || ExampleClass;
 				return ExampleClass;
 			})();
 
-			parser(ExampleClass, module);
+			parser(ExampleClass, 'MyFactory', [], module);
 
 			var factoryName = module.factory.args[0][0];
 			var factoryProvider = module.factory.args[0][1][0];

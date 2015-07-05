@@ -1,4 +1,4 @@
-import {sinon} from './tests';
+import {sinon} from '../tests/frameworks';
 import {d, register, registerFactory} from './decorate';
 
 describe('Decorator helpers for ES5/ES6', function(){

@@ -1,6 +1,6 @@
 import {Transclude} from './transclude';
 import {componentWriter} from '../../writers';
-import {expect} from '../../util/tests';
+import {expect} from '../../tests/frameworks';
 
 describe('@Transclude Component decorator', function(){
 	it('should add the transclude key on the DDO', function(){

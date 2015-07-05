@@ -26,6 +26,8 @@ var _decoratorsProvidersService = require('./decorators/providers/service');
 
 var _decoratorsProvidersFilter = require('./decorators/providers/filter');
 
+var _decoratorsProvidersAnimation = require('./decorators/providers/animation');
+
 var _decoratorsComponentRequire = require('./decorators/component/require');
 
 var _decoratorsComponentView = require('./decorators/component/view');
@@ -40,6 +42,7 @@ exports.Filter = _decoratorsProvidersFilter.Filter;
 exports.Provider = _decoratorsProvidersProvider.Provider;
 exports.Factory = _decoratorsProvidersFactory.Factory;
 exports.Service = _decoratorsProvidersService.Service;
+exports.Animation = _decoratorsProvidersAnimation.Animation;
 exports.Require = _decoratorsComponentRequire.Require;
 exports.View = _decoratorsComponentView.View;
 exports.Transclude = _decoratorsComponentTransclude.Transclude;

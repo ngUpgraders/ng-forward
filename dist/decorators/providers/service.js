@@ -21,6 +21,6 @@ var TYPE = 'service';
 var Service = (0, _utilDecoratorFactory2['default'])(TYPE);
 
 exports.Service = Service;
-_module3['default'].registerProvider(TYPE, function (provider, name, injects, ngModule) {
+_module3['default'].addProvider(TYPE, function (provider, name, injects, ngModule) {
 	ngModule.service(name, [].concat(_toConsumableArray(injects), [provider]));
 });

@@ -39,7 +39,7 @@ export default function(config, t){
 	}
 }
 
-Module.registerProvider('directive', (target, name, injects, ngModule) => {
+Module.addProvider('directive', (target, name, injects, ngModule) => {
 	let ddo = {};
 
 	componentWriter.forEach((val, key) => {

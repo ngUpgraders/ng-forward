@@ -1,6 +1,6 @@
 'use strict';
 
-var _tests = require('./tests');
+var _testsFrameworks = require('../tests/frameworks');
 
 var _decorate = require('./decorate');
 
@@ -12,7 +12,7 @@ describe('Decorator helpers for ES5/ES6', function () {
   });
 
   it('should let you register new simple decorators', function () {
-    var spy = _tests.sinon.spy();
+    var spy = _testsFrameworks.sinon.spy();
     (0, _decorate.register)('Test', spy);
     _decorate.d.Test['for'](function () {});
 
@@ -21,7 +21,7 @@ describe('Decorator helpers for ES5/ES6', function () {
   });
 
   it('should let you register new decorator factories', function () {
-    var spy = _tests.sinon.spy();
+    var spy = _testsFrameworks.sinon.spy();
     (0, _decorate.registerFactory)('NewTest', function () {
       return spy;
     });

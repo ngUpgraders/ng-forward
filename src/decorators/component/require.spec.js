@@ -1,6 +1,6 @@
 import {Require} from './require';
 import {componentWriter} from '../../writers';
-import {expect} from '../../util/tests';
+import {expect} from '../../tests/frameworks';
 
 describe('@Require Component Decorator', function(){
 	it('should add the require DDO key to the target', function(){

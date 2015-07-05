@@ -1,4 +1,4 @@
-import chai from './tests';
+import chai from '../tests/frameworks';
 import parseProperties from './parse-properties';
 
 describe('Property Parser', function(){

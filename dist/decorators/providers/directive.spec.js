@@ -4,7 +4,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var _writers = require('../../writers');
 
-require('../../util/tests');
+require('../../tests/frameworks');
 
 var _directive = require('./directive');
 

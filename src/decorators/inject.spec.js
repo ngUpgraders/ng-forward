@@ -1,6 +1,6 @@
 import {Inject} from './inject';
 import {baseWriter} from '../writers';
-import chai from '../util/tests';
+import chai from '../tests/frameworks';
 
 describe('@Inject annotation', function(){
 	it('should decorate a function with the $inject array', function(){

@@ -1,42 +1,36 @@
-import chai from '../../util/tests';
+import {View} from './view';
+import '../../tests/frameworks';
+import {componentWriter} from '../../writers';
 
-xdescribe('@Template Annotation', function(){
+describe('@View Decorator', function(){
 	it('should add a template option to a component', function(){
-		@Template({ inline : 'test' })
+		@View({ template: 'test' })
 		class MyClass{ }
 
-		MyClass.should.have.property('$component');
-		MyClass.$component.should.have.property('template');
-	});
-
-	it('should support inline templates', function(){
-		@Template({ inline : 'test' })
-		class MyClass{ }
-
-		MyClass.$component.should.have.property('template', 'test');
+		componentWriter.get('template', MyClass).should.eql('test');
 	});
 
 	it('should support template URLs', function(){
-		@Template({ url : '/path/to/it' })
+		@View({ templateUrl : '/path/to/it' })
 		class MyClass{ }
 
-		MyClass.$component.should.have.property('templateUrl', '/path/to/it');
+		componentWriter.get('templateUrl', MyClass).should.eql('/path/to/it');
 	});
 
 	it('should overwrite previously set template options via inheritance', function(){
-		@Template({ inline : 'test' })
-		class MyClass{ }
+		@View({ template: 'test' })
+		class Parent{ }
 
-		@Template({ url : '/path/to/it' })
-		class NewClass extends MyClass{ }
+		@View({ templateUrl: '/path/to/it' })
+		class Child extends Parent{ }
 
-		@Template({ inline : 'new test' })
-		class TestClass extends NewClass{ }
+		@View({ template: 'new test' })
+		class GrandChild extends Child{ }
 
-		MyClass.$component.should.have.property('template', 'test');
-		NewClass.$component.should.have.property('templateUrl', '/path/to/it');
-		NewClass.$component.should.not.have.property('template');
-		TestClass.$component.should.have.property('template', 'new test');
-		TestClass.$component.should.not.have.property('templateUrl');
+		componentWriter.get('template', Parent).should.eql('test');
+		componentWriter.get('templateUrl', Child).should.eql('/path/to/it');
+		(componentWriter.get('template', Child) === undefined).should.be.true;
+		componentWriter.get('template', GrandChild).should.eql('new test');
+		(componentWriter.get('templateUrl', GrandChild) === undefined).should.be.true;
 	});
 });

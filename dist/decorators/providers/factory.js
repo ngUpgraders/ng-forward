@@ -22,7 +22,7 @@ var TYPE = 'factory';
 var Factory = (0, _utilDecoratorFactory2['default'])(TYPE);
 
 exports.Factory = Factory;
-_module3['default'].registerProvider(TYPE, function (provider, name, injects, ngModule) {
+_module3['default'].addProvider(TYPE, function (provider, name, injects, ngModule) {
 	var create = provider.create || function (dependencies) {
 		for (var _len = arguments.length, params = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
 			params[_key - 1] = arguments[_key];

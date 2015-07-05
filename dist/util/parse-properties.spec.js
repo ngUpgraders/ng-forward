@@ -2,9 +2,9 @@
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _tests = require('./tests');
+var _testsFrameworks = require('../tests/frameworks');
 
-var _tests2 = _interopRequireDefault(_tests);
+var _testsFrameworks2 = _interopRequireDefault(_testsFrameworks);
 
 var _parseProperties = require('./parse-properties');
 

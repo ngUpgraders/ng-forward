@@ -6,7 +6,7 @@ var _transclude = require('./transclude');
 
 var _writers = require('../../writers');
 
-var _utilTests = require('../../util/tests');
+var _testsFrameworks = require('../../tests/frameworks');
 
 describe('@Transclude Component decorator', function () {
 	it('should add the transclude key on the DDO', function () {

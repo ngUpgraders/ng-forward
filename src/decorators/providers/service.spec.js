@@ -1,15 +1,15 @@
-// import {Module} from '../module/module';
-// import {Service} from './service';
-import {sinon} from '../../util/tests';
+import Module from '../../module';
+import {Service} from './service';
+import {sinon} from '../../tests/frameworks';
+import {providerWriter} from '../../writers';
 
-xdescribe('@Service Annotation', function(){
-	it('should annotate a class', function(){
+describe('@Service Decorator', function(){
+	it('should decorate a class with a provider name and type', function(){
 		@Service
 		class MyService{ }
 
-		MyService.should.have.property('$provider');
-		MyService.$provider.name.should.equal('MyService');
-		MyService.$provider.type.should.equal('service');
+		providerWriter.get('type', MyService).should.eql('service');
+		providerWriter.get('name', MyService).should.eql('MyService');
 	});
 
 	it('should adhere to inheritance', function(){
@@ -19,16 +19,15 @@ xdescribe('@Service Annotation', function(){
 		@Service
 		class MyClass extends BaseClass{ }
 
-		BaseClass.$provider.name.should.equal('BaseClass');
-		MyClass.$provider.name.should.equal('MyClass');
+		providerWriter.get('name', BaseClass).should.eql('BaseClass');
+		providerWriter.get('name', MyClass).should.eql('MyClass');
 	});
 
 	it('should let you specify a name for the service', function(){
 		@Service('Renamed')
 		class BaseClass{ }
 
-		BaseClass.$provider.name.should.eql('Renamed');
-		BaseClass.$provider.type.should.eql('service');
+		providerWriter.get('name', BaseClass).should.eql('Renamed');
 	});
 
 	describe('Parser', function(){
@@ -49,13 +48,9 @@ xdescribe('@Service Annotation', function(){
 			@Service
 			class MyService{ }
 
-			parser(MyService, module);
+			parser(MyService, 'MyService', [], module);
 
-			let name = module.service.args[0][0];
-			let service = module.service.args[0][1];
-
-			name.should.equal('MyService');
-			service.should.eql(MyService);
+			module.service.should.have.been.calledWith('MyService', [MyService]);
 		});
 	});
 });

@@ -6,9 +6,9 @@ var _parseSelector = require('./parse-selector');
 
 var _parseSelector2 = _interopRequireDefault(_parseSelector);
 
-var _tests = require('./tests');
+var _testsFrameworks = require('../tests/frameworks');
 
-var _tests2 = _interopRequireDefault(_tests);
+var _testsFrameworks2 = _interopRequireDefault(_testsFrameworks);
 
 describe('Component selector parser', function () {
 	it('should correctly parse element selectors', function () {

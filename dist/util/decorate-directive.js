@@ -53,7 +53,7 @@ exports['default'] = function (config, t) {
 	}
 };
 
-_module3['default'].registerProvider('directive', function (target, name, injects, ngModule) {
+_module3['default'].addProvider('directive', function (target, name, injects, ngModule) {
 	var ddo = {};
 
 	_writers.componentWriter.forEach(function (val, key) {

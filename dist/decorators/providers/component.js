@@ -31,17 +31,17 @@ var Component = function Component(config) {
 		var _parseSelector = (0, _utilParseSelector2['default'])(config.selector);
 
 		var name = _parseSelector.name;
-		var type = _parseSelector.type;
+		var restrict = _parseSelector.type;
 
-		if (type !== 'E') {
-			throw new Error('Component selectors can only be elements. Perhaps you meant to use @Directive?');
+		if (restrict !== 'E') {
+			throw new Error('@Component selectors can only be elements. Perhaps you meant to use @Directive?');
 		}
 
 		_writers.providerWriter.set('name', name, t);
 		_writers.providerWriter.set('type', TYPE, t);
 
 		// Sensible defaults for components
-		_writers.componentWriter.set('restrict', type, t);
+		_writers.componentWriter.set('restrict', restrict, t);
 		_writers.componentWriter.set('scope', {}, t);
 		_writers.componentWriter.set('bindToController', true, t);
 		_writers.componentWriter.set('controllerAs', name, t);

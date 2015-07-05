@@ -22,7 +22,7 @@ var TYPE = 'filter';
 var Filter = (0, _utilDecoratorFactory2['default'])(TYPE);
 
 exports.Filter = Filter;
-_module3['default'].registerProvider(TYPE, function (provider, name, injects, ngModule) {
+_module3['default'].addProvider(TYPE, function (provider, name, injects, ngModule) {
 	ngModule.filter(name, [].concat(_toConsumableArray(injects), [function () {
 		for (var _len = arguments.length, dependencies = Array(_len), _key = 0; _key < _len; _key++) {
 			dependencies[_key] = arguments[_key];

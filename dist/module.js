@@ -32,15 +32,15 @@ var DecoratedModule = (function () {
 	_createClass(DecoratedModule, [{
 		key: 'add',
 		value: function add() {
-			for (var _len = arguments.length, providers = Array(_len), _key = 0; _key < _len; _key++) {
-				providers[_key] = arguments[_key];
-			}
-
 			var _iteratorNormalCompletion = true;
 			var _didIteratorError = false;
 			var _iteratorError = undefined;
 
 			try {
+				for (var _len = arguments.length, providers = Array(_len), _key = 0; _key < _len; _key++) {
+					providers[_key] = arguments[_key];
+				}
+
 				for (var _iterator = providers[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 					var provider = _step.value;
 
@@ -52,7 +52,11 @@ var DecoratedModule = (function () {
 					var _name = _writers.providerWriter.get('name', provider);
 					var inject = _writers.baseWriter.get('$inject', provider) || [];
 
-					_parsers[type](provider, _name, inject, this._module);
+					if (_parsers[type]) {
+						_parsers[type](provider, _name, inject, this._module);
+					} else {
+						throw new Error('No parser registered for type \'' + type + '\'');
+					}
 				}
 			} catch (err) {
 				_didIteratorError = true;
@@ -120,7 +124,7 @@ function Module() {
 	return new (_bind.apply(DecoratedModule, [null].concat(params)))();
 }
 
-Module.registerProvider = function (providerType, parser) {
+Module.addProvider = function (providerType, parser) {
 	_parsers[providerType] = parser;
 };
 

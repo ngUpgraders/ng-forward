@@ -21,6 +21,6 @@ var TYPE = 'controller';
 var Controller = (0, _utilDecoratorFactory2['default'])(TYPE);
 
 exports.Controller = Controller;
-_module3['default'].registerProvider(TYPE, function (provider, name, injects, ngModule) {
+_module3['default'].addProvider(TYPE, function (provider, name, injects, ngModule) {
 	ngModule.controller(name, [].concat(_toConsumableArray(injects), [provider]));
 });

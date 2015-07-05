@@ -1,19 +1,25 @@
 'use strict';
 
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _utilTests = require('../../util/tests');
+var _testsFrameworks = require('../../tests/frameworks');
 
-require('../../util/tests');
+var _module2 = require('../../module');
+
+var _module3 = _interopRequireDefault(_module2);
 
 var _writers = require('../../writers');
 
 var _controller = require('./controller');
 
 describe('@Controller annotation', function () {
-	xit('should decorate a class with $provider meta data', function () {
+	it('should decorate a class with $provider meta data', function () {
 		var MyController = (function () {
 			function MyController() {
 				_classCallCheck(this, _MyController);
@@ -24,20 +30,17 @@ describe('@Controller annotation', function () {
 			return MyController;
 		})();
 
-		hasMeta('$provider', MyController).should.be.ok;
-		getMeta('$provider', MyController).should.eql({
-			name: 'MyController',
-			type: 'controller'
-		});
+		_writers.providerWriter.get('type', MyController).should.eql('controller');
+		_writers.providerWriter.get('name', MyController).should.eql('MyController');
 	});
 
-	xit('should register a controller parser with the Module class', function () {
-		var parser = Module.getParser('controller');
+	it('should register a controller parser with the Module class', function () {
+		var parser = _module3['default'].getParser('controller');
 
 		parser.should.exist;
 	});
 
-	xit('should correctly parse a controller', function () {
+	it('should correctly parse a controller', function () {
 		var MyController = (function () {
 			function MyController() {
 				_classCallCheck(this, _MyController2);
@@ -49,12 +52,12 @@ describe('@Controller annotation', function () {
 		})();
 
 		var module = {
-			controller: _utilTests.sinon.spy()
+			controller: _testsFrameworks.sinon.spy()
 		};
 
-		var parser = Module.getParser('controller');
+		var parser = _module3['default'].getParser('controller');
 
-		parser(MyController, module);
+		parser(MyController, 'MyController', [], module);
 
 		var name = module.controller.args[0][0];
 		var controller = module.controller.args[0][1];
@@ -64,7 +67,7 @@ describe('@Controller annotation', function () {
 		controller.should.eql([MyController]);
 	});
 
-	xit('should define the $provider property on the prototype of the target', function () {
+	it('should define the $provider property on the prototype of the target', function () {
 		var MyController = (function () {
 			function MyController() {
 				_classCallCheck(this, _MyController3);
@@ -79,9 +82,7 @@ describe('@Controller annotation', function () {
 			function NewController() {
 				_classCallCheck(this, _NewController);
 
-				if (_MyController4 != null) {
-					_MyController4.apply(this, arguments);
-				}
+				_get(Object.getPrototypeOf(_NewController.prototype), 'constructor', this).apply(this, arguments);
 			}
 
 			_inherits(NewController, _MyController4);
@@ -91,8 +92,8 @@ describe('@Controller annotation', function () {
 			return NewController;
 		})(MyController);
 
-		getMeta('$provider', MyController).name.should.not.equal('NewController');
-		getMeta('$provider', MyController).name.should.equal('MyController');
-		getMeta('$provider', NewController).name.should.equal('NewController');
+		_writers.providerWriter.get('name', MyController).should.not.equal('NewController');
+		_writers.providerWriter.get('name', MyController).should.equal('MyController');
+		_writers.providerWriter.get('name', NewController).should.equal('NewController');
 	});
 });

@@ -2,11 +2,11 @@
 
 angular-decorators is a library of ES7 decorators for writing Angular 2 style code in AngularJS.
 
-#### Installation via npm
+**Installation via npm**
 
 `npm install angular-decorators@1.0.0-beta2 --save`
 
-#### Installation via jspm
+**Installation via jspm**
 
 `jspm install angular-decorators`
 
@@ -159,7 +159,6 @@ By default, the `controllerAs` property is set to a camel-cased version of your 
 ```
 
 #### Changing Scope
-
 By default, isolate scopes are created for each component. It is strongly recommended that you structure your components to always create isolate scopes, but if you need to change this it can be specified in the component config object:
 
 ```js
@@ -169,10 +168,27 @@ By default, isolate scopes are created for each component. It is strongly recomm
 })
 ```
 
-##### Require decorator
+#### Setting the Template
+Templates are added with the `@View` decorator. Pass in a config object with either an inline `template` or a `templateUrl`:
+
+```js
+import {Component, View} from 'angular-decorators';
+
+@Component({ selector: 'my-component' })
+@View({ template: `<h1>My Component Template</h1>` })
+class MyComponentCtrl{ ... }
+
+@Component({ selector: 'another-component' })
+@View({ templateUrl: '/path/to/template.html' })
+class AnotherComponentCtrl{ ... }
+```
+
+##### Requiring Other Directives
 Use the `@Require` decorator to require directive controllers and access them using the static link function:
 
 ```js
+import {Component, Require} from 'angular-decorators';
+
 @Component({ selector : 'my-component' })
 @Require('^parent', 'myComponent')
 class MyComponent{
@@ -182,6 +198,17 @@ class MyComponent{
 		self.parent = parent;
 	}
 }
+```
+
+#### Transclusion
+Use the `@Transclude` decorator to setup transclusion for your component:
+
+```js
+import {Component, Transclude} from 'angular-decorators';
+
+@Component({ selector: 'my-component' })
+@Transclude
+class MyComponent{ ... }
 ```
 
 ### Directive
@@ -205,7 +232,7 @@ class MyClassCtrl{
 }
 ```
 
-It is important to note that unlike `@Component`, `@Directive` does not create a new, isolate scope by default nor does it expose your directive's controller on the scope.
+It is important to note that unlike `@Component`, `@Directive` does not create a new isolate scope by default nor does it expose your directive's controller on the scope.
 
 ### Filter
 The `@Filter` decorator let's you write class-based filters similar to Angular 2's Pipes:
@@ -218,13 +245,15 @@ class TrimFilter{
 	supports(input){
 		return (typeof input === 'string');
 	}
-	transform(input){
+	transform(input, param){
 		return input.trim();
 	}
 }
 
 export default Module('trim-filter', []).add(TrimFilter);
 ```
+
+The support function is optional, however if you supply a support function and some input fails the support test the filter will throw an exception.
 
 ### Service
 The `@Service` decorator simply turns your class into a service:
@@ -313,4 +342,32 @@ export default Module('comment-factory', []).add(Comment);
 ```
 
 ## Adding Your Own Parsers
-Coming soon!
+Adding your own parsers and decorators to angular-decorators is relatively painless. For instance, if you want to add a new decorator called `@RouteableComponent` that hooked up a component to the upcoming router, you would start by creating a decorator that set a provider name and type on a class:
+
+```js
+import {providerWriter} from 'angular-decorators/writers';
+
+export default const RouteableComponent = name => targetClass => {
+  providerWriter.set('type', 'routeable-component', targetClass);
+  providerWriter.set('name', name, targetClass);
+}
+```
+
+Then you'll need to register your custom parser:
+
+```js
+import Module from 'angular-decorators/module';
+
+Module.addParser('routeable-component', (parsedClass, parsedName, injectables, ngModule) => {
+  // implement parsing logic here, adding necessary config/directives/etc to the raw ngModule
+});
+```
+
+## Extending Directive Parser
+The directive parser is similarly easy to extend. Any metakey you set with the `componentWriter` will be added to the directive definiton object. Here's an example of creating a priority decorator that set's the directive's priority:
+
+```js
+import {componentWriter} from 'angular-decorators';
+
+export const Priority = level => target => componentWriter.set('priority', level, target);
+```
