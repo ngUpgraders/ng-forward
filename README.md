@@ -67,7 +67,7 @@ let lastModule = angular.module('last-module', [ myModule.name ]);
 
 ## Decorators
 
-The decorators provided in this package follow [this proposal](https://github.com/jonathandturner/brainstorming/blob/master/README.md). They work by adding metadata to your classes and functions under the `$ng-decs` namespace using the reflect-metadata polyfill.
+The decorators provided in this package follow [this proposal](https://github.com/jonathandturner/brainstorming/blob/master/README.md). They work by adding metadata to your classes under the `$ng-decs` namespace using the reflect-metadata polyfill.
 
 ### Inject
 
@@ -82,7 +82,7 @@ class MyService{
 }
 ```
 
-When used with inheritance, child dependencies are placed before parent dependencies letting you easily capture parent dependencies using a rest parameter:
+When inheriting from a decorated class, child dependencies are placed before parent dependencies letting you easily capture parent dependencies using a rest parameter:
 
 ```js
 @Inject('$q', '$http')
@@ -109,10 +109,22 @@ import {Component, Module} from 'angular-decorators';
 
 @Component({ selector : 'my-component' })
 class MyComponentCtrl{
-	constructor(){ }
+	constructor(){ ... }
 }
 
-Module('my-component-module', []).add(MyComponentCtrl);
+export default Module('my-component-module', []).add(MyComponentCtrl);
+```
+
+The directive definition object generated for the above component is:
+
+```js
+{
+  controller: MyComponentCtrl,
+  controllerAs: 'myComponent',
+  bindToController: true,
+  scope: {},
+  restrict: 'E'
+}
 ```
 
 #### Binding Element Attributes to the Controller
@@ -341,7 +353,8 @@ class Comment{
 export default Module('comment-factory', []).add(Comment);
 ```
 
-## Adding Your Own Parsers
+## Extending angular-decrators
+#### Adding Your Own Parsers
 Adding your own parsers and decorators to angular-decorators is relatively painless. For instance, if you want to add a new decorator called `@RouteableComponent` that hooked up a component to the upcoming router, you would start by creating a decorator that set a provider name and type on a class:
 
 ```js
@@ -363,7 +376,7 @@ Module.addParser('routeable-component', (parsedClass, parsedName, injectables, n
 });
 ```
 
-## Extending Directive Parser
+#### Extending the Directive Parser
 The directive parser is similarly easy to extend. Any metakey you set with the `componentWriter` will be added to the directive definiton object. Here's an example of creating a priority decorator that set's the directive's priority:
 
 ```js
@@ -371,3 +384,4 @@ import {componentWriter} from 'angular-decorators';
 
 export const Priority = level => target => componentWriter.set('priority', level, target);
 ```
+
