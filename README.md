@@ -71,7 +71,7 @@ The decorators provided in this package follow [this proposal](https://github.co
 
 ### Inject
 
-The `@Inject` decorator let's you specify dependencies to AngularJS's dependency injector:
+The `@Inject` decorator lets you specify dependencies to AngularJS's dependency injector:
 
 ```js
 @Inject('$q', '$http')
@@ -82,7 +82,7 @@ class MyService{
 }
 ```
 
-When inheriting from a decorated class, child dependencies are placed before parent dependencies letting you easily capture parent dependencies using a rest parameter:
+When inheriting from a decorated class, child dependencies are specified before parent dependencies letting you capture parent dependencies using a rest parameter:
 
 ```js
 @Inject('$q', '$http')
@@ -102,7 +102,7 @@ class Child extends Parent{
 
 ### Component
 
-The `@Component` decorator let's you easily create components in AngularJS by wrapping the directive API and setting you up with sensible defaults:
+The `@Component` decorator let's you create components in AngularJS by wrapping the directive API and setting you up with sensible defaults:
 
 ```js
 import {Component, Module} from 'angular-decorators';
@@ -161,7 +161,7 @@ This becomes:
 
 #### Renaming `controllerAs`
 
-By default, the `controllerAs` property is set to a camel-cased version of your selector (i.e. `my-own-component`'s `controllerAs` would be `myOwnComponent`'). Changing it is easy:
+By default, the `controllerAs` property is a camel-cased version of your selector (i.e. `my-own-component`'s `controllerAs` would be `myOwnComponent`'). You can override this by specifying a new name in the `@Component:
 
 ```js
 @Component({
@@ -171,7 +171,7 @@ By default, the `controllerAs` property is set to a camel-cased version of your 
 ```
 
 #### Changing Scope
-By default, isolate scopes are created for each component. It is strongly recommended that you structure your components to always create isolate scopes, but if you need to change this it can be specified in the component config object:
+By default, components create new, isolate scopes but this can be manually set in the component config object:
 
 ```js
 @Component({
@@ -244,7 +244,7 @@ class MyClassCtrl{
 }
 ```
 
-It is important to note that unlike `@Component`, `@Directive` does not create a new isolate scope by default nor does it expose your directive's controller on the scope.
+Note that unlike `@Component`, `@Directive` does not create a new isolate scope by default nor does it expose your directive's controller on the scope.
 
 ### Filter
 The `@Filter` decorator let's you write class-based filters similar to Angular 2's Pipes:
@@ -265,10 +265,10 @@ class TrimFilter{
 export default Module('trim-filter', []).add(TrimFilter);
 ```
 
-The support function is optional, however if you supply a support function and some input fails the support test the filter will throw an exception.
+The support function is an optional test against the input. If the support function returns false the generated filter will throw an error instead of applying the transform.
 
 ### Service
-The `@Service` decorator simply turns your class into a service:
+The `@Service` decorator turns your class into a service:
 
 ```js
 import {Service, Inject, Module} from 'angular-decorators';
@@ -354,8 +354,8 @@ export default Module('comment-factory', []).add(Comment);
 ```
 
 ## Extending angular-decrators
-#### Adding Your Own Parsers
-Adding your own parsers and decorators to angular-decorators is relatively painless. For instance, if you want to add a new decorator called `@RouteableComponent` that hooked up a component to the upcoming router, you would start by creating a decorator that set a provider name and type on a class:
+#### Adding Your Own Providers
+You can register your own providers using `Module.addProvider`. For instance, if you want to add a new decorator called `@RouteableComponent` that hooked up a component to the upcoming router, you would start by creating a decorator that set a provider name and type on a class:
 
 ```js
 import {providerWriter} from 'angular-decorators/writers';
@@ -371,13 +371,13 @@ Then you'll need to register your custom parser:
 ```js
 import Module from 'angular-decorators/module';
 
-Module.addParser('routeable-component', (parsedClass, parsedName, injectables, ngModule) => {
+Module.addProvider('routeable-component', (provider, name, injectables, ngModule) => {
   // implement parsing logic here, adding necessary config/directives/etc to the raw ngModule
 });
 ```
 
 #### Extending the Directive Parser
-The directive parser is similarly easy to extend. Any metakey you set with the `componentWriter` will be added to the directive definiton object. Here's an example of creating a priority decorator that set's the directive's priority:
+The directive definiton object is derived from all key/value pairs set with the `providerWriter`. Here's an example of creating a priority decorator that sets a directive's priority:
 
 ```js
 import {componentWriter} from 'angular-decorators';
