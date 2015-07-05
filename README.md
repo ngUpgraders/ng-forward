@@ -102,7 +102,7 @@ class Child extends Parent{
 
 ### Component
 
-The `@Component` decorator let's you create components in AngularJS by wrapping the directive API and setting you up with sensible defaults:
+The `@Component` decorator lets you create components in AngularJS by wrapping the directive API and setting you up with sensible defaults:
 
 ```js
 import {Component, Module} from 'angular-decorators';
@@ -127,7 +127,7 @@ The directive definition object generated for the above component is:
 }
 ```
 
-#### Binding Element Attributes to the Controller
+##### Binding Element Attributes to the Controller
 
 Supply an array to properties key of your config object using Angular 2 property syntax:
 
@@ -159,7 +159,7 @@ This becomes:
 })
 ```
 
-#### Renaming `controllerAs`
+##### Renaming `controllerAs`
 
 By default, the `controllerAs` property is a camel-cased version of your selector (i.e. `my-own-component`'s `controllerAs` would be `myOwnComponent`'). You can override this by specifying a new name in the `@Component:
 
@@ -170,7 +170,7 @@ By default, the `controllerAs` property is a camel-cased version of your selecto
 })
 ```
 
-#### Changing Scope
+##### Changing Scope
 By default, components create new, isolate scopes but this can be manually set in the component config object:
 
 ```js
@@ -180,7 +180,7 @@ By default, components create new, isolate scopes but this can be manually set i
 })
 ```
 
-#### Setting the Template
+##### Setting the Template
 Templates are added with the `@View` decorator. Pass in a config object with either an inline `template` or a `templateUrl`:
 
 ```js
