@@ -12,6 +12,8 @@ var _module3 = _interopRequireDefault(_module2);
 
 var _decoratorsInject = require('./decorators/inject');
 
+var _decoratorsProvidersAnimation = require('./decorators/providers/animation');
+
 var _decoratorsProvidersComponent = require('./decorators/providers/component');
 
 var _decoratorsProvidersController = require('./decorators/providers/controller');
@@ -20,13 +22,11 @@ var _decoratorsProvidersDirective = require('./decorators/providers/directive');
 
 var _decoratorsProvidersFactory = require('./decorators/providers/factory');
 
+var _decoratorsProvidersFilter = require('./decorators/providers/filter');
+
 var _decoratorsProvidersProvider = require('./decorators/providers/provider');
 
 var _decoratorsProvidersService = require('./decorators/providers/service');
-
-var _decoratorsProvidersFilter = require('./decorators/providers/filter');
-
-var _decoratorsProvidersAnimation = require('./decorators/providers/animation');
 
 var _decoratorsComponentRequire = require('./decorators/component/require');
 
@@ -35,6 +35,7 @@ var _decoratorsComponentView = require('./decorators/component/view');
 var _decoratorsComponentTransclude = require('./decorators/component/transclude');
 
 exports.Module = _module3['default'];
+exports.Inject = _decoratorsInject.Inject;
 exports.Component = _decoratorsProvidersComponent.Component;
 exports.Controller = _decoratorsProvidersController.Controller;
 exports.Directive = _decoratorsProvidersDirective.Directive;
