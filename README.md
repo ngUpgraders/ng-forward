@@ -14,7 +14,7 @@ _[Looking for the 0.1x docs?](https://github.com/MikeRyan52/angular-decorators/b
 
 ## Modules
 
-The standard `angular.module` does not understand the metadata attached to your classes from this library's decorators. Use the provided Module function to create Angular modules:
+The standard `angular.module` does not understand the metadata attached to your classes from this library's decorators. Use the provided Module function to create decorator-friendly Angular modules:
 
 ```js
 import {Module} from 'angular-decorators';
@@ -26,7 +26,7 @@ let myModule = Module('my-module', ['ui.bootrap', 'ui.router']);
 let otherModule = Module('my-module');
 ```
 
-Adding decorated classes is easy:
+All decorated classes are added to the module using `add`:
 
 ```js
 import {Service, Module} from 'angular-decorators';
@@ -37,13 +37,13 @@ class MyService{ }
 Module('my-module', []).add(MyService);
 ```
 
-As is accessing the internal `angular.module` (if you need it):
+If you need the raw `angular.module`, use the `publish` function:
 
 ```js
 let angularModule = myModule.add(AnnotatedClass).publish();
 ```
 
-It also supports `config` and `run` blocks:
+Modules alias `config` and `run` blocks to the internal `angular-module`:
 
 ```js
 Module('example', []).config(...).run(...);
@@ -67,11 +67,11 @@ let lastModule = angular.module('last-module', [ myModule.name ]);
 
 ## Decorators
 
-The decorators provided in this package follow [this proposal](https://github.com/jonathandturner/brainstorming/blob/master/README.md). They work by adding metadata to your classes under the `$ng-decs` namespace using the reflect-metadata polyfill.
+The decorators provided in this package follow [this proposal](https://github.com/jonathandturner/brainstorming/blob/master/README.md). They work by adding metadata to your classes under the `$ng-decs` namespace using the [reflect-metadata polyfill](https://github.com/rbuckton/ReflectDecorators).
 
 ### Inject
 
-The `@Inject` decorator lets you specify dependencies to AngularJS's dependency injector:
+The `@Inject` decorator lets you specify dependencies:
 
 ```js
 @Inject('$q', '$http')
@@ -105,11 +105,12 @@ class Child extends Parent{
 The `@Component` decorator lets you create components in AngularJS by wrapping the directive API and setting you up with sensible defaults:
 
 ```js
-import {Component, Module} from 'angular-decorators';
+import {Component, Inject, Module} from 'angular-decorators';
 
 @Component({ selector : 'my-component' })
+@Inject('$q')
 class MyComponentCtrl{
-	constructor(){ ... }
+	constructor($q){ ... }
 }
 
 export default Module('my-component-module', []).add(MyComponentCtrl);
@@ -119,7 +120,7 @@ The directive definition object generated for the above component is:
 
 ```js
 {
-  controller: MyComponentCtrl,
+  controller: ['$q', MyComponentCtrl],
   controllerAs: 'myComponent',
   bindToController: true,
   scope: {},
@@ -129,7 +130,7 @@ The directive definition object generated for the above component is:
 
 ##### Binding Element Attributes to the Controller
 
-Supply an array to properties key of your config object using Angular 2 property syntax:
+Supply an array of properties key of your config object using Angular 2 property syntax:
 
 ```js
 @Component({
@@ -159,9 +160,11 @@ This becomes:
 })
 ```
 
+For information on attribute binding, view the [AngularJS docs on scopes](https://docs.angularjs.org/api/ng/service/$compile#-scope-).
+
 ##### Renaming `controllerAs`
 
-By default, the `controllerAs` property is a camel-cased version of your selector (i.e. `my-own-component`'s `controllerAs` would be `myOwnComponent`'). You can override this by specifying a new name in the `@Component:
+By default, the `controllerAs` property is a camelCased version of your selector (i.e. `my-own-component`'s `controllerAs` would be `myOwnComponent`'). You can override this by specifying a new name in the `@Component` config object:
 
 ```js
 @Component({
@@ -224,7 +227,7 @@ class MyComponent{ ... }
 ```
 
 ### Directive
-The `@Directive` decorator is like the `@Component` decorator, except you use `@Directive` for directives that you want to restrict to a class or attribute:
+Unlike `@Component`, `@Directive` does not create a new isolate scope by default nor does it expose your directive's controller on the scope. It can only be used for directives that you want to restrict to a class name or attribute:
 
 ```js
 import {Directive} from 'angular-decorators';
@@ -244,16 +247,15 @@ class MyClassCtrl{
 }
 ```
 
-Note that unlike `@Component`, `@Directive` does not create a new isolate scope by default nor does it expose your directive's controller on the scope.
-
 ### Filter
-The `@Filter` decorator let's you write class-based filters similar to Angular 2's Pipes:
+The `@Filter` decorator lets you write class-based filters similar to Angular 2's Pipes:
 
 ```js
 import {Filter, Module} from 'angular-decorators';
 
 @Filter('trim')
 class TrimFilter{
+  // Implementing a supports function is encouraged but optional
 	supports(input){
 		return (typeof input === 'string');
 	}
@@ -265,7 +267,7 @@ class TrimFilter{
 export default Module('trim-filter', []).add(TrimFilter);
 ```
 
-The support function is an optional test against the input. If the support function returns false the generated filter will throw an error instead of applying the transform.
+The `supports` function is an optional test against the input. If the `supports` function returns false the generated filter will throw an error instead of applying the transform.
 
 ### Service
 The `@Service` decorator turns your class into a service:
@@ -285,14 +287,10 @@ export default Module('my-service', []).add(MyService);
 ```
 
 ### Factory
-The factory decorator is a complex decorator that assumes:
-
-1. You have a class that requires parameters on instantiation
-2. The parameters differ from injected AngularJS services
-
-For example, if you had a class that looked like this:
+The `@Factory` decorator is a complex decorator that assumes you have a class that requires more parameters on instantiation than what will be provided by AngularJS's injector. For example, if you had a class that looked like this:
 
 ```js
+@Inject('$http')
 class Post{
 	constructor($http, title, content){
 
@@ -300,7 +298,7 @@ class Post{
 }
 ```
 
-and you wanted to make a factory that created a `Post` with a parameters for title and content, you could do the following:
+and you wanted to make a factory that created a new `Post` with a parameters for title and content, you would use `@Factory`:
 
 ```js
 import {Factory, Inject, Module} from 'angular-decorators';
@@ -313,7 +311,7 @@ class Post{
 	}
 }
 
-export default Module('post-factory', []).add(PostFactory);
+export default Module('post-factory', []).add(Post);
 ```
 
 When injected elsewhere use the factory like this:
@@ -376,12 +374,15 @@ Module.addProvider('routeable-component', (provider, name, injectables, ngModule
 });
 ```
 
+Your parser will be called each time a provider is added to a `Module` that has the provider type you've specified.
+
 #### Extending the Directive Parser
-The directive definiton object is derived from all key/value pairs set with the `providerWriter`. Here's an example of creating a priority decorator that sets a directive's priority:
+The directive definiton object is derived from all key/value pairs set with the `componentWriter`. Here is an example of creating a priority decorator that sets a directive's priority:
 
 ```js
-import {componentWriter} from 'angular-decorators';
+import {componentWriter} from 'angular-decorators/writers';
 
 export const Priority = level => target => componentWriter.set('priority', level, target);
 ```
 
+No other configuration is required. Simply using `@Priority` in tandem with `@Component` or `@Directive` will work.
