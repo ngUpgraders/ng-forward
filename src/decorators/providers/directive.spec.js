@@ -1,5 +1,5 @@
 import {providerWriter, componentWriter} from '../../writers';
-import '../../util/tests';
+import '../../tests/frameworks';
 import {Directive} from './directive';
 
 describe('@Directive Decorator', function(){

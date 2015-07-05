@@ -1,27 +1,24 @@
-import {sinon} from '../../util/tests';
-import '../../util/tests';
+import {sinon} from '../../tests/frameworks';
+import Module from '../../module';
 import {providerWriter, componentWriter} from '../../writers';
 import {Controller} from './controller';
 
 describe('@Controller annotation', function(){
-	xit('should decorate a class with $provider meta data', function(){
+	it('should decorate a class with $provider meta data', function(){
 		@Controller
 		class MyController{ }
 
-		hasMeta('$provider', MyController).should.be.ok;
-		getMeta('$provider', MyController).should.eql({
-			name : 'MyController',
-			type : 'controller'
-		});
+		providerWriter.get('type', MyController).should.eql('controller');
+		providerWriter.get('name', MyController).should.eql('MyController');
 	});
 
-	xit('should register a controller parser with the Module class', function(){
+	it('should register a controller parser with the Module class', function(){
 		let parser = Module.getParser('controller');
 
 		parser.should.exist;
 	});
 
-	xit('should correctly parse a controller', function(){
+	it('should correctly parse a controller', function(){
 		@Controller
 		class MyController{ }
 
@@ -31,7 +28,7 @@ describe('@Controller annotation', function(){
 
 		let parser = Module.getParser('controller');
 
-		parser(MyController, module);
+		parser(MyController, 'MyController', [], module);
 
 		let name = module.controller.args[0][0];
 		let controller = module.controller.args[0][1];
@@ -41,15 +38,15 @@ describe('@Controller annotation', function(){
 		controller.should.eql([MyController]);
 	});
 
-	xit('should define the $provider property on the prototype of the target', function(){
+	it('should define the $provider property on the prototype of the target', function(){
 		@Controller
 		class MyController{ }
 
 		@Controller
 		class NewController extends MyController{ }
 
-		getMeta('$provider', MyController).name.should.not.equal('NewController');
-		getMeta('$provider', MyController).name.should.equal('MyController');
-		getMeta('$provider', NewController).name.should.equal('NewController');
+		providerWriter.get('name', MyController).should.not.equal('NewController');
+		providerWriter.get('name', MyController).should.equal('MyController');
+		providerWriter.get('name', NewController).should.equal('NewController');
 	});
 });

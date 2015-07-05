@@ -1,5 +1,5 @@
 import parseSelector from './parse-selector';
-import chai from './tests';
+import chai from '../tests/frameworks';
 
 describe('Component selector parser', function(){
 	it('should correctly parse element selectors', function(){

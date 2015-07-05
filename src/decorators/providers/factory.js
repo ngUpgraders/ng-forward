@@ -5,7 +5,7 @@ const TYPE = 'factory';
 
 export const Factory = decoratorFactory(TYPE);
 
-Module.registerProvider(TYPE, (provider, name, injects, ngModule) => {
+Module.addProvider(TYPE, (provider, name, injects, ngModule) => {
 	let create = provider.create || function(dependencies, ...params){
 		return new provider(...dependencies, ...params);
 	};

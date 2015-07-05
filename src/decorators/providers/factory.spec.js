@@ -1,17 +1,15 @@
-// import {Factory} from './factory';
-// import {Module} from '../module/module';
-// import {sinon} from '../util/tests';
-// import {hasMeta, getMeta} from '../util/metadata';
+import {Factory} from './factory';
+import Module from '../../module';
+import {sinon} from '../../tests/frameworks';
+import {providerWriter} from '../../writers';
 
-xdescribe('@Factory Annotation', function(){
+describe('@Factory Annotation', function(){
 	it('should decorate a class with $provider meta information', function(){
 		@Factory('MyFactory')
 		class ExampleClass{ }
 
-		getMeta('$provider', ExampleClass).should.eql({
-			name : 'MyFactory',
-			type : 'factory'
-		});
+		providerWriter.get('type', ExampleClass).should.eql('factory');
+		providerWriter.get('name', ExampleClass).should.eql('MyFactory');
 	});
 
 	describe('Parser', function(){
@@ -36,7 +34,7 @@ xdescribe('@Factory Annotation', function(){
 				}
 			}
 
-			parser(ExampleClass, module);
+			parser(ExampleClass, 'MyFactory', [], module);
 			let factoryProvider = module.factory.args[0][1][0];
 
 			factoryProvider()();
@@ -54,7 +52,7 @@ xdescribe('@Factory Annotation', function(){
 				}
 			}
 
-			parser(ExampleClass, module);
+			parser(ExampleClass, 'MyFactory', [], module);
 			let factoryProvider = module.factory.args[0][1][0];
 
 			factoryProvider(1, 2)();
@@ -77,7 +75,7 @@ xdescribe('@Factory Annotation', function(){
 				}
 			}
 
-			parser(ExampleClass, module);
+			parser(ExampleClass, 'MyFactory', [], module);
 
 			let factoryName = module.factory.args[0][0];
 			let factoryProvider = module.factory.args[0][1][0];

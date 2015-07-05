@@ -1,5 +1,5 @@
 import {Component} from './component';
-import '../../util/tests';
+import '../../tests/frameworks';
 import {providerWriter, componentWriter} from '../../writers';
 
 describe('@Component annotation', function(){

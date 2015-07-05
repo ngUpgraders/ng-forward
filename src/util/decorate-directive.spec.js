@@ -1,7 +1,7 @@
 import decorateDirective from './decorate-directive';
 import Module from '../module';
 import {componentWriter} from '../writers';
-import {sinon} from './tests';
+import {sinon} from '../tests/frameworks';
 
 describe('Directive Decorator', function(){
 	class Example{ }

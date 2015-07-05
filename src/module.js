@@ -28,7 +28,12 @@ class DecoratedModule{
 			let name = providerWriter.get('name', provider);
 			let inject = baseWriter.get('$inject', provider) || [];
 
-			_parsers[type](provider, name, inject, this._module);
+			if(_parsers[type]){
+				_parsers[type](provider, name, inject, this._module);
+			}
+			else{
+				throw new Error(`No parser registered for type '${type}'`);
+			}
 		}
 
 		return this;
@@ -77,7 +82,7 @@ function Module(...params){
 	return new DecoratedModule(...params);
 }
 
-Module.registerProvider = function(providerType, parser){
+Module.addProvider = function(providerType, parser){
 	_parsers[providerType] = parser;
 }
 
