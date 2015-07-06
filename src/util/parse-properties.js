@@ -1,5 +1,25 @@
+const ALLOWED_SYMBOLS = ['&', '=', '@', '=', '*', '?'];
+
 function checkBindingType(str){
-	return (str.charAt(0) === '&' || str.charAt(0) === '=' || str.charAt(0) === '@')
+	return (ALLOWED_SYMBOLS.indexOf(str.charAt(0)) !== -1);
+}
+
+function parseProperty(str){
+	let symbols = [];
+
+	function getName(input){
+		if(checkBindingType(input.join('')))
+		{
+			symbols.push(input.shift());
+			return getName(input);
+		}
+
+		return input;
+	}
+
+	let name = getName(str.split(''));
+
+	return { name: name.join(''), symbols: symbols.join('') };
 }
 
 export default function(props){
@@ -13,15 +33,14 @@ export default function(props){
 		}
 
 		if(split.length === 1 && checkBindingType(split[0])){
-			let type = split[0].substr(0, 1);
-			let prop = split[0].substr(1);
-			map[prop] = type;
+			let {name, symbols} = parseProperty(split[0]);
+			map[name] = symbols;
 		}
 		else if(split.length === 2 && checkBindingType(split[1])){
 			map[split[0]] = split[1];
 		}
 		else{
-			throw new Error('Properties must be in the form of "propName: [&, @, =]attrName" or in the form of "[&, @, =]attrName"');
+			throw new Error('Properties must be in the form of "propName: [&, @, =, =*, =?, =*?]attrName" or in the form of "[&, @, =, =*, =?, =*?]attrName"');
 		}
 	}
 
