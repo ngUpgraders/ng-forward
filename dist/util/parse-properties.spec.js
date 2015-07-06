@@ -12,16 +12,21 @@ var _parseProperties2 = _interopRequireDefault(_parseProperties);
 
 describe('Property Parser', function () {
 	it('should parse an array of colon-delimited properties', function () {
-		(0, _parseProperties2['default'])(['myProp: @anotherProp', 'secondProp: =thirdProp']).should.eql({
-			myProp: '@anotherProp',
-			secondProp: '=thirdProp'
+		(0, _parseProperties2['default'])(['a: @a1', 'b: =b2', 'c: =?c2', 'd: =*d2', 'e: =*?e2']).should.eql({
+			a: '@a1',
+			b: '=b2',
+			c: '=?c2',
+			d: '=*d2',
+			e: '=*?e2'
 		});
 	});
 
 	it('should parse an array of simple properties', function () {
-		(0, _parseProperties2['default'])(['@anotherProp', '=thirdProp']).should.eql({
-			anotherProp: '@',
-			thirdProp: '='
+		(0, _parseProperties2['default'])(['@a', '=b', '=?c', '=*?d']).should.eql({
+			a: '@',
+			b: '=',
+			c: '=?',
+			d: '=*?'
 		});
 	});
 

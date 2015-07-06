@@ -4,25 +4,35 @@ import parseProperties from './parse-properties';
 describe('Property Parser', function(){
 	it('should parse an array of colon-delimited properties', function(){
 		parseProperties([
-			'myProp: @anotherProp',
-			'secondProp: =thirdProp'
+			'a: @a1',
+			'b: =b2',
+			'c: =?c2',
+			'd: =*d2',
+			'e: =*?e2'
 		])
 
 		.should.eql({
-			myProp : '@anotherProp',
-			secondProp : '=thirdProp'
+			a : '@a1',
+			b : '=b2',
+			c : '=?c2',
+			d : '=*d2',
+			e : '=*?e2'
 		});
 	});
 
 	it('should parse an array of simple properties', function(){
 		parseProperties([
-			'@anotherProp',
-			'=thirdProp'
+			'@a',
+			'=b',
+			'=?c',
+			'=*?d'
 		])
 
 		.should.eql({
-			anotherProp : '@',
-			thirdProp : '='
+			a: '@',
+			b: '=',
+			c: '=?',
+			d: '=*?'
 		});
 	});
 
