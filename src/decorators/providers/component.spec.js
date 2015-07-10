@@ -45,4 +45,23 @@ describe('@Component annotation', function(){
 		caughtAttr.should.be.ok;
 		caughtClass.should.be.ok;
 	});
+
+	it('should respect inheritance', function(){
+		@Component({
+			selector: 'parent',
+			properties: [
+				'@first',
+				'=second'
+			]
+		})
+		class ParentCtrl{ }
+
+		@Component({ selector: 'child' })
+		class ChildCtrl extends ParentCtrl{ }
+
+		componentWriter.get('bindToController', ChildCtrl).should.eql({
+			first: '@',
+			second: '='
+		});
+	});
 });

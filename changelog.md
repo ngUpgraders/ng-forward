@@ -1,13 +1,69 @@
-# v1.0.0
+# Changelog
 
-## New Features
+## v1.0.3
+
+**Documentation now includes examples of `@Animation` and `@Provider`**
+Examples of usage:
+```js
+@Animation('.my-animation')
+class MyAnimation{ ... }
+
+@Provider('SomeService')
+class SomeServiceProvider{ ... }
+```
+
+**Properties and scope of a component are respected with inheritance**
+
+```js
+@Component({
+	selector: 'parent',
+	properties: [
+		'=first'
+	]
+})
+class ParentCtrl{ ... }
+
+@Component({
+	selector: 'child',
+	properties: [
+		'@second'
+	]
+})
+class ChildCtrl extends ParentCtrl{ ... }
+
+// Properties of childCtrl are: ['=first', '@second']
+```
+
+## v1.0.2
+
+**Fixed bug where properties were parsed incorrectly**
+Property declarations now have full support for watch collection and optional symbols:
+
+```js
+@Component({
+  selector: 'example',
+  properties: [
+    '=*first',
+    '=?second',
+    '=*?third'
+  ]
+})
+```
+
+## v1.0.1
+
+**Correctly exporting `@Inject` decorator**
+
+## v1.0.0
+
+### New Features
 
 * `@Animation` decorator for creating animation providers
 * `@Provider` decorator for creating raw providers
 * `@Filter` decorator for defining Angular 2 pipe-style filters
 * `@Component({ properties: [ 'myAttr: =renamedAttr' ] })` for defining properties Angular 2 style
 
-## Breaking Changes
+### Breaking Changes
 
 **Inject decorator now places new injects at the front of the injection array rather than at the end**
 

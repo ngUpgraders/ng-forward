@@ -1,3 +1,4 @@
+/*global describe,it,beforeEach */
 import decorateDirective from './decorate-directive';
 import Module from '../module';
 import {componentWriter} from '../writers';
@@ -7,11 +8,11 @@ describe('Directive Decorator', function(){
 	class Example{ }
 
 	it('should let you bind attributes to the controller using a simple map', function(){
-		decorateDirective({ bind : {
+		decorateDirective({ bind: {
 			'someProp' : '@'
 		}}, Example);
 
-		componentWriter.get('scope', Example).should.eql({ someProp : '@' });
+		componentWriter.get('scope', Example).should.eql({ someProp: '@' });
 		componentWriter.get('bindToController', Example).should.be.ok;
 	});
 
@@ -32,14 +33,14 @@ describe('Directive Decorator', function(){
 		}, Example);
 
 		componentWriter.get('bindToController', Example).should.eql({
-			'someProp' : '@',
-			'anotherProp' : '='
+			'someProp': '@',
+			'anotherProp': '='
 		});
 	});
 
 	it('should throw an error if you do not pass an array to the properties field', function(){
 		let dec = (val) => () => decorateDirective({
-			properties : val
+			properties: val
 		}, Example);
 
 		dec('string').should.throw(TypeError);
@@ -50,7 +51,7 @@ describe('Directive Decorator', function(){
 	});
 
 	it('should set the controllerAs field if provided', function(){
-		decorateDirective({ controllerAs : 'hi' }, Example);
+		decorateDirective({ controllerAs: 'hi' }, Example);
 
 		componentWriter.get('controllerAs', Example).should.eql('hi');
 	});
@@ -64,7 +65,7 @@ describe('Directive Decorator', function(){
 
 		beforeEach(function(){
 			parser = Module.getParser('directive');
-			ngModule = { directive : sinon.spy() };
+			ngModule = { directive: sinon.spy() };
 		});
 
 		it('should be defined', function(){
@@ -82,7 +83,7 @@ describe('Directive Decorator', function(){
 			name.should.eql('testSelector');
 			(typeof factory).should.eql('function');
 			factory().should.eql({
-				controller : [Test]
+				controller: [Test]
 			});
 		});
 
@@ -108,13 +109,61 @@ describe('Directive Decorator', function(){
 			factory().should.eql({
 				scope: true,
 				bindToController: {
-					attr : '@',
-					prop : '='
+					attr: '@',
+					prop: '='
 				},
 				controllerAs: 'asdf',
 				controller: ['$q', '$timeout', AnotherTest],
 				link: AnotherTest.link,
 				compile: AnotherTest.compile
+			});
+		});
+
+		it('should respect properties inheritance during parsing', function(){
+			class Parent{ }
+
+			decorateDirective({
+				properties: [
+					'=first',
+					'@second'
+				],
+				scope: {
+					first: '=',
+					second: '&another'
+				}
+			}, Parent);
+
+			class Child extends Parent{ }
+
+			decorateDirective({
+				properties: [
+					'&second',
+					'&third',
+					'fourth: =*renamed'
+				],
+				scope: {
+					second: '=primary',
+					third: '@'
+				}
+			}, Child);
+
+			parser(Child, 'childSelector', [], ngModule);
+
+			let [name, factory] = ngModule.directive.args[0];
+
+			factory().should.eql({
+				bindToController: {
+					first: '=',
+					second: '&',
+					third: '&',
+					fourth: '=*renamed'
+				},
+				scope: {
+					first: '=',
+					second: '=primary',
+					third: '@'
+				},
+				controller: [Child]
 			});
 		});
 	});

@@ -351,6 +351,50 @@ class Comment{
 export default Module('comment-factory', []).add(Comment);
 ```
 
+### Providers
+Create raw providers using the `@Provider` decorator. For easily injecting dependencies to the `$get` function, enable ES7 property initializers in your compiler:
+
+```js
+import {Provider, Module} from 'angular-decorators';
+
+@Provider('SomeService')
+class SomeServiceProvider{
+  constructor(){
+    this.greeting = 'hello';
+  }
+
+  setGreeting(newGreeting){
+    this.greeting = newGreeting;
+  }
+
+  $get = ['$timeout', $timeout => name => $timeout(() => console.log(`${this.greeting} ${name}`))];
+}
+
+export default Module('some-service-provider', []).add(SomeServiceProvider);
+```
+
+### Animation
+Create animations using the `@Animation` decorator. Requires `ngAnimate` to be included in your module:
+
+```js
+import {Animation, Inject, Module} from 'angular-decorators';
+import ngAnimate from 'angular-animate';
+
+@Animation('.animation-class')
+@Inject('$q')
+class MyAnimation{
+  constructor($q){
+    this.$q = $q;
+  }
+  enter(element){
+    return this.$q((resolve, reject) => { ... });
+  }
+}
+
+export default Module('my-animation', [ngAnimate]).add(MyAnimation);
+```
+
+
 ## Extending angular-decrators
 #### Adding Your Own Providers
 You can register your own providers using `Module.addProvider`. For instance, if you want to add a new decorator called `@RouteableComponent` that hooked up a component to the upcoming router, you would start by creating a decorator that set a provider name and type on a class:
