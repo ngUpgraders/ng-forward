@@ -41,9 +41,16 @@ var Component = function Component(config) {
 		_writers.providerWriter.set('type', TYPE, t);
 
 		// Sensible defaults for components
-		_writers.componentWriter.set('restrict', restrict, t);
-		_writers.componentWriter.set('scope', {}, t);
-		_writers.componentWriter.set('bindToController', true, t);
+		if (!_writers.componentWriter.has('restrict', t)) {
+			_writers.componentWriter.set('restrict', restrict, t);
+		}
+		if (!_writers.componentWriter.has('scope', t)) {
+			_writers.componentWriter.set('scope', {}, t);
+		}
+		if (!_writers.componentWriter.has('bindToController', t)) {
+			_writers.componentWriter.set('bindToController', true, t);
+		}
+
 		_writers.componentWriter.set('controllerAs', name, t);
 
 		(0, _utilDecorateDirective2['default'])(config, t);

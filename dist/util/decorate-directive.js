@@ -18,6 +18,10 @@ var _parseProperties = require('./parse-properties');
 
 var _parseProperties2 = _interopRequireDefault(_parseProperties);
 
+var _extend = require('extend');
+
+var _extend2 = _interopRequireDefault(_extend);
+
 exports['default'] = function (config, t) {
 	// Support for legacy angular-decorators bind config
 	if (config.bind) {
@@ -27,12 +31,25 @@ exports['default'] = function (config, t) {
 
 	// Check for scope
 	if (config.scope) {
-		_writers.componentWriter.set('scope', config.scope, t);
+		var scope = _writers.componentWriter.get('scope', t);
+
+		if (scope && typeof scope === 'object') {
+			_writers.componentWriter.set('scope', (0, _extend2['default'])(scope, config.scope), t);
+		} else {
+			_writers.componentWriter.set('scope', config.scope, t);
+		}
 	}
 
 	// Check for Angular 2 style properties
 	if (config.properties && Array.isArray(config.properties)) {
-		_writers.componentWriter.set('bindToController', (0, _parseProperties2['default'])(config.properties), t);
+		var binders = (0, _parseProperties2['default'])(config.properties);
+		var previous = _writers.componentWriter.get('bindToController', t);
+
+		if (previous && typeof previous === 'object') {
+			_writers.componentWriter.set('bindToController', (0, _extend2['default'])(previous, binders), t);
+		} else {
+			_writers.componentWriter.set('bindToController', (0, _parseProperties2['default'])(config.properties), t);
+		}
 	} else if (config.properties !== undefined) {
 		throw new TypeError('Component properties must be an array');
 	}

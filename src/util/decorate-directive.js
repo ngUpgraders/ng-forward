@@ -1,6 +1,7 @@
 import Module from '../module';
 import {componentWriter} from '../writers';
 import parseProperties from './parse-properties';
+import extend from 'extend';
 
 export default function(config, t){
 	// Support for legacy angular-decorators bind config
@@ -11,13 +12,32 @@ export default function(config, t){
 
 	// Check for scope
 	if(config.scope){
-		componentWriter.set('scope', config.scope, t);
+		let scope = componentWriter.get('scope', t);
+
+		if(scope && typeof scope === 'object')
+		{
+			componentWriter.set('scope', extend(scope, config.scope), t);
+		}
+		else
+		{
+			componentWriter.set('scope', config.scope, t);
+		}
 	}
 
 
 	// Check for Angular 2 style properties
 	if(config.properties && Array.isArray(config.properties)){
-		componentWriter.set('bindToController', parseProperties(config.properties), t);
+		let binders = parseProperties(config.properties);
+		let previous = componentWriter.get('bindToController', t);
+
+		if(previous && typeof previous === 'object')
+		{
+			componentWriter.set('bindToController', extend(previous, binders), t);
+		}
+		else
+		{
+			componentWriter.set('bindToController', parseProperties(config.properties), t);
+		}
 	}
 	else if(config.properties !== undefined){
 		throw new TypeError('Component properties must be an array');
