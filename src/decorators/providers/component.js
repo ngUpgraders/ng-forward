@@ -1,4 +1,3 @@
-import Module from '../../module';
 import parseSelector from '../../util/parse-selector';
 import decorateDirective from '../../util/decorate-directive';
 import {providerWriter, componentWriter} from '../../writers';
@@ -6,12 +5,12 @@ import {providerWriter, componentWriter} from '../../writers';
 const TYPE = 'directive';
 
 export const Component = config => t => {
-	if(! config.selector)
+	if( !config.selector )
 	{
 		throw new Error('Component selector must be provided');
 	}
 
-	let {name, type:restrict} = parseSelector(config.selector);
+	let {name, type: restrict} = parseSelector(config.selector);
 
 	if(restrict !== 'E')
 	{
