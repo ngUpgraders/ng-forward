@@ -26,7 +26,7 @@ export default function(selector){
 		for(let i = 0; i < selectorArray.length; i++)
 		{
 			let s = selectorArray[i];
-			s = s.slice(0,1).toUpperCase() + s.slice(1, s.length);
+			s = s.slice(0, 1).toUpperCase() + s.slice(1, s.length);
 			selectorArray[i] = s;
 		}
 
