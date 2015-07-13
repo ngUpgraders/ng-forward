@@ -162,6 +162,21 @@ This becomes:
 
 For information on attribute binding, view the [AngularJS docs on scopes](https://docs.angularjs.org/api/ng/service/$compile#-scope-).
 
+**Note**: the above uses the new `bindToController` syntax introduced in AngularJS 1.4. For AngularJS 1.3, use `bind` in your `@Component` config instead of `properties`:
+
+```js
+import {Component} from 'angular-decorators';
+
+@Component({
+  selector: 'my-component',
+  bind: {
+    myProp: '=renamedProp',
+    anotherAttribute: '@'
+  }
+})
+class MyComponentCtrl{ ... }
+```
+
 ##### Renaming `controllerAs`
 
 By default, the `controllerAs` property is a camelCased version of your selector (i.e. `my-own-component`'s `controllerAs` would be `myOwnComponent`'). You can override this by specifying a new name in the `@Component` config object:
