@@ -101,13 +101,13 @@ describe('@Component annotation', function () {
 		})();
 
 		var ChildCtrl = (function (_ParentCtrl2) {
+			_inherits(ChildCtrl, _ParentCtrl2);
+
 			function ChildCtrl() {
 				_classCallCheck(this, _ChildCtrl);
 
 				_get(Object.getPrototypeOf(_ChildCtrl.prototype), 'constructor', this).apply(this, arguments);
 			}
-
-			_inherits(ChildCtrl, _ParentCtrl2);
 
 			var _ChildCtrl = ChildCtrl;
 			ChildCtrl = (0, _component.Component)({ selector: 'child' })(ChildCtrl) || ChildCtrl;

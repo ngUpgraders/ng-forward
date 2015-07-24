@@ -47,6 +47,20 @@ describe('Decorator Supported Module', function () {
 		_testsAngular.ngMocks.run.should.have.been.calledWith(run);
 	});
 
+	it('should let you add value to the module', function () {
+		var value = 'testValue';
+		(0, _module3['default'])('test', []).value('test', value);
+
+		_testsAngular.ngMocks.value.should.have.been.calledWith('test', value);
+	});
+
+	it('should let you add constant to the module', function () {
+		var value = 'constantValue';
+		(0, _module3['default'])('test', []).constant('TEST', value);
+
+		_testsAngular.ngMocks.constant.should.have.been.calledWith('TEST', value);
+	});
+
 	describe('Adding providers', function () {
 		var exampleRegister = undefined;
 

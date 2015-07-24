@@ -14,7 +14,9 @@ var ngMocks = {
 	animation: _testsFrameworks.sinon.spy(),
 	directive: _testsFrameworks.sinon.spy(),
 	provider: _testsFrameworks.sinon.spy(),
-	filter: _testsFrameworks.sinon.spy()
+	filter: _testsFrameworks.sinon.spy(),
+	value: _testsFrameworks.sinon.spy(),
+	constant: _testsFrameworks.sinon.spy()
 };
 
 exports.ngMocks = ngMocks;

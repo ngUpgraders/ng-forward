@@ -46,13 +46,13 @@ describe('@Service Decorator', function () {
 		})();
 
 		var MyClass = (function (_BaseClass2) {
+			_inherits(MyClass, _BaseClass2);
+
 			function MyClass() {
 				_classCallCheck(this, _MyClass);
 
 				_get(Object.getPrototypeOf(_MyClass.prototype), 'constructor', this).apply(this, arguments);
 			}
-
-			_inherits(MyClass, _BaseClass2);
 
 			var _MyClass = MyClass;
 			MyClass = (0, _service.Service)(MyClass) || MyClass;

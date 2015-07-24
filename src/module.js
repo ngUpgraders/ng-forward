@@ -38,7 +38,7 @@ class DecoratedModule{
 
 		return this;
 	}
-	
+
 	publish(){
 		return this._module;
 	}
@@ -75,6 +75,14 @@ class DecoratedModule{
 		this._module.run(runFunc);
 
 		return this;
+	}
+
+	value(...args){
+		this._module.value(...args);
+	}
+
+	constant(...args){
+		this._module.constant(...args);
 	}
 }
 

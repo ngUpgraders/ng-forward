@@ -6,10 +6,6 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _module2 = require('../../module');
-
-var _module3 = _interopRequireDefault(_module2);
-
 var _utilParseSelector = require('../../util/parse-selector');
 
 var _utilParseSelector2 = _interopRequireDefault(_utilParseSelector);

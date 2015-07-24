@@ -57,13 +57,13 @@ describe('@Inject annotation', function () {
 		})();
 
 		var SubClass = (function (_MyClass4) {
+			_inherits(SubClass, _MyClass4);
+
 			function SubClass() {
 				_classCallCheck(this, _SubClass);
 
 				_get(Object.getPrototypeOf(_SubClass.prototype), 'constructor', this).apply(this, arguments);
 			}
-
-			_inherits(SubClass, _MyClass4);
 
 			var _SubClass = SubClass;
 			SubClass = (0, _inject.Inject)('d', 'e', 'f')(SubClass) || SubClass;
