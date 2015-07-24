@@ -8,11 +8,13 @@ export let ngMocks = {
 	animation: sinon.spy(),
 	directive: sinon.spy(),
 	provider: sinon.spy(),
-	filter: sinon.spy()
+	filter: sinon.spy(),
+  value: sinon.spy(),
+  constant: sinon.spy()
 };
 
 export let angular = {
 	module: sinon.stub().returns(ngMocks)
 };
 
-global.angular = angular; 
+global.angular = angular;
