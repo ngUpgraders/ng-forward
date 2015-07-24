@@ -15,7 +15,7 @@ var _parsers = {};
 
 var DecoratedModule = (function () {
 	function DecoratedModule(name) {
-		var modules = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+		var modules = arguments[1] === undefined ? false : arguments[1];
 
 		_classCallCheck(this, DecoratedModule);
 
@@ -117,6 +117,8 @@ var DecoratedModule = (function () {
 			var _module2;
 
 			(_module2 = this._module).value.apply(_module2, arguments);
+
+			return this;
 		}
 	}, {
 		key: 'constant',
@@ -124,6 +126,8 @@ var DecoratedModule = (function () {
 			var _module3;
 
 			(_module3 = this._module).constant.apply(_module3, arguments);
+
+			return this;
 		}
 	}]);
 

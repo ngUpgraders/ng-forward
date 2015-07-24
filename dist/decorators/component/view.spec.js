@@ -53,13 +53,13 @@ describe('@View Decorator', function () {
 		})();
 
 		var Child = (function (_Parent2) {
-			_inherits(Child, _Parent2);
-
 			function Child() {
 				_classCallCheck(this, _Child);
 
 				_get(Object.getPrototypeOf(_Child.prototype), 'constructor', this).apply(this, arguments);
 			}
+
+			_inherits(Child, _Parent2);
 
 			var _Child = Child;
 			Child = (0, _view.View)({ templateUrl: '/path/to/it' })(Child) || Child;
@@ -67,13 +67,13 @@ describe('@View Decorator', function () {
 		})(Parent);
 
 		var GrandChild = (function (_Child2) {
-			_inherits(GrandChild, _Child2);
-
 			function GrandChild() {
 				_classCallCheck(this, _GrandChild);
 
 				_get(Object.getPrototypeOf(_GrandChild.prototype), 'constructor', this).apply(this, arguments);
 			}
+
+			_inherits(GrandChild, _Child2);
 
 			var _GrandChild = GrandChild;
 			GrandChild = (0, _view.View)({ template: 'new test' })(GrandChild) || GrandChild;

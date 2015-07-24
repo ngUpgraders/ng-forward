@@ -79,13 +79,13 @@ describe('@Controller annotation', function () {
 		})();
 
 		var NewController = (function (_MyController4) {
-			_inherits(NewController, _MyController4);
-
 			function NewController() {
 				_classCallCheck(this, _NewController);
 
 				_get(Object.getPrototypeOf(_NewController.prototype), 'constructor', this).apply(this, arguments);
 			}
+
+			_inherits(NewController, _MyController4);
 
 			var _NewController = NewController;
 			NewController = (0, _controller.Controller)(NewController) || NewController;

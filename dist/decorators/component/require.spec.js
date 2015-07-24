@@ -54,13 +54,13 @@ describe('@Require Component Decorator', function () {
 		})();
 
 		var Child = (function (_Parent2) {
-			_inherits(Child, _Parent2);
-
 			function Child() {
 				_classCallCheck(this, _Child);
 
 				_get(Object.getPrototypeOf(_Child.prototype), 'constructor', this).apply(this, arguments);
 			}
+
+			_inherits(Child, _Parent2);
 
 			var _Child = Child;
 			Child = (0, _require.Require)('b')(Child) || Child;

@@ -175,13 +175,13 @@ describe('Directive Decorator', function () {
 			}, Parent);
 
 			var Child = (function (_Parent) {
-				_inherits(Child, _Parent);
-
 				function Child() {
 					_classCallCheck(this, Child);
 
 					_get(Object.getPrototypeOf(Child.prototype), 'constructor', this).apply(this, arguments);
 				}
+
+				_inherits(Child, _Parent);
 
 				return Child;
 			})(Parent);
