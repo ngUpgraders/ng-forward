@@ -79,10 +79,14 @@ class DecoratedModule{
 
 	value(...args){
 		this._module.value(...args);
+
+		return this;
 	}
 
 	constant(...args){
 		this._module.constant(...args);
+
+		return this;
 	}
 }
 
@@ -92,10 +96,10 @@ function Module(...params){
 
 Module.addProvider = function(providerType, parser){
 	_parsers[providerType] = parser;
-}
+};
 
 Module.getParser = function(providerType){
-	return _parsers[providerType]
-}
+	return _parsers[providerType];
+};
 
 export default Module;
