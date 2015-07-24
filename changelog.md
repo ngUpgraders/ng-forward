@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.1.0
+Added `constant` and `value` aliases to to Module:
+
+```js
+import {Module} from 'angular-decorators';
+
+Module('my-module', [])
+	.constant('constant', 'test constant')
+	.value('value', 'test value');
+
 ## v1.0.3
 
 **Documentation now includes examples of `@Animation` and `@Provider`**
