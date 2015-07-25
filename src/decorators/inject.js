@@ -1,6 +1,16 @@
-import {baseWriter} from '../writers';
+import {baseWriter, providerWriter} from '../writers';
 
-export const Inject = ( ...dependencies ) => t => {
+export const Inject = ( ...injects ) => t => {
+	let dependencies = injects.map(injectable => {
+		if(typeof injectable === 'string')
+		{
+			return injectable;
+		}
+		else {
+			return providerWriter.get('name', injectable);
+		}
+	});
+
 	if(baseWriter.has('$inject', t))
 	{
 		let parentInjects = baseWriter.get('$inject', t);

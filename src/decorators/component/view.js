@@ -1,4 +1,4 @@
-import {componentWriter} from '../../writers';
+import {componentWriter, appWriter} from '../../writers';
 
 export const View = config => t => {
 	if( typeof config !== 'object' || ( !config.templateUrl && !config.template ) || t === undefined )
@@ -23,5 +23,9 @@ export const View = config => t => {
 		}
 
 		componentWriter.set('template', config.template, t);
+	}
+
+	if(config.directives){
+		appWriter.set('directives', config.directives, t);
 	}
 }

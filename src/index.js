@@ -1,4 +1,5 @@
 import Module from './module';
+import bootstrap from './bootstrap';
 import { Inject } from './decorators/inject';
 
 import { Animation } from './decorators/providers/animation';
@@ -16,6 +17,7 @@ import { Transclude } from './decorators/component/transclude';
 
 export {
 	Module,
+	bootstrap,
 	Inject,
 
 	Component,
@@ -26,7 +28,7 @@ export {
 	Factory,
 	Service,
 	Animation,
-	
+
 	Require,
 	View,
 	Transclude
