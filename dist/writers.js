@@ -16,3 +16,5 @@ var providerWriter = new _metawriter2['default']('provider', baseWriter);
 exports.providerWriter = providerWriter;
 var componentWriter = new _metawriter2['default']('component', baseWriter);
 exports.componentWriter = componentWriter;
+var appWriter = new _metawriter2['default']('app', baseWriter);
+exports.appWriter = appWriter;

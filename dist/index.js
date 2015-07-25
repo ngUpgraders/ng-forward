@@ -10,6 +10,10 @@ var _module2 = require('./module');
 
 var _module3 = _interopRequireDefault(_module2);
 
+var _bootstrap = require('./bootstrap');
+
+var _bootstrap2 = _interopRequireDefault(_bootstrap);
+
 var _decoratorsInject = require('./decorators/inject');
 
 var _decoratorsProvidersAnimation = require('./decorators/providers/animation');
@@ -35,6 +39,7 @@ var _decoratorsComponentView = require('./decorators/component/view');
 var _decoratorsComponentTransclude = require('./decorators/component/transclude');
 
 exports.Module = _module3['default'];
+exports.bootstrap = _bootstrap2['default'];
 exports.Inject = _decoratorsInject.Inject;
 exports.Component = _decoratorsProvidersComponent.Component;
 exports.Controller = _decoratorsProvidersController.Controller;

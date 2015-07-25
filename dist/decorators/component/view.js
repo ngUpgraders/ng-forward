@@ -25,6 +25,10 @@ var View = function View(config) {
 
 			_writers.componentWriter.set('template', config.template, t);
 		}
+
+		if (config.directives) {
+			_writers.appWriter.set('directives', config.directives, t);
+		}
 	};
 };
 exports.View = View;

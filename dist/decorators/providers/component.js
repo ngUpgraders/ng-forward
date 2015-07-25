@@ -35,6 +35,23 @@ var Component = function Component(config) {
 
 		_writers.providerWriter.set('name', name, t);
 		_writers.providerWriter.set('type', TYPE, t);
+		_writers.appWriter.set('selector', config.selector, t);
+
+		var viewInjector = config.viewInjector || [];
+		var modules = [];
+		var providers = [];
+		viewInjector.forEach(function (injectable) {
+			if (typeof injectable === 'string') {
+				modules.push(injectable);
+			} else if (_writers.providerWriter.has('type', injectable)) {
+				providers.push(injectable);
+			} else {
+				throw new Error('Unknown view injectable in ' + config.selector);
+			}
+		});
+
+		_writers.appWriter.set('modules', modules, t);
+		_writers.appWriter.set('providers', providers, t);
 
 		// Sensible defaults for components
 		if (!_writers.componentWriter.has('restrict', t)) {
