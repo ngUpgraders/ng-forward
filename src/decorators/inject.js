@@ -6,7 +6,8 @@ export const Inject = ( ...injects ) => t => {
 		{
 			return injectable;
 		}
-		else {
+		else
+		{
 			return providerWriter.get('name', injectable);
 		}
 	});
@@ -20,4 +21,4 @@ export const Inject = ( ...injects ) => t => {
 	{
 		baseWriter.set('$inject', dependencies, t);
 	}
-}
+};

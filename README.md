@@ -2,40 +2,68 @@ This is an experimental branch of angular-decorators. It abstracts away the need
 
 ```js
 import 'angular';
-import {Component, View, Inject, Service, bootstrap} from 'angular-decorators';
+import uiRouter from 'angular-ui-router';
+import {Component, View, Inject, Injectables, Service, bootstrap} from 'angular-decorators';
 
 @Service('Test')
+@Inject('$state')
 class Test{
-	constructor(){
+	constructor($state){
 		this.isReal = true;
+		console.log($state);
 	}
 }
 
 @Component({
-	selector: 'inner-app'
+	selector: 'nested'
 })
 @View({
-	template: '<h2>Inner app</h2>'
+	template: '...'
 })
-@Inject(Test)
+class Nested{ }
+
+@Component({
+	selector: 'inner-app',
+	events: ['test']
+})
+@View({
+	directives: [Nested],
+	template: '<h2 on-click="innerApp.test()">Inner app</h2> <nested></nested>'
+})
+@Inject(Test, '$element')
 class InnerApp{
-	constructor(test){
+	constructor(test, $element){
 		console.log(test);
+
+		this.$element = $element;
+	}
+
+	test(){
+		this.$element.triggerHandler('test');
 	}
 }
 
 @Component({
 	selector: 'app',
-	viewInjector: [Test]
+	viewInjector: [Test, uiRouter]
 })
 @View({
-	directives: [InnerApp],
+	directives: [InnerApp, Nested],
 	template: `
-		<h1>Hello, world!</h1>
-		<inner-app></inner-app>
+		<h1>Hello, world!</h1> <nested></nested>
+		<span>Trigger count: {{ app.triggers }}</span>
+		<inner-app on-test="app.onTest()"></inner-app>
 	`
 })
-class AppCtrl{ }
+class AppCtrl{
+	constructor(){
+		this.triggers = 0;
+	}
+	onTest(){
+		this.triggers++;
+	}
+}
 
 bootstrap(AppCtrl);
+
 ```

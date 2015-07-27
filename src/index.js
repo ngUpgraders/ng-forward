@@ -1,6 +1,7 @@
 import Module from './module';
 import bootstrap from './bootstrap';
 import { Inject } from './decorators/inject';
+import { Injectables } from './decorators/injectables';
 
 import { Animation } from './decorators/providers/animation';
 import { Component } from './decorators/providers/component';
@@ -19,6 +20,7 @@ export {
 	Module,
 	bootstrap,
 	Inject,
+	Injectables,
 
 	Component,
 	Controller,
