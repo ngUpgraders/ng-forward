@@ -22,6 +22,10 @@ var _extend = require('extend');
 
 var _extend2 = _interopRequireDefault(_extend);
 
+var _utilEvents = require('../util/events');
+
+var _utilEvents2 = _interopRequireDefault(_utilEvents);
+
 exports['default'] = function (config, t) {
 	// Support for legacy angular-decorators bind config
 	if (config.bind) {
@@ -52,6 +56,11 @@ exports['default'] = function (config, t) {
 		}
 	} else if (config.properties !== undefined) {
 		throw new TypeError('Component properties must be an array');
+	}
+
+	// events
+	if (config.events && Array.isArray(config.events)) {
+		_utilEvents2['default'].add.apply(_utilEvents2['default'], _toConsumableArray(config.events));
 	}
 
 	// Allow for renaming the controllerAs

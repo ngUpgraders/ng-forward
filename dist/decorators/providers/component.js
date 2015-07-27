@@ -6,6 +6,8 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+
 var _utilParseSelector = require('../../util/parse-selector');
 
 var _utilParseSelector2 = _interopRequireDefault(_utilParseSelector);
@@ -15,6 +17,8 @@ var _utilDecorateDirective = require('../../util/decorate-directive');
 var _utilDecorateDirective2 = _interopRequireDefault(_utilDecorateDirective);
 
 var _writers = require('../../writers');
+
+var _injectables = require('../injectables');
 
 var TYPE = 'directive';
 
@@ -38,20 +42,7 @@ var Component = function Component(config) {
 		_writers.appWriter.set('selector', config.selector, t);
 
 		var viewInjector = config.viewInjector || [];
-		var modules = [];
-		var providers = [];
-		viewInjector.forEach(function (injectable) {
-			if (typeof injectable === 'string') {
-				modules.push(injectable);
-			} else if (_writers.providerWriter.has('type', injectable)) {
-				providers.push(injectable);
-			} else {
-				throw new Error('Unknown view injectable in ' + config.selector);
-			}
-		});
-
-		_writers.appWriter.set('modules', modules, t);
-		_writers.appWriter.set('providers', providers, t);
+		_injectables.Injectables.apply(undefined, _toConsumableArray(viewInjector))(t);
 
 		// Sensible defaults for components
 		if (!_writers.componentWriter.has('restrict', t)) {

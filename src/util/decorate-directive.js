@@ -2,6 +2,7 @@ import Module from '../module';
 import {componentWriter} from '../writers';
 import parseProperties from './parse-properties';
 import extend from 'extend';
+import events from '../util/events';
 
 export default function(config, t){
 	// Support for legacy angular-decorators bind config
@@ -41,6 +42,11 @@ export default function(config, t){
 	}
 	else if(config.properties !== undefined){
 		throw new TypeError('Component properties must be an array');
+	}
+
+	// events
+	if(config.events && Array.isArray(config.events)){
+		events.add(...config.events);
 	}
 
 	// Allow for renaming the controllerAs

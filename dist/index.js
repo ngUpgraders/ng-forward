@@ -16,6 +16,8 @@ var _bootstrap2 = _interopRequireDefault(_bootstrap);
 
 var _decoratorsInject = require('./decorators/inject');
 
+var _decoratorsInjectables = require('./decorators/injectables');
+
 var _decoratorsProvidersAnimation = require('./decorators/providers/animation');
 
 var _decoratorsProvidersComponent = require('./decorators/providers/component');
@@ -41,6 +43,7 @@ var _decoratorsComponentTransclude = require('./decorators/component/transclude'
 exports.Module = _module3['default'];
 exports.bootstrap = _bootstrap2['default'];
 exports.Inject = _decoratorsInject.Inject;
+exports.Injectables = _decoratorsInjectables.Injectables;
 exports.Component = _decoratorsProvidersComponent.Component;
 exports.Controller = _decoratorsProvidersController.Controller;
 exports.Directive = _decoratorsProvidersDirective.Directive;

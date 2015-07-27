@@ -1,6 +1,7 @@
 import parseSelector from '../../util/parse-selector';
 import decorateDirective from '../../util/decorate-directive';
 import {providerWriter, componentWriter, appWriter} from '../../writers';
+import {Injectables} from '../injectables';
 
 const TYPE = 'directive';
 
@@ -22,25 +23,7 @@ export const Component = config => t => {
 	appWriter.set('selector', config.selector, t);
 
 	let viewInjector = config.viewInjector || [];
-	let modules = [];
-	let providers = [];
-	viewInjector.forEach(injectable => {
-		if(typeof injectable === 'string')
-		{
-			modules.push(injectable);
-		}
-		else if(providerWriter.has('type', injectable))
-		{
-			providers.push(injectable);
-		}
-		else
-		{
-			throw new Error(`Unknown view injectable in ${config.selector}`);
-		}
-	});
-
-	appWriter.set('modules', modules, t);
-	appWriter.set('providers', providers, t);
+	Injectables(...viewInjector)(t);
 
 	// Sensible defaults for components
 	if( !componentWriter.has('restrict', t) )
