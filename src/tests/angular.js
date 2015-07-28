@@ -1,4 +1,5 @@
-import {sinon} from '../tests/frameworks';
+import {sinon} from './frameworks';
+import realAngular from '../../node_modules/angular'
 
 export let ngMocks = {
 	factory: sinon.spy(),
@@ -13,8 +14,14 @@ export let ngMocks = {
   constant: sinon.spy()
 };
 
-export let angular = {
-	module: sinon.stub().returns(ngMocks)
+export let ng = {
+	module: sinon.stub().returns(ngMocks),
+	useStub() {
+		global.angular = this;
+	},
+	useReal() {
+		return global.angular = realAngular;
+	}
 };
 
-global.angular = angular;
+ng.useStub();
