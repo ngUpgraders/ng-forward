@@ -1,5 +1,5 @@
 import {sinon} from './tests/frameworks';
-import {angular, ngMocks} from './tests/angular';
+import {ng, ngMocks} from './tests/angular';
 import {providerWriter, baseWriter} from './writers';
 import Module from './module';
 
@@ -13,7 +13,7 @@ describe('Decorator Supported Module', function(){
 		let module = Module('test', []);
 
 		module.should.be.defined;
-		angular.module.should.have.been.called;
+		ng.module.should.have.been.called;
 	});
 
 	it('should let you publish the module to gain access to the ng module', function(){
@@ -96,5 +96,18 @@ describe('Decorator Supported Module', function(){
 
 			test.should.throw(Error, /No parser registered/);
 		});
+	});
+});
+
+describe('Integration: Module', () => {
+	let angular;
+
+	beforeEach(() => {
+		angular = ng.useReal();
+	});
+
+	it('should let you create an Angular module', function(){
+		let module = Module('test', []);
+		angular.module('test').should.be.equal(module.publish());
 	});
 });

@@ -1,25 +1,21 @@
 module.exports = function(config) {
 	config.set({
+		basePath: './src',
 		browsers: ['Chrome'],
-		frameworks: ['jasmine'],
+		frameworks: ['angular', 'mocha', 'sinon-chai', 'browserify', 'phantomjs-shim'],
+		reporters: ['mocha'],
+		angular: ['mocks'],
 		files: [
-			'src/**/*.js',
-			'test/**/*.js'
+			{ pattern: './**/*.spec.js', watched: false }
 		],
 		preprocessors: {
-			'src/**/*.js': ['babel'],
-			'test/**/*.js': ['babel']
+			'./**/*.js': ['browserify']
 		},
-		babelPreprocessor: {
-			options: {
-				sourceMap: 'inline'
-			},
-			filename: function(file) {
-				return file.originalPath.replace(/\.js$/, '.es5.js');
-			},
-			sourceFileName: function(file) {
-				return file.originalPath;
-			}
+		browserify: {
+			debug: true,
+			transform: [
+				['babelify', {stage: 0}]
+			]
 		}
 	});
 };
