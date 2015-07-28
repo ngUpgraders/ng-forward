@@ -1,5 +1,5 @@
 module.exports = function(config) {
-	config.set({
+	let configuration = {
 		basePath: './src',
 		browsers: ['Chrome'],
 		frameworks: ['angular', 'mocha', 'sinon-chai', 'browserify', 'phantomjs-shim'],
@@ -16,6 +16,18 @@ module.exports = function(config) {
 			transform: [
 				['babelify', {stage: 0}]
 			]
+		},
+		customLaunchers: {
+			ChromeTravis: {
+				base: 'Chrome',
+				flags: ['--no-sandbox']
+			}
 		}
-	});
+	};
+
+	if(process.env.TRAVIS){
+		configuration.browsers = ['ChromeTravis'];
+	}
+
+	config.set(configuration);
 };
