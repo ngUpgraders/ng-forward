@@ -22,8 +22,8 @@ export const Component = config => t => {
 	providerWriter.set('type', TYPE, t);
 	appWriter.set('selector', config.selector, t);
 
-	let viewInjector = config.viewInjector || [];
-	Injectables(...viewInjector)(t);
+	let bindings = config.bindings || [];
+	Injectables(...bindings)(t);
 
 	// Sensible defaults for components
 	if( !componentWriter.has('restrict', t) )

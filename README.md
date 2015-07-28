@@ -5,7 +5,6 @@ import 'angular';
 import uiRouter from 'angular-ui-router';
 import {Component, View, Inject, Injectables, Service, bootstrap} from 'angular-decorators';
 
-@Service('Test')
 @Inject('$state')
 class Test{
 	constructor($state){
@@ -14,12 +13,8 @@ class Test{
 	}
 }
 
-@Component({
-	selector: 'nested'
-})
-@View({
-	template: '...'
-})
+@Component({ selector: 'nested' })
+@View({ template: '...' })
 class Nested{ }
 
 @Component({
@@ -45,7 +40,7 @@ class InnerApp{
 
 @Component({
 	selector: 'app',
-	viewInjector: [Test, uiRouter]
+	bindings: [Test, uiRouter]
 })
 @View({
 	directives: [InnerApp, Nested],
@@ -65,5 +60,6 @@ class AppCtrl{
 }
 
 bootstrap(AppCtrl);
+
 
 ```
