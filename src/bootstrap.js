@@ -1,6 +1,6 @@
 /*global angular,document */
 import bundle from './bundle';
-import appWriter from './writers';
+import {appWriter} from './writers';
 
 export default function bootstrap(component, otherProviders = []){
   let selector = appWriter.get('selector', component);

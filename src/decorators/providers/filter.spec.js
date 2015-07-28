@@ -1,3 +1,4 @@
+/*global describe, it, beforeEach */
 import '../../tests/frameworks';
 import {ngMocks} from '../../tests/angular';
 import {providerWriter} from '../../writers';
@@ -5,6 +6,8 @@ import Module from '../../module';
 import {Filter} from './filter';
 
 describe('@Filter Decorator', function(){
+	beforeEach(() => Filter.clearNameCache());
+	
 	it('should set the correct name and provider type', function(){
 		@Filter('splice')
 		class SpliceFilter{ }

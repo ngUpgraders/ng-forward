@@ -1,9 +1,12 @@
+/*global describe, it, beforeEach*/
 import {Factory} from './factory';
 import Module from '../../module';
 import {sinon} from '../../tests/frameworks';
 import {providerWriter} from '../../writers';
 
 describe('@Factory Annotation', function(){
+	beforeEach(() => Factory.clearNameCache());
+	
 	it('should decorate a class with $provider meta information', function(){
 		@Factory('MyFactory')
 		class ExampleClass{ }

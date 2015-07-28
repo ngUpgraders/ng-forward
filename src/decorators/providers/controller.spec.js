@@ -1,9 +1,12 @@
+/*global beforeEach, it, describe */
 import {sinon} from '../../tests/frameworks';
 import Module from '../../module';
-import {providerWriter, componentWriter} from '../../writers';
+import {providerWriter} from '../../writers';
 import {Controller} from './controller';
 
 describe('@Controller annotation', function(){
+	beforeEach(() => Controller.clearNameCache());
+	
 	it('should decorate a class with $provider meta data', function(){
 		@Controller
 		class MyController{ }
