@@ -1,3 +1,4 @@
+import {Service} from './providers/service';
 import {baseWriter, providerWriter} from '../writers';
 
 export const Inject = ( ...injects ) => t => {
@@ -6,8 +7,13 @@ export const Inject = ( ...injects ) => t => {
 		{
 			return injectable;
 		}
-		else
+		else if(providerWriter.has('type', injectable))
 		{
+			return providerWriter.get('name', injectable);
+		}
+		else if(typeof injectable === 'function')
+		{
+			Service(injectable);
 			return providerWriter.get('name', injectable);
 		}
 	});

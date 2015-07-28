@@ -1,3 +1,4 @@
+/*global describe, it, beforeEach */
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -19,6 +20,10 @@ var _module3 = _interopRequireDefault(_module2);
 var _filter2 = require('./filter');
 
 describe('@Filter Decorator', function () {
+	beforeEach(function () {
+		return _filter2.Filter.clearNameCache();
+	});
+
 	it('should set the correct name and provider type', function () {
 		var SpliceFilter = (function () {
 			function SpliceFilter() {

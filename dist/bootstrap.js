@@ -14,12 +14,10 @@ var _bundle2 = _interopRequireDefault(_bundle);
 
 var _writers = require('./writers');
 
-var _writers2 = _interopRequireDefault(_writers);
-
 function bootstrap(component) {
   var otherProviders = arguments[1] === undefined ? [] : arguments[1];
 
-  var selector = _writers2['default'].get('selector', component);
+  var selector = _writers.appWriter.get('selector', component);
   (0, _bundle2['default'])(selector, component, otherProviders);
   angular.bootstrap(document.querySelector(selector), [selector]);
 }
