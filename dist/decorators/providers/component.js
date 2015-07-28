@@ -41,8 +41,8 @@ var Component = function Component(config) {
 		_writers.providerWriter.set('type', TYPE, t);
 		_writers.appWriter.set('selector', config.selector, t);
 
-		var viewInjector = config.viewInjector || [];
-		_injectables.Injectables.apply(undefined, _toConsumableArray(viewInjector))(t);
+		var bindings = config.bindings || [];
+		_injectables.Injectables.apply(undefined, _toConsumableArray(bindings))(t);
 
 		// Sensible defaults for components
 		if (!_writers.componentWriter.has('restrict', t)) {

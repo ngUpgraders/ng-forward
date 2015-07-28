@@ -26,7 +26,7 @@ describe('Decorator Supported Module', function () {
 		var module = (0, _module3['default'])('test', []);
 
 		module.should.be.defined;
-		_testsAngular.angular.module.should.have.been.called;
+		_testsAngular.ng.module.should.have.been.called;
 	});
 
 	it('should let you publish the module to gain access to the ng module', function () {
@@ -150,5 +150,18 @@ describe('Decorator Supported Module', function () {
 
 			test.should['throw'](Error, /No parser registered/);
 		});
+	});
+});
+
+describe('Integration: Module', function () {
+	var angular = undefined;
+
+	beforeEach(function () {
+		angular = _testsAngular.ng.useReal();
+	});
+
+	it('should let you create an Angular module', function () {
+		var module = (0, _module3['default'])('test', []);
+		angular.module('test').should.be.equal(module.publish());
 	});
 });

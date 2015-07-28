@@ -4,25 +4,37 @@ Object.defineProperty(exports, '__esModule', {
 	value: true
 });
 
-var _testsFrameworks = require('../tests/frameworks');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _frameworks = require('./frameworks');
+
+var _node_modulesAngular = require('../../node_modules/angular');
+
+var _node_modulesAngular2 = _interopRequireDefault(_node_modulesAngular);
 
 var ngMocks = {
-	factory: _testsFrameworks.sinon.spy(),
-	config: _testsFrameworks.sinon.spy(),
-	run: _testsFrameworks.sinon.spy(),
-	service: _testsFrameworks.sinon.spy(),
-	animation: _testsFrameworks.sinon.spy(),
-	directive: _testsFrameworks.sinon.spy(),
-	provider: _testsFrameworks.sinon.spy(),
-	filter: _testsFrameworks.sinon.spy(),
-	value: _testsFrameworks.sinon.spy(),
-	constant: _testsFrameworks.sinon.spy()
+	factory: _frameworks.sinon.spy(),
+	config: _frameworks.sinon.spy(),
+	run: _frameworks.sinon.spy(),
+	service: _frameworks.sinon.spy(),
+	animation: _frameworks.sinon.spy(),
+	directive: _frameworks.sinon.spy(),
+	provider: _frameworks.sinon.spy(),
+	filter: _frameworks.sinon.spy(),
+	value: _frameworks.sinon.spy(),
+	constant: _frameworks.sinon.spy()
 };
 
 exports.ngMocks = ngMocks;
-var angular = {
-	module: _testsFrameworks.sinon.stub().returns(ngMocks)
+var ng = {
+	module: _frameworks.sinon.stub().returns(ngMocks),
+	useStub: function useStub() {
+		global.angular = this;
+	},
+	useReal: function useReal() {
+		return global.angular = _node_modulesAngular2['default'];
+	}
 };
 
-exports.angular = angular;
-global.angular = angular;
+exports.ng = ng;
+ng.useStub();
