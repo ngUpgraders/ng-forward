@@ -6,6 +6,8 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
+require('babel/polyfill');
+
 var _chai = require('chai');
 
 var _chai2 = _interopRequireDefault(_chai);
