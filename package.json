@@ -30,7 +30,6 @@
     "eslint": "^0.24.0",
     "gulp": "^3.8.11",
     "gulp-babel": "^5.0.0",
-    "gulp-mocha": "^2.0.1",
     "karma": "^0.13.3",
     "karma-angular": "0.0.6",
     "karma-babel-preprocessor": "^5.2.1",

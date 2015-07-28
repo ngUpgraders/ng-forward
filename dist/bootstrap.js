@@ -15,7 +15,7 @@ var _bundle2 = _interopRequireDefault(_bundle);
 var _writers = require('./writers');
 
 function bootstrap(component) {
-  var otherProviders = arguments[1] === undefined ? [] : arguments[1];
+  var otherProviders = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
 
   var selector = _writers.appWriter.get('selector', component);
   (0, _bundle2['default'])(selector, component, otherProviders);

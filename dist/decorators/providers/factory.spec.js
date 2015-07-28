@@ -60,15 +60,14 @@ describe('@Factory Annotation', function () {
 					_classCallCheck(this, _ExampleClass2);
 				}
 
-				var _ExampleClass2 = ExampleClass;
-
-				_createClass(_ExampleClass2, null, [{
+				_createClass(ExampleClass, null, [{
 					key: 'create',
 					value: function create() {
 						called = true;
 					}
 				}]);
 
+				var _ExampleClass2 = ExampleClass;
 				ExampleClass = (0, _factory.Factory)('MyFactory')(ExampleClass) || ExampleClass;
 				return ExampleClass;
 			})();
@@ -90,9 +89,7 @@ describe('@Factory Annotation', function () {
 					_classCallCheck(this, _ExampleClass3);
 				}
 
-				var _ExampleClass3 = ExampleClass;
-
-				_createClass(_ExampleClass3, null, [{
+				_createClass(ExampleClass, null, [{
 					key: 'create',
 					value: function create(dependencies) {
 						var _dependencies = _slicedToArray(dependencies, 2);
@@ -102,6 +99,7 @@ describe('@Factory Annotation', function () {
 					}
 				}]);
 
+				var _ExampleClass3 = ExampleClass;
 				ExampleClass = (0, _factory.Factory)('MyFactory')(ExampleClass) || ExampleClass;
 				return ExampleClass;
 			})();

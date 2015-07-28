@@ -46,9 +46,7 @@ function resolve(ngModule) {
         });
       }
 
-      var _EventHandler = EventHandler;
-
-      _createClass(_EventHandler, [{
+      _createClass(EventHandler, [{
         key: 'eventHandler',
         value: function eventHandler($event) {
           this.expression(this.$scope, { $event: $event });
@@ -61,6 +59,7 @@ function resolve(ngModule) {
         }
       }]);
 
+      var _EventHandler = EventHandler;
       EventHandler = (0, _index.Inject)('$parse', '$element', '$attrs', '$scope')(EventHandler) || EventHandler;
       EventHandler = (0, _index.Directive)({ selector: selector })(EventHandler) || EventHandler;
       return EventHandler;

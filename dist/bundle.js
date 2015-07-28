@@ -22,7 +22,7 @@ var _utilEvents2 = _interopRequireDefault(_utilEvents);
 function bundle(moduleName, component) {
   var _Module;
 
-  var otherProviders = arguments[2] === undefined ? [] : arguments[2];
+  var otherProviders = arguments.length <= 2 || arguments[2] === undefined ? [] : arguments[2];
 
   var name = function name(t) {
     return _writers.providerWriter.get('name', t);

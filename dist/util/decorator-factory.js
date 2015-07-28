@@ -14,7 +14,6 @@ exports['default'] = function (type) {
 	var names = new Set();
 
 	var createUniqueName = function createUniqueName(_x) {
-		var _arguments = arguments;
 		var _again = true;
 
 		_function: while (_again) {
@@ -22,7 +21,7 @@ exports['default'] = function (type) {
 			_again = false;
 
 			if (names.has(name)) {
-				_arguments = [_x = '' + name + randomInt(), type];
+				_x = '' + name + randomInt();
 				_again = true;
 				continue _function;
 			} else {

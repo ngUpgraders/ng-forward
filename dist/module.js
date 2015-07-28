@@ -15,7 +15,7 @@ var _parsers = {};
 
 var DecoratedModule = (function () {
 	function DecoratedModule(name) {
-		var modules = arguments[1] === undefined ? false : arguments[1];
+		var modules = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
 		_classCallCheck(this, DecoratedModule);
 
