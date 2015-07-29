@@ -4,7 +4,11 @@ Object.defineProperty(exports, '__esModule', {
 	value: true
 });
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+
 var _writers = require('../../writers');
+
+var _injectables = require('../injectables');
 
 var View = function View(config) {
 	return function (t) {
@@ -27,7 +31,7 @@ var View = function View(config) {
 		}
 
 		if (config.directives) {
-			_writers.appWriter.set('directives', config.directives, t);
+			_injectables.Injectables.apply(undefined, _toConsumableArray(config.directives))(t);
 		}
 	};
 };

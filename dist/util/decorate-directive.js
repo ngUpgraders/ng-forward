@@ -26,6 +26,10 @@ var _utilEvents = require('../util/events');
 
 var _utilEvents2 = _interopRequireDefault(_utilEvents);
 
+var _utilStrategy = require('../util/strategy');
+
+var _utilStrategy2 = _interopRequireDefault(_utilStrategy);
+
 exports['default'] = function (config, t) {
 	// Support for legacy angular-decorators bind config
 	if (config.bind) {
@@ -77,6 +81,8 @@ exports['default'] = function (config, t) {
 	if (t.compile) {
 		_writers.componentWriter.set('compile', t.compile, t);
 	}
+
+	(0, _utilStrategy2['default'])('directive', t);
 };
 
 _module3['default'].addProvider('directive', function (target, name, injects, ngModule) {

@@ -11,6 +11,8 @@ export const Injectables = (...injectables) => t => {
     throw new Error('Unidentified injectable type. Sorry this message is not clearer!');
   }
 
-  appWriter.set('modules', stringInjects, t);
-  appWriter.set('providers', providerInjects, t);
+  let modules = appWriter.get('modules', t) || [];
+  appWriter.set('modules', [...modules, ...stringInjects], t);
+  let providers = appWriter.get('providers', t) || [];
+  appWriter.set('providers', [...providers, ...providerInjects], t);
 };

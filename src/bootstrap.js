@@ -2,8 +2,6 @@
 import bundle from './bundle';
 import {appWriter} from './writers';
 
-
-
 export default function bootstrap(component, otherProviders = []){
   let ngZone;
   let selector = appWriter.get('selector', component);

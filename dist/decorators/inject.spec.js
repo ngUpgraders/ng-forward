@@ -1,3 +1,4 @@
+/* global describe, it */
 'use strict';
 
 var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
@@ -28,7 +29,7 @@ describe('@Inject annotation', function () {
 			return MyClass;
 		})();
 
-		_writers.baseWriter.has('$inject', MyClass).should.be.ok;
+		_writers.appWriter.has('$inject', MyClass).should.be.ok;
 	});
 
 	it('should add injected dependencies to the $inject array', function () {
@@ -42,7 +43,7 @@ describe('@Inject annotation', function () {
 			return MyClass;
 		})();
 
-		_writers.baseWriter.get('$inject', MyClass).should.eql(['a', 'b', 'c']);
+		_writers.appWriter.get('$inject', MyClass).should.eql(['a', 'b', 'c']);
 	});
 
 	it('should adhere to inheritance', function () {
@@ -70,7 +71,7 @@ describe('@Inject annotation', function () {
 			return SubClass;
 		})(MyClass);
 
-		_writers.baseWriter.get('$inject', MyClass).should.eql(['a', 'b', 'c']);
-		_writers.baseWriter.get('$inject', SubClass).should.eql(['d', 'e', 'f', 'a', 'b', 'c']);
+		_writers.appWriter.get('$inject', MyClass).should.eql(['a', 'b', 'c']);
+		_writers.appWriter.get('$inject', SubClass).should.eql(['d', 'e', 'f', 'a', 'b', 'c']);
 	});
 });

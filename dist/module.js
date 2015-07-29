@@ -1,3 +1,4 @@
+/* global angular */
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -50,7 +51,7 @@ var DecoratedModule = (function () {
 
 					var type = _writers.providerWriter.get('type', provider);
 					var _name = _writers.providerWriter.get('name', provider);
-					var inject = _writers.baseWriter.get('$inject', provider) || [];
+					var inject = _writers.appWriter.get('$inject', provider) || [];
 
 					if (_parsers[type]) {
 						_parsers[type](provider, _name, inject, this._module);

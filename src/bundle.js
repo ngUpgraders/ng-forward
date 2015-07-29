@@ -3,48 +3,38 @@ import Module from './module';
 import events from './util/events';
 
 
-export default function bundle(moduleName, component, otherProviders = []){
-  const name = t => providerWriter.get('name', t);
+export default function bundle(moduleName, provider, otherProviders = []){
+  const getName = t => providerWriter.get('name', t);
+  const getProviders = t => appWriter.get('providers', t) || [];
+  const getModules = t => appWriter.get('modules', t) || [];
 
-  let directives = new Map();
-  let providers = new Map();
-  let modules = [];
+  let modules = new Set();
+  let providers = {
+    directive: new Map(),
+    filter: new Map(),
+    provider: new Map(),
+    animation: new Map()
+  };
 
-  function parseComponentTree(component){
-    directives.set(name(component), component);
+  function parseProvider(provider){
+    let name = getName(provider);
+    let strategy = appWriter.get('traversalStrategy', provider);
 
-    (appWriter.get('directives', component) || [])
-      .filter(directive => !directives.has(name(directive)))
-      .forEach(parseComponentTree);
-
-    (appWriter.get('providers', component) || [])
-      .filter(provider => !providers.has(name(provider)))
-      .map(provider => [name(provider), provider])
-      .forEach(provider => providers.set(...provider));
-
-    modules.push(...(appWriter.get('modules', component) || []));
-  }
-
-  function parseProviderTree(provider){
-    if( !providers.has(name(provider)) ) {
-      providers.set(name(provider), provider);
+    if( providers[strategy] && !providers[strategy].has(name) ){
+      providers[strategy].set(name, provider);
+      getModules(provider).forEach(mod => modules.add(mod));
+      getProviders(provider).forEach(parseProvider);
     }
-
-    (appWriter.get('providers', provider) || [])
-      .filter(provider => !providers.has(name(provider)))
-      .forEach(parseProviderTree);
-
-    modules.push(...(appWriter.get('modules', provider) || []));
   }
 
-  parseComponentTree(component);
-  providers.forEach(parseProviderTree);
+  parseProvider(provider);
 
 
-  return Module(moduleName, modules).add(
-    ...directives.values(),
-    ...providers.values(),
-    ...otherProviders,
+  return Module(moduleName, [...modules.values()]).add(
+    ...providers.directive.values(),
+    ...providers.filter.values(),
+    ...providers.provider.values(),
+    ...providers.animation.values(),
     ...events.resolve()
   );
 }

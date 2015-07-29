@@ -1,4 +1,5 @@
 import {componentWriter, appWriter} from '../../writers';
+import {Injectables} from '../injectables';
 
 export const View = config => t => {
 	if( typeof config !== 'object' || ( !config.templateUrl && !config.template ) || t === undefined )
@@ -26,6 +27,6 @@ export const View = config => t => {
 	}
 
 	if(config.directives){
-		appWriter.set('directives', config.directives, t);
+		Injectables(...config.directives)(t);
 	}
 }

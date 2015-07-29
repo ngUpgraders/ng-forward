@@ -4,6 +4,8 @@ Object.defineProperty(exports, '__esModule', {
   value: true
 });
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+
 var _writers = require('../writers');
 
 var Injectables = function Injectables() {
@@ -26,8 +28,10 @@ var Injectables = function Injectables() {
       throw new Error('Unidentified injectable type. Sorry this message is not clearer!');
     }
 
-    _writers.appWriter.set('modules', stringInjects, t);
-    _writers.appWriter.set('providers', providerInjects, t);
+    var modules = _writers.appWriter.get('modules', t) || [];
+    _writers.appWriter.set('modules', [].concat(_toConsumableArray(modules), _toConsumableArray(stringInjects)), t);
+    var providers = _writers.appWriter.get('providers', t) || [];
+    _writers.appWriter.set('providers', [].concat(_toConsumableArray(providers), _toConsumableArray(providerInjects)), t);
   };
 };
 exports.Injectables = Injectables;

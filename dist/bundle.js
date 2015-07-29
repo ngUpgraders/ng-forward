@@ -19,53 +19,45 @@ var _utilEvents = require('./util/events');
 
 var _utilEvents2 = _interopRequireDefault(_utilEvents);
 
-function bundle(moduleName, component) {
+function bundle(moduleName, provider) {
   var _Module;
 
   var otherProviders = arguments.length <= 2 || arguments[2] === undefined ? [] : arguments[2];
 
-  var name = function name(t) {
+  var getName = function getName(t) {
     return _writers.providerWriter.get('name', t);
   };
+  var getProviders = function getProviders(t) {
+    return _writers.appWriter.get('providers', t) || [];
+  };
+  var getModules = function getModules(t) {
+    return _writers.appWriter.get('modules', t) || [];
+  };
 
-  var directives = new Map();
-  var providers = new Map();
-  var modules = [];
+  var modules = new Set();
+  var providers = {
+    directive: new Map(),
+    filter: new Map(),
+    provider: new Map(),
+    animation: new Map()
+  };
 
-  function parseComponentTree(component) {
-    directives.set(name(component), component);
+  function parseProvider(provider) {
+    var name = getName(provider);
+    var strategy = _writers.appWriter.get('traversalStrategy', provider);
 
-    (_writers.appWriter.get('directives', component) || []).filter(function (directive) {
-      return !directives.has(name(directive));
-    }).forEach(parseComponentTree);
-
-    (_writers.appWriter.get('providers', component) || []).filter(function (provider) {
-      return !providers.has(name(provider));
-    }).map(function (provider) {
-      return [name(provider), provider];
-    }).forEach(function (provider) {
-      return providers.set.apply(providers, _toConsumableArray(provider));
-    });
-
-    modules.push.apply(modules, _toConsumableArray(_writers.appWriter.get('modules', component) || []));
-  }
-
-  function parseProviderTree(provider) {
-    if (!providers.has(name(provider))) {
-      providers.set(name(provider), provider);
+    if (providers[strategy] && !providers[strategy].has(name)) {
+      providers[strategy].set(name, provider);
+      getModules(provider).forEach(function (mod) {
+        return modules.add(mod);
+      });
+      getProviders(provider).forEach(parseProvider);
     }
-
-    (_writers.appWriter.get('providers', provider) || []).filter(function (provider) {
-      return !providers.has(name(provider));
-    }).forEach(parseProviderTree);
-
-    modules.push.apply(modules, _toConsumableArray(_writers.appWriter.get('modules', provider) || []));
   }
 
-  parseComponentTree(component);
-  providers.forEach(parseProviderTree);
+  parseProvider(provider);
 
-  return (_Module = (0, _module3['default'])(moduleName, modules)).add.apply(_Module, _toConsumableArray(directives.values()).concat(_toConsumableArray(providers.values()), _toConsumableArray(otherProviders), _toConsumableArray(_utilEvents2['default'].resolve())));
+  return (_Module = (0, _module3['default'])(moduleName, [].concat(_toConsumableArray(modules.values())))).add.apply(_Module, _toConsumableArray(providers.directive.values()).concat(_toConsumableArray(providers.filter.values()), _toConsumableArray(providers.provider.values()), _toConsumableArray(providers.animation.values()), _toConsumableArray(_utilEvents2['default'].resolve())));
 }
 
 module.exports = exports['default'];

@@ -27,11 +27,11 @@ var Inject = function Inject() {
 			}
 		});
 
-		if (_writers.baseWriter.has('$inject', t)) {
-			var parentInjects = _writers.baseWriter.get('$inject', t);
-			_writers.baseWriter.set('$inject', [].concat(_toConsumableArray(dependencies), _toConsumableArray(parentInjects)), t);
+		if (_writers.appWriter.has('$inject', t)) {
+			var parentInjects = _writers.appWriter.get('$inject', t);
+			_writers.appWriter.set('$inject', [].concat(_toConsumableArray(dependencies), _toConsumableArray(parentInjects)), t);
 		} else {
-			_writers.baseWriter.set('$inject', dependencies, t);
+			_writers.appWriter.set('$inject', dependencies, t);
 		}
 	};
 };
