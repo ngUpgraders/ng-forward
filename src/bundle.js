@@ -1,11 +1,10 @@
-import {appWriter, providerWriter} from './writers';
+import {appWriter} from './writers';
 import Module from './module';
 import events from './util/events';
 import filterBindings from './util/filter-bindings';
 
 
 export default function bundle(moduleName, provider, bindings = []){
-  const getName = t => providerWriter.get('name', t);
   const getProviders = t => appWriter.get('providers', t) || [];
   const getModules = t => appWriter.get('modules', t) || [];
 
@@ -13,18 +12,17 @@ export default function bundle(moduleName, provider, bindings = []){
 
   let modules = new Set(startingModules);
   let providers = {
-    directive: new Map(),
-    filter: new Map(),
-    provider: new Map(),
-    animation: new Map()
+    directive: new Set(),
+    filter: new Set(),
+    provider: new Set(),
+    animation: new Set()
   };
 
   function parseProvider(provider){
-    let name = getName(provider);
     let strategy = appWriter.get('traversalStrategy', provider);
 
-    if( providers[strategy] && !providers[strategy].has(name) ){
-      providers[strategy].set(name, provider);
+    if( providers[strategy] && !providers[strategy].has(provider) ){
+      providers[strategy].add(provider);
       getModules(provider).forEach(mod => modules.add(mod));
       getProviders(provider).forEach(parseProvider);
     }
