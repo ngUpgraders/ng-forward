@@ -1,3 +1,4 @@
+/* global describe, it */
 import {Component} from './component';
 import '../../tests/frameworks';
 import {providerWriter, componentWriter} from '../../writers';
@@ -50,8 +51,8 @@ describe('@Component annotation', function(){
 		@Component({
 			selector: 'parent',
 			properties: [
-				'@first',
-				'=second'
+				'first',
+				'second'
 			]
 		})
 		class ParentCtrl{ }
@@ -59,9 +60,9 @@ describe('@Component annotation', function(){
 		@Component({ selector: 'child' })
 		class ChildCtrl extends ParentCtrl{ }
 
-		componentWriter.get('bindToController', ChildCtrl).should.eql({
-			first: '@',
-			second: '='
+		componentWriter.get('properties', ChildCtrl).should.eql({
+			first: 'first',
+			second: 'second'
 		});
 	});
 });

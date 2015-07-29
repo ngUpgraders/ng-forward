@@ -30,33 +30,23 @@ var _utilStrategy = require('../util/strategy');
 
 var _utilStrategy2 = _interopRequireDefault(_utilStrategy);
 
+var _utilDirectiveController = require('../util/directive-controller');
+
+var _utilDirectiveController2 = _interopRequireDefault(_utilDirectiveController);
+
+var _utilPropertiesBuilder = require('../util/properties-builder');
+
 exports['default'] = function (config, t) {
-	// Support for legacy angular-decorators bind config
-	if (config.bind) {
-		_writers.componentWriter.set('scope', config.bind, t);
-		_writers.componentWriter.set('bindToController', true, t);
-	}
-
-	// Check for scope
-	if (config.scope) {
-		var scope = _writers.componentWriter.get('scope', t);
-
-		if (scope && typeof scope === 'object') {
-			_writers.componentWriter.set('scope', (0, _extend2['default'])(scope, config.scope), t);
-		} else {
-			_writers.componentWriter.set('scope', config.scope, t);
-		}
-	}
 
 	// Check for Angular 2 style properties
 	if (config.properties && Array.isArray(config.properties)) {
 		var binders = (0, _parseProperties2['default'])(config.properties);
-		var previous = _writers.componentWriter.get('bindToController', t);
+		var previous = _writers.componentWriter.get('properties', t);
 
 		if (previous && typeof previous === 'object') {
-			_writers.componentWriter.set('bindToController', (0, _extend2['default'])(previous, binders), t);
+			_writers.componentWriter.set('properties', (0, _extend2['default'])(previous, binders), t);
 		} else {
-			_writers.componentWriter.set('bindToController', (0, _parseProperties2['default'])(config.properties), t);
+			_writers.componentWriter.set('properties', (0, _parseProperties2['default'])(config.properties), t);
 		}
 	} else if (config.properties !== undefined) {
 		throw new TypeError('Component properties must be an array');
@@ -65,6 +55,7 @@ exports['default'] = function (config, t) {
 	// events
 	if (config.events && Array.isArray(config.events)) {
 		_utilEvents2['default'].add.apply(_utilEvents2['default'], _toConsumableArray(config.events));
+		_writers.componentWriter.set('events', (0, _parseProperties2['default'])(config.events), t);
 	}
 
 	// Allow for renaming the controllerAs
@@ -92,7 +83,11 @@ _module3['default'].addProvider('directive', function (target, name, injects, ng
 		ddo[key] = val;
 	}, target);
 
-	ddo.controller = [].concat(_toConsumableArray(injects), [target]);
+	if (ddo.controllerAs) {
+		ddo.bindToController = (0, _utilPropertiesBuilder.propertiesMap)(ddo.properties);
+	}
+
+	ddo.controller = (0, _utilDirectiveController2['default'])(injects, target, ddo);
 
 	ngModule.directive(name, function () {
 		return ddo;

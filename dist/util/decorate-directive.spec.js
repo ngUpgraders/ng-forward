@@ -25,36 +25,19 @@ var _writers = require('../writers');
 
 var _testsFrameworks = require('../tests/frameworks');
 
-describe('Directive Decorator', function () {
+xdescribe('Directive Decorator', function () {
 	var Example = function Example() {
 		_classCallCheck(this, Example);
 	};
 
-	it('should let you bind attributes to the controller using a simple map', function () {
-		(0, _decorateDirective2['default'])({ bind: {
-				'someProp': '@'
-			} }, Example);
-
-		_writers.componentWriter.get('scope', Example).should.eql({ someProp: '@' });
-		_writers.componentWriter.get('bindToController', Example).should.be.ok;
-	});
-
-	it('should manually let you configure the scope', function () {
-		(0, _decorateDirective2['default'])({
-			scope: true
-		}, Example);
-
-		_writers.componentWriter.get('scope', Example).should.be.ok;
-	});
-
 	it('should let you bind attributes to the controller using a properties array like Angular 2', function () {
 		(0, _decorateDirective2['default'])({
-			properties: ['someProp: @', 'anotherProp: =']
+			properties: ['someProp', 'anotherProp']
 		}, Example);
 
-		_writers.componentWriter.get('bindToController', Example).should.eql({
-			'someProp': '@',
-			'anotherProp': '='
+		_writers.componentWriter.get('properties', Example).should.eql({
+			'someProp': 'someProp',
+			'anotherProp': 'anotherProp'
 		});
 	});
 
@@ -136,9 +119,7 @@ describe('Directive Decorator', function () {
 			})();
 
 			(0, _decorateDirective2['default'])({
-				scope: true,
-				properties: ['attr: @', 'prop : ='],
-				controllerAs: 'asdf'
+				properties: ['attr', 'prop']
 			}, AnotherTest);
 
 			parser(AnotherTest, 'testSelector', ['$q', '$timeout'], ngModule);
@@ -149,12 +130,10 @@ describe('Directive Decorator', function () {
 			var factory = _ngModule$directive$args$02[1];
 
 			factory().should.eql({
-				scope: true,
-				bindToController: {
-					attr: '@',
-					prop: '='
+				properties: {
+					attr: 'attr',
+					prop: 'prop'
 				},
-				controllerAs: 'asdf',
 				controller: ['$q', '$timeout', AnotherTest],
 				link: AnotherTest.link,
 				compile: AnotherTest.compile
@@ -167,11 +146,7 @@ describe('Directive Decorator', function () {
 			};
 
 			(0, _decorateDirective2['default'])({
-				properties: ['=first', '@second'],
-				scope: {
-					first: '=',
-					second: '&another'
-				}
+				properties: ['first', 'second']
 			}, Parent);
 
 			var Child = (function (_Parent) {
@@ -187,11 +162,7 @@ describe('Directive Decorator', function () {
 			})(Parent);
 
 			(0, _decorateDirective2['default'])({
-				properties: ['&second', '&third', 'fourth: =*renamed'],
-				scope: {
-					second: '=primary',
-					third: '@'
-				}
+				properties: ['second', 'third', 'fourth: renamed']
 			}, Child);
 
 			parser(Child, 'childSelector', [], ngModule);
@@ -202,16 +173,11 @@ describe('Directive Decorator', function () {
 			var factory = _ngModule$directive$args$03[1];
 
 			factory().should.eql({
-				bindToController: {
-					first: '=',
-					second: '&',
-					third: '&',
-					fourth: '=*renamed'
-				},
-				scope: {
-					first: '=',
-					second: '=primary',
-					third: '@'
+				properties: {
+					first: 'first',
+					second: 'second',
+					third: 'third',
+					fourth: 'renamed'
 				},
 				controller: [Child]
 			});
