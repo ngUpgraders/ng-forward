@@ -19,10 +19,14 @@ var _utilEvents = require('./util/events');
 
 var _utilEvents2 = _interopRequireDefault(_utilEvents);
 
+var _utilFilterBindings = require('./util/filter-bindings');
+
+var _utilFilterBindings2 = _interopRequireDefault(_utilFilterBindings);
+
 function bundle(moduleName, provider) {
   var _Module;
 
-  var otherProviders = arguments.length <= 2 || arguments[2] === undefined ? [] : arguments[2];
+  var bindings = arguments.length <= 2 || arguments[2] === undefined ? [] : arguments[2];
 
   var getName = function getName(t) {
     return _writers.providerWriter.get('name', t);
@@ -34,7 +38,12 @@ function bundle(moduleName, provider) {
     return _writers.appWriter.get('modules', t) || [];
   };
 
-  var modules = new Set();
+  var _filterBindings = (0, _utilFilterBindings2['default'])([provider].concat(_toConsumableArray(bindings)));
+
+  var startingModules = _filterBindings.modules;
+  var startingProviders = _filterBindings.providers;
+
+  var modules = new Set(startingModules);
   var providers = {
     directive: new Map(),
     filter: new Map(),
@@ -55,7 +64,7 @@ function bundle(moduleName, provider) {
     }
   }
 
-  parseProvider(provider);
+  startingProviders.forEach(parseProvider);
 
   return (_Module = (0, _module3['default'])(moduleName, [].concat(_toConsumableArray(modules.values())))).add.apply(_Module, _toConsumableArray(providers.directive.values()).concat(_toConsumableArray(providers.filter.values()), _toConsumableArray(providers.provider.values()), _toConsumableArray(providers.animation.values()), _toConsumableArray(_utilEvents2['default'].resolve())));
 }

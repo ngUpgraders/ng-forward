@@ -1,14 +1,17 @@
 import {appWriter, providerWriter} from './writers';
 import Module from './module';
 import events from './util/events';
+import filterBindings from './util/filter-bindings';
 
 
-export default function bundle(moduleName, provider, otherProviders = []){
+export default function bundle(moduleName, provider, bindings = []){
   const getName = t => providerWriter.get('name', t);
   const getProviders = t => appWriter.get('providers', t) || [];
   const getModules = t => appWriter.get('modules', t) || [];
 
-  let modules = new Set();
+  let {modules: startingModules, providers: startingProviders} = filterBindings([provider, ...bindings]);
+
+  let modules = new Set(startingModules);
   let providers = {
     directive: new Map(),
     filter: new Map(),
@@ -27,7 +30,7 @@ export default function bundle(moduleName, provider, otherProviders = []){
     }
   }
 
-  parseProvider(provider);
+  startingProviders.forEach(parseProvider);
 
 
   return Module(moduleName, [...modules.values()]).add(
