@@ -28,9 +28,6 @@ function bundle(moduleName, provider) {
 
   var bindings = arguments.length <= 2 || arguments[2] === undefined ? [] : arguments[2];
 
-  var getName = function getName(t) {
-    return _writers.providerWriter.get('name', t);
-  };
   var getProviders = function getProviders(t) {
     return _writers.appWriter.get('providers', t) || [];
   };
@@ -45,18 +42,17 @@ function bundle(moduleName, provider) {
 
   var modules = new Set(startingModules);
   var providers = {
-    directive: new Map(),
-    filter: new Map(),
-    provider: new Map(),
-    animation: new Map()
+    directive: new Set(),
+    filter: new Set(),
+    provider: new Set(),
+    animation: new Set()
   };
 
   function parseProvider(provider) {
-    var name = getName(provider);
     var strategy = _writers.appWriter.get('traversalStrategy', provider);
 
-    if (providers[strategy] && !providers[strategy].has(name)) {
-      providers[strategy].set(name, provider);
+    if (providers[strategy] && !providers[strategy].has(provider)) {
+      providers[strategy].add(provider);
       getModules(provider).forEach(function (mod) {
         return modules.add(mod);
       });
