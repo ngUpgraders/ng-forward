@@ -12,13 +12,13 @@ Example:
 ```js
 import 'angular';
 import uiRouter from 'angular-ui-router';
-import {Component, View, Inject, Injectables, Service, bootstrap} from 'angular-decorators';
+import {Component, View, Inject, Injectables, Service, bootstrap} from 'ng-forward';
 
 @Inject('$state')
 class Test{
 	constructor($state){
 		this.isReal = true;
-		console.log($state);
+		this.$state = $state;
 	}
 }
 
