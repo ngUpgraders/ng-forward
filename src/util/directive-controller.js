@@ -1,5 +1,6 @@
 /* global Object */
 import {propertiesBuilder} from './properties-builder';
+import eventsBuilder from './events-builder';
 import extend from 'extend';
 
 export default function directiveControllerFactory(injects, controller, ddo){
@@ -11,6 +12,10 @@ export default function directiveControllerFactory(injects, controller, ddo){
           propertiesBuilder(instance, key, ddo.properties[key]);
         }
         extend(instance, this);
+
+        let events = eventsBuilder($element[0], $scope, ddo.events || {});
+
+        extend(instance, events);
 
         $injector.invoke([...injects, controller], instance, {
           $element,
