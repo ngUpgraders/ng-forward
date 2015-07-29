@@ -4,41 +4,23 @@ import parseProperties from './parse-properties';
 import extend from 'extend';
 import events from '../util/events';
 import strategy from '../util/strategy';
+import directiveControllerFactory from '../util/directive-controller';
+import {propertiesMap} from '../util/properties-builder';
 
 export default function(config, t){
-	// Support for legacy angular-decorators bind config
-	if(config.bind){
-		componentWriter.set('scope', config.bind, t);
-		componentWriter.set('bindToController', true, t);
-	}
-
-	// Check for scope
-	if(config.scope){
-		let scope = componentWriter.get('scope', t);
-
-		if(scope && typeof scope === 'object')
-		{
-			componentWriter.set('scope', extend(scope, config.scope), t);
-		}
-		else
-		{
-			componentWriter.set('scope', config.scope, t);
-		}
-	}
-
 
 	// Check for Angular 2 style properties
 	if(config.properties && Array.isArray(config.properties)){
 		let binders = parseProperties(config.properties);
-		let previous = componentWriter.get('bindToController', t);
+		let previous = componentWriter.get('properties', t);
 
 		if(previous && typeof previous === 'object')
 		{
-			componentWriter.set('bindToController', extend(previous, binders), t);
+			componentWriter.set('properties', extend(previous, binders), t);
 		}
 		else
 		{
-			componentWriter.set('bindToController', parseProperties(config.properties), t);
+			componentWriter.set('properties', parseProperties(config.properties), t);
 		}
 	}
 	else if(config.properties !== undefined){
@@ -48,6 +30,7 @@ export default function(config, t){
 	// events
 	if(config.events && Array.isArray(config.events)){
 		events.add(...config.events);
+		componentWriter.set('events', parseProperties(config.events), t);
 	}
 
 	// Allow for renaming the controllerAs
@@ -75,7 +58,11 @@ Module.addProvider('directive', (target, name, injects, ngModule) => {
 		ddo[key] = val;
 	}, target);
 
-	ddo.controller = [...injects, target];
+	if(ddo.controllerAs){
+		ddo.bindToController = propertiesMap(ddo.properties);
+	}
+		
+	ddo.controller = directiveControllerFactory(injects, target, ddo);
 
 	ngModule.directive(name, () => ddo);
 });
