@@ -1,4 +1,5 @@
-import {baseWriter, providerWriter} from './writers';
+/* global angular */
+import {appWriter, providerWriter} from './writers';
 
 let _parsers = {};
 
@@ -26,7 +27,7 @@ class DecoratedModule{
 
 			let type = providerWriter.get('type', provider);
 			let name = providerWriter.get('name', provider);
-			let inject = baseWriter.get('$inject', provider) || [];
+			let inject = appWriter.get('$inject', provider) || [];
 
 			if(_parsers[type]){
 				_parsers[type](provider, name, inject, this._module);

@@ -3,6 +3,7 @@ import {componentWriter} from '../writers';
 import parseProperties from './parse-properties';
 import extend from 'extend';
 import events from '../util/events';
+import strategy from '../util/strategy';
 
 export default function(config, t){
 	// Support for legacy angular-decorators bind config
@@ -63,6 +64,8 @@ export default function(config, t){
 	if(t.compile){
 		componentWriter.set('compile', t.compile, t);
 	}
+
+	strategy('directive', t);
 }
 
 Module.addProvider('directive', (target, name, injects, ngModule) => {

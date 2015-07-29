@@ -1,6 +1,7 @@
 import Module from '../../module';
 import {providerWriter} from '../../writers';
 import parseSelector from '../../util/parse-selector';
+import strategy from '../../util/strategy';
 
 const TYPE = 'animation';
 
@@ -9,7 +10,7 @@ export const Animation = className => {
 	{
 		throw new Error(`@Animation must be supplied with the name of a class: @Animation('.my-animation'`);
 	}
-	
+
 	let {type} = parseSelector(className);
 
 	if(type !== 'C')
@@ -21,8 +22,9 @@ export const Animation = className => {
 
 		providerWriter.set('type', TYPE, target);
 		providerWriter.set('name', className, target);
+		strategy('animation', target);
 	}
-}
+};
 
 Module.addProvider(TYPE, (provider, name, injects, ngModule) => {
 	ngModule.animation(name, [...injects, (...depends) => {
