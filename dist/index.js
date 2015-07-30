@@ -18,6 +18,8 @@ var _decoratorsInject = require('./decorators/inject');
 
 var _decoratorsInjectables = require('./decorators/injectables');
 
+var _utilEventEmitter = require('./util/event-emitter');
+
 var _decoratorsProvidersAnimation = require('./decorators/providers/animation');
 
 var _decoratorsProvidersComponent = require('./decorators/providers/component');
@@ -44,6 +46,7 @@ exports.Module = _module3['default'];
 exports.bootstrap = _bootstrap2['default'];
 exports.Inject = _decoratorsInject.Inject;
 exports.Injectables = _decoratorsInjectables.Injectables;
+exports.EventEmitter = _utilEventEmitter.EventEmitter;
 exports.Component = _decoratorsProvidersComponent.Component;
 exports.Controller = _decoratorsProvidersController.Controller;
 exports.Directive = _decoratorsProvidersDirective.Directive;

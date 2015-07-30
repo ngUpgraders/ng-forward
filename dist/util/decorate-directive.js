@@ -6,8 +6,6 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
-
 var _module2 = require('../module');
 
 var _module3 = _interopRequireDefault(_module2);
@@ -50,8 +48,11 @@ exports['default'] = function (config, t) {
 
 	// events
 	if (config.events && Array.isArray(config.events)) {
-		_utilEvents2['default'].add.apply(_utilEvents2['default'], _toConsumableArray(config.events));
-		_writers.componentWriter.set('events', (0, _parseProperties2['default'])(config.events), t);
+		var eventMap = (0, _parseProperties2['default'])(config.events) || {};
+		_writers.componentWriter.set('events', eventMap, t);
+		for (var key in eventMap) {
+			_utilEvents2['default'].add(eventMap[key]);
+		}
 	}
 
 	// Allow for renaming the controllerAs

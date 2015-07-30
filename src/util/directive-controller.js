@@ -37,11 +37,6 @@ export default function directiveControllerFactory(injects, controller, ddo){
       // to extend after building the properties that way we fire the setters
       extend(instance, this);
 
-      // Events work similarly, but they need the raw $element and the $scope for
-      // destroying event observables.
-      let events = eventsBuilder($element[0], $scope, ddo.events || {});
-      extend(instance, events);
-
       // Finally, invoke the constructor using the injection array and the captured
       // locals
       $injector.invoke([...injects, controller], instance, {
@@ -50,6 +45,10 @@ export default function directiveControllerFactory(injects, controller, ddo){
         $attrs,
         $transclude
       });
+
+      // Events work similarly, but they need the raw $element and the $scope for
+      // destroying event observables.
+      eventsBuilder(instance, $element[0], $scope, ddo.events || {});
 
       // Return the controller instance
       return instance;

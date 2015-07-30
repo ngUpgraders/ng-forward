@@ -2,6 +2,7 @@ import Module from './module';
 import bootstrap from './bootstrap';
 import { Inject } from './decorators/inject';
 import { Injectables } from './decorators/injectables';
+import { EventEmitter } from './util/event-emitter';
 
 import { Animation } from './decorators/providers/animation';
 import { Component } from './decorators/providers/component';
@@ -21,7 +22,8 @@ export {
 	bootstrap,
 	Inject,
 	Injectables,
-
+	EventEmitter,
+	
 	Component,
 	Controller,
 	Directive,

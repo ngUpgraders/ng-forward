@@ -28,8 +28,11 @@ export default function(config, t){
 
 	// events
 	if(config.events && Array.isArray(config.events)){
-		events.add(...config.events);
-		componentWriter.set('events', parseProperties(config.events), t);
+		let eventMap = parseProperties(config.events) || {};
+		componentWriter.set('events', eventMap, t);
+		for(let key in eventMap){
+			events.add(eventMap[key]);
+		}
 	}
 
 	// Allow for renaming the controllerAs
