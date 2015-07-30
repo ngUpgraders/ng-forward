@@ -13,7 +13,7 @@ Module.addProvider(TYPE, (provider, name, injects, ngModule) => {
 	function factory(...dependencies){
 		return function(...params){
 			return create(dependencies, ...params);
-		}
+		};
 	}
 
 	ngModule.factory(name, [...injects, factory]);

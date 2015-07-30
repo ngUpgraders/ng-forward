@@ -14,7 +14,7 @@ Module.addProvider(TYPE, (provider, name, injects, ngModule) => {
 		}
 
 		return (input, ...params) => {
-			if(filter.supports && ! filter.supports(input)){
+			if(filter.supports && !filter.supports(input)){
 				throw new Error(`Filter ${name} does not support ${input}`);
 			}
 
