@@ -4,13 +4,7 @@ Object.defineProperty(exports, '__esModule', {
 	value: true
 });
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
 var _writers = require('../writers');
-
-var _strategy = require('./strategy');
-
-var _strategy2 = _interopRequireDefault(_strategy);
 
 var randomInt = function randomInt() {
 	return Math.floor(Math.random() * 100);
@@ -53,14 +47,12 @@ exports['default'] = function (type) {
 				_writers.providerWriter.set('type', type, t);
 				_writers.providerWriter.set('name', maybeT, t);
 				names.add(maybeT);
-				(0, _strategy2['default'])(strategyType, t);
 			};
 		} else {
 			var _name = createUniqueName(maybeT.name);
 			_writers.providerWriter.set('type', type, maybeT);
 			_writers.providerWriter.set('name', _name, maybeT);
 			names.add(_name);
-			(0, _strategy2['default'])(strategyType, maybeT);
 		}
 	};
 

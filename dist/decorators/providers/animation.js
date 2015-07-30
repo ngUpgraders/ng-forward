@@ -19,10 +19,6 @@ var _utilParseSelector = require('../../util/parse-selector');
 
 var _utilParseSelector2 = _interopRequireDefault(_utilParseSelector);
 
-var _utilStrategy = require('../../util/strategy');
-
-var _utilStrategy2 = _interopRequireDefault(_utilStrategy);
-
 var TYPE = 'animation';
 
 var Animation = function Animation(className) {
@@ -42,7 +38,6 @@ var Animation = function Animation(className) {
 
 		_writers.providerWriter.set('type', TYPE, target);
 		_writers.providerWriter.set('name', className, target);
-		(0, _utilStrategy2['default'])('animation', target);
 	};
 };
 
