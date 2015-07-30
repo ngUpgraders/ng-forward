@@ -3,7 +3,6 @@ import {componentWriter} from '../writers';
 import parseProperties from './parse-properties';
 import extend from 'extend';
 import events from '../util/events';
-import strategy from '../util/strategy';
 import directiveControllerFactory from '../util/directive-controller';
 import {propertiesMap} from '../util/properties-builder';
 
@@ -47,8 +46,6 @@ export default function(config, t){
 	if(t.compile){
 		componentWriter.set('compile', t.compile, t);
 	}
-
-	strategy('directive', t);
 }
 
 Module.addProvider('directive', (target, name, injects, ngModule) => {
@@ -61,7 +58,7 @@ Module.addProvider('directive', (target, name, injects, ngModule) => {
 	if(ddo.controllerAs){
 		ddo.bindToController = propertiesMap(ddo.properties);
 	}
-		
+
 	ddo.controller = directiveControllerFactory(injects, target, ddo);
 
 	ngModule.directive(name, () => ddo);

@@ -5,7 +5,7 @@ import {providerWriter, componentWriter} from '../../writers';
 const TYPE = 'directive';
 
 export const Directive = config => t => {
-	if(! config.selector )
+	if( !config.selector )
 	{
 		throw new Error('Directive selector must be provided');
 	}
@@ -25,4 +25,4 @@ export const Directive = config => t => {
 	componentWriter.set('restrict', type, t);
 
 	decorateDirective(config, t);
-}
+};

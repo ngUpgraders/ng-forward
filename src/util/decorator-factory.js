@@ -1,5 +1,4 @@
 import {providerWriter} from '../writers';
-import strategy from './strategy';
 
 const randomInt = () => Math.floor(Math.random() * 100);
 
@@ -34,7 +33,6 @@ export default (type, strategyType = 'provider') => {
 				providerWriter.set('type', type, t);
 				providerWriter.set('name', maybeT, t);
 				names.add(maybeT);
-				strategy(strategyType, t);
 			};
 		}
 		else
@@ -43,7 +41,6 @@ export default (type, strategyType = 'provider') => {
 			providerWriter.set('type', type, maybeT);
 			providerWriter.set('name', name, maybeT);
 			names.add(name);
-			strategy(strategyType, maybeT);
 		}
 	};
 

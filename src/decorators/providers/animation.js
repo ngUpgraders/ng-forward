@@ -1,7 +1,6 @@
 import Module from '../../module';
 import {providerWriter} from '../../writers';
 import parseSelector from '../../util/parse-selector';
-import strategy from '../../util/strategy';
 
 const TYPE = 'animation';
 
@@ -22,7 +21,6 @@ export const Animation = className => {
 
 		providerWriter.set('type', TYPE, target);
 		providerWriter.set('name', className, target);
-		strategy('animation', target);
 	}
 };
 
