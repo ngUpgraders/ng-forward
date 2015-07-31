@@ -34,26 +34,35 @@ export function propertiesBuilder(controller, key){
       enumerable: true,
       configurable: true,
       get: function() {
-        this.__using_binding = this.__using_binding || {};
-        if (this.__using_binding[key]) {
-          let binding = this[`${this.__using_binding[key]}${key}`];
-          return (typeof binding === 'function') ? binding() : binding;
-        }
+        const getBindingInUseVal = () => {
+          if (this.__using_binding[key]) {
+            let binding = this[`${this.__using_binding[key]}${key}`];
+            // Return the binding val. String and two-way are values, but one-way is a function that we invoke to get the value
+            return (typeof binding === 'function') ? binding() : binding;
+          }
+        };
 
+        // When getting the key first check if we've already determined which binding we are using for this particular
+        // key. If we have, then just return it.
+        this.__using_binding = this.__using_binding || {};
+        let bindingInUseVal = getBindingInUseVal();
+        if (bindingInUseVal) return bindingInUseVal;
+
+        // If we haven't determined which binding we are using yet, we go ahead and access all of them to see if they
+        // contain values.
         let stringVal = this[`${STRING}${key}`];
         let oneWayVal = this[`${BIND_ONEWAY}${key}`]();
         let twoWayVal = this[`${BIND_TWOWAY}${key}`];
 
-        //let definedValsCount = [stringVal, oneWayVal, twoWayVal].filter(v => v !== undefined).length;
-        //if (definedValsCount.length > 1) {
-        //  throw new Error(`Can not use more than one type of attribute binding simultaneously: ${key}, bind-${key}, bind-on-${key}`);
-        //}
-
+        // For each one, if it is a valid value, we'll set it as the binding we are using. setBindingUsed will throw
+        // an error if we try to use more than one at a time.
         if (stringVal) setBindingUsed(this, STRING, key);
         if (oneWayVal) setBindingUsed(this, BIND_ONEWAY, key);
         if (twoWayVal) setBindingUsed(this, BIND_TWOWAY, key);
 
-        return stringVal || oneWayVal || twoWayVal || undefined;
+        // Now we know which we are using, so get the binding val (or getter function in the case of one-way).
+        bindingInUseVal = getBindingInUseVal();
+        return bindingInUseVal;
       },
       set: function(val) {
         if (this.__using_binding[key] === BIND_TWOWAY) {
