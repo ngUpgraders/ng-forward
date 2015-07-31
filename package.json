@@ -2,7 +2,7 @@
   "name": "ng-forward",
   "version": "0.0.1",
   "description": "The default solution for those that want to write Angular 2.x style code in Angular 1.x",
-  "main": "./dist/index.js",
+  "main": "./src/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/ngUpgraders/ng-forward"
