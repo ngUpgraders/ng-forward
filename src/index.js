@@ -12,6 +12,7 @@ import { Factory } from './decorators/providers/factory';
 import { Filter } from './decorators/providers/filter';
 import { Provider } from './decorators/providers/provider';
 import { Service } from './decorators/providers/service';
+import { StateComponent } from './decorators/providers/state-component';
 
 import { Require } from './decorators/component/require';
 import { View } from './decorators/component/view';
@@ -23,7 +24,7 @@ export {
 	Inject,
 	Injectables,
 	EventEmitter,
-	
+
 	Component,
 	Controller,
 	Directive,
@@ -32,6 +33,7 @@ export {
 	Factory,
 	Service,
 	Animation,
+	StateComponent,
 
 	Require,
 	View,
