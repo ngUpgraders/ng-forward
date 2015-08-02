@@ -22,7 +22,7 @@ describe('@Pipe Decorator', function(){
 
 		Module('test', []).add(SplicePipe);
 
-		ngMocks.pipe.should.have.been.calledWith('splice');
+		ngMocks.filter.should.have.been.calledWith('splice');
 	});
 
 	describe('Pipe Parser Implementation', function(){
@@ -42,7 +42,7 @@ describe('@Pipe Decorator', function(){
 			}
 
 			parser(Test, 'test', [], {
-				pipe: (name, pipeBlock) => {
+				filter: (name, pipeBlock) => {
 					pipe = pipeBlock[0]();
 				}
 			});
