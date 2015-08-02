@@ -9,7 +9,7 @@ import { Component } from './decorators/providers/component';
 import { Controller } from './decorators/providers/controller';
 import { Directive } from './decorators/providers/directive';
 import { Factory } from './decorators/providers/factory';
-import { Filter } from './decorators/providers/filter';
+import { Pipe } from './decorators/providers/pipe';
 import { Provider } from './decorators/providers/provider';
 import { Service } from './decorators/providers/service';
 import { StateComponent } from './decorators/providers/state-component';
@@ -28,7 +28,7 @@ export {
 	Component,
 	Controller,
 	Directive,
-	Filter,
+	Pipe,
 	Provider,
 	Factory,
 	Service,
