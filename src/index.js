@@ -6,11 +6,9 @@ import { EventEmitter } from './util/event-emitter';
 
 import { Animation } from './decorators/providers/animation';
 import { Component } from './decorators/providers/component';
-import { Controller } from './decorators/providers/controller';
 import { Directive } from './decorators/providers/directive';
 import { Factory } from './decorators/providers/factory';
 import { Pipe } from './decorators/providers/pipe';
-import { Provider } from './decorators/providers/provider';
 import { Service } from './decorators/providers/service';
 import { StateComponent } from './decorators/providers/state-component';
 
@@ -26,10 +24,8 @@ export {
 	EventEmitter,
 
 	Component,
-	Controller,
 	Directive,
 	Pipe,
-	Provider,
 	Factory,
 	Service,
 	Animation,
