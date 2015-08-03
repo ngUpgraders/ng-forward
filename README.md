@@ -57,10 +57,10 @@ class Nested{ }
 		<!-- We've created custom directives for all the standard dom events:
 		     click, change, scroll, etc. So you can use on-click instead of ng-click
 		     to match Angular 2 syntax -->
-		<button on-click="innerApp.triggerEventNormally()">
+		<button (click)="innerApp.triggerEventNormally()">
 			Trigger DOM Event
 		</button>
-		<button on-click="innerApp.triggerEventViaEventEmitter()">
+		<button (click)="innerApp.triggerEventViaEventEmitter()">
 			Trigger Emitted Event
 		</button>
 
@@ -153,8 +153,8 @@ class InnerApp{
 		     can bind to component properties: prop (with no prefix) will pass in
 		     a simple string, bind-prop will one-way bind to an expression, and
 		     bind-on-prop will two way bind to an expression. -->
-		<inner-app on-event1="app.onIncrement()" on-event2="app.onIncrement()"
-		           bind-message1="app.message1" bind-on-message2="app.message2" message3="Hey, inner app... nothin'">
+		<inner-app (event1)="app.onIncrement()" (event2)="app.onIncrement()"
+		           [message1]="app.message1" [(message2)]="app.message2" message3="Hey, inner app... nothin'">
 		</inner-app>
 	`
 })
@@ -173,8 +173,8 @@ class AppCtrl{
 // Finally go ahead and bootstrap a component. It will look for the selector
 // in your html and call ng1's bootstrap method on it. What's cool is if you
 // include zone.js in your app, we'll automatically bootstrap your app within
-// the context of a zone so you don't need to call $scope.$apply for many common
-// async tasks, like Promise resolution, event handlers, setTimeout, setInterval,
-// and fetch.
+// the context of a zone so you don't need to call $scope.$apply (Mike is
+// this really true??).
 bootstrap(AppCtrl);
+
 ```

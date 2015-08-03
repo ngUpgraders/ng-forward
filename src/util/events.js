@@ -39,7 +39,7 @@ function resolve(ngModule){
   let directives = [];
 
   events.forEach(event => {
-    const selector = `[on-${event}]`;
+    const selector = `[(${event})]`;
     @Directive({ selector })
     @Inject('$parse', '$element', '$attrs', '$scope')
     class EventHandler{
