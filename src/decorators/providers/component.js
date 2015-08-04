@@ -174,8 +174,6 @@ Module.addProvider(TYPE, (target, name, injects, ngModule) => {
 				$transclude
 			});
 
-			console.log(instance);
-
 			return instance;
 		}
 	];
