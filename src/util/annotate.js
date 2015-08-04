@@ -1,6 +1,6 @@
-export let d = {};
+export let a = {};
 
-class D{
+class A{
 	constructor(){
 		this.decorators = [];
 	}
@@ -21,7 +21,7 @@ class D{
 }
 
 export const register = (name, decorator) => {
-	Object.defineProperty(D.prototype, name, {
+	Object.defineProperty(A.prototype, name, {
 		get: function(){
 			this.decorators.push(decorator);
 			return this;
@@ -30,9 +30,9 @@ export const register = (name, decorator) => {
 		configurable: true
 	});
 
-	Object.defineProperty(d, name, {
+	Object.defineProperty(a, name, {
 		get: function(){
-			return (new D())[name];
+			return (new A())[name];
 		},
 		enumerable: true,
 		configurable: true
@@ -40,12 +40,12 @@ export const register = (name, decorator) => {
 };
 
 export const registerFactory = (name, decoratorFactory) => {
-	D.prototype[name] = function(...params){
+	A.prototype[name] = function(...params){
 		this.decorators.push(decoratorFactory(...params));
 		return this;
 	};
 
-	d[name] = function(...params){
-		return (new D())[name](...params);
+	a[name] = function(...params){
+		return (new A())[name](...params);
 	};
 };
