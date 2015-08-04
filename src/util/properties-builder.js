@@ -27,6 +27,22 @@ export function propertiesMap(properties){
 }
 
 export function propertiesBuilder(controller, key, value){
+  // We are going to be installing a lot of properties on the controller to handle the magic
+  // of our property bindings. Here we are marking them as hidden but writeable, that way
+  // we don't leak our abstraction
+  let propertyDefinitions = {};
+
+  [`${STRING}${key}`, `[${value}]`, `[(${value})]`, `__using_binding`].forEach(prop => {
+    propertyDefinitions[prop] = {
+      enumerable: false,
+      configurable: false,
+      writable: true,
+      value: controller[prop]
+    };
+  });
+
+  Object.defineProperties(controller, propertyDefinitions);
+
   // Later during controller instantiation we create a special getter/setter that handles the various binding strategies.
   Object.defineProperties(controller, {
     [key]: {

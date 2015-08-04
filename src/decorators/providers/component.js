@@ -167,12 +167,16 @@ Module.addProvider(TYPE, (target, name, injects, ngModule) => {
 	ddo.controller = [
 		'$scope', '$element', '$attrs', '$transclude', '$injector',
 		function($scope, $element, $attrs, $transclude, $injector){
-			return directiveControllerFactory(this, injects, target, ddo, $injector, {
+			let instance = directiveControllerFactory(this, injects, target, ddo, $injector, {
 				$scope,
 				$element,
 				$attrs,
 				$transclude
 			});
+
+			console.log(instance);
+
+			return instance;
 		}
 	];
 

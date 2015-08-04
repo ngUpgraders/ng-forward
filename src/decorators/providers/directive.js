@@ -63,11 +63,6 @@ export const Directive = componentConfig => t => {
 
 	// Restrict type must be 'element'
 	componentWriter.set('restrict', restrict, t);
-
-	// Set a compile function
-	if(t.compile){
-		componentWriter.set('compile', t.compile, t);
-	}
 };
 
 // ## Component Provider Parser
@@ -98,5 +93,7 @@ Module.addProvider(TYPE, (target, name, injects, ngModule) => {
 				$requires
 			});
 		};
+
+		return ddo;
 	}]);
 });
