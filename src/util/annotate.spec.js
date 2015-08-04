@@ -1,5 +1,5 @@
 import {sinon} from '../tests/frameworks';
-import {a, register, registerFactory} from './decorate';
+import {a, register, registerFactory} from './annotate';
 
 describe('Decorator helpers for ES5/ES6', function(){
   it('should export the d helper object and two registeration functions', function(){

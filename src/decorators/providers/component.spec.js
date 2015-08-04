@@ -9,7 +9,7 @@ describe('@Component annotation', function(){
 		class MyComponentCtrl{ }
 
 		providerWriter.has('type', MyComponentCtrl).should.be.ok;
-		providerWriter.get('type', MyComponentCtrl).should.eql('directive');
+		providerWriter.get('type', MyComponentCtrl).should.eql('component');
 		providerWriter.has('name', MyComponentCtrl).should.be.ok;
 		providerWriter.get('name', MyComponentCtrl).should.eql('myComponent');
 	});

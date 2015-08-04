@@ -18,13 +18,6 @@ describe('@Directive Decorator', function(){
     componentWriter.get('restrict', AttrCtrl).should.eql('A');
   });
 
-  it('should set sensible defaults for attribute and class directives', function(){
-    @Directive({ selector: '[my-directive]' })
-    class DirCtrl{ }
-
-    componentWriter.get('scope', DirCtrl).should.eql(false);
-  });
-
   it('should throw an error if used with an element selector', function(){
     let decorate = () => {
       @Directive({ selector: 'my-component' })
