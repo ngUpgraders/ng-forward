@@ -15,11 +15,7 @@ describe('@Directive Decorator', function(){
     @Directive({ selector: '[attr]' })
     class AttrCtrl{ }
 
-    @Directive({ selector: '.class' })
-    class ClassCtrl{ }
-
     componentWriter.get('restrict', AttrCtrl).should.eql('A');
-    componentWriter.get('restrict', ClassCtrl).should.eql('C');
   });
 
   it('should set sensible defaults for attribute and class directives', function(){

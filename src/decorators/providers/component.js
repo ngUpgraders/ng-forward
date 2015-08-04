@@ -41,74 +41,141 @@
 // of the selector as well as the type of selector it was (element, attribute, or
 // CSS class).
 import parseSelector from '../../util/parse-selector';
-// A more general config-to-ddo utility. Creates some reusability between
-// `@Component` and `@Directive`
-import decorateDirective from '../../util/decorate-directive';
 // `providerWriter` sets up provider information, `componentWriter` writes the DDO,
 // and `appWriter` sets up app traversal/bootstrapping information.
 import {providerWriter, componentWriter, appWriter} from '../../writers';
 // Takes the information from `config.bindings` and turns it into the actual metadata
 // needed during app traversal
 import {Injectables} from '../injectables';
+// Provider parser will need to be registered with Module
+import Module from '../../module';
+import parseProperties from '../../util/parse-properties';
+import events from '../../util/events';
+import directiveControllerFactory from '../../util/directive-controller';
+import {propertiesMap} from '../../util/properties-builder';
 
 // The type for right now is `directive`. In angular-decorators there was very little
 // difference between `@Component` and `@Directive` so they shared a common provider
 // parser defined in `../../util/decorate-directive.js`
-const TYPE = 'directive';
+const TYPE = 'component';
 
 // ## Decorator Definition
-export const Component = config => t => {
-	// The only required config is a selector.
-	if( !config.selector )
-	{
+export const Component = componentConfig => t => {
+	// The only required config is a selector. If one wasn't passed, throw immediately
+	if( !componentConfig.selector ) {
 		throw new Error('Component selector must be provided');
 	}
+
+	const DEFAULT_CONFIG = {
+		properties: [],
+		bindings: [],
+		directives: [],
+		events: []
+	};
+
+	let config = Object.assign({}, DEFAULT_CONFIG, componentConfig || {});
 
 	// Grab the provider name and selector type by parsing the selector
 	let {name, type: restrict} = parseSelector(config.selector);
 
 	// If the selector type was not an element, throw an error. Components can only
 	// be elements in Angular 2, so we want to enforce that strictly here.
-	if(restrict !== 'E')
-	{
+	if(restrict !== 'E') {
 		throw new Error('@Component selectors can only be elements. Perhaps you meant to use @Directive?');
 	}
 
+	// Must perform some basic shape checking on the config object
+	['properties', 'bindings', 'directives', 'events'].forEach(property => {
+		if(config[property] !== undefined && !Array.isArray(config[property])){
+			throw new TypeError(`Component ${property} must be an array`);
+		}
+	});
+
 	// Setup provider information using the parsed selector
 	providerWriter.set('name', name, t);
-	providerWriter.set('type', TYPE, t); // NOTE: `TYPE` here is `'directive'`
+	providerWriter.set('type', TYPE, t);
 
 	// The appWriter needs the raw selector. This lets it bootstrap the root component
 	appWriter.set('selector', config.selector, t);
 
 	// Grab the bindings from the config object, parse them, and write the metadata
 	// to the target.
-	let bindings = config.bindings || [];
-	Injectables(...bindings)(t);
+	Injectables(...config.bindings)(t);
 
-	// Sensible defaults for components
-	if( !componentWriter.has('restrict', t) )
-	{
-		// Restrict type must be 'element'
-		componentWriter.set('restrict', restrict, t);
-	}
-	if( !componentWriter.has('scope', t) )
-	{
-		// Components should always create an isolate scope
-		componentWriter.set('scope', {}, t);
-	}
-	if( !componentWriter.has('bindToController', t) )
-	{
-		// Properties should always be bound to the controller instance, not
-		// to the scope
-		componentWriter.set('bindToController', true, t);
+	// Restrict type must be 'element'
+	componentWriter.set('restrict', restrict, t);
+
+	// Components should always create an isolate scope
+	componentWriter.set('scope', {}, t);
+
+	// Properties should always be bound to the controller instance, not
+	// to the scope
+	componentWriter.set('bindToController', true, t);
+
+	// Check for Angular 2 style properties
+	let binders = parseProperties(config.properties);
+	let previous = componentWriter.get('properties', t) || {};
+	componentWriter.set('properties', Object.assign({}, previous, binders), t);
+
+	// events
+	if(config.events.length > 0){
+		let eventMap = parseProperties(config.events) || {};
+		componentWriter.set('events', eventMap, t);
+		for(let key in eventMap){
+			events.add(eventMap[key]);
+		}
 	}
 
-	// ControllerAs is the parsed selector. For example, `app` becomes `app` and
-	// `send-message` becomes `sendMessage`
-	componentWriter.set('controllerAs', name, t);
+	// Allow for renaming the controllerAs
+	if(config.controllerAs) {
+		componentWriter.set('controllerAs', config.controllerAs, t);
+	}
+	else {
+		// ControllerAs is the parsed selector. For example, `app` becomes `app` and
+		// `send-message` becomes `sendMessage`
+		componentWriter.set('controllerAs', name, t);
+	}
 
-	// Finally, pass off the rest of config to the general purpose `decorateDirective`
-	// utility
-	decorateDirective(config, t);
+	// Set a link function
+	if(t.link) {
+		componentWriter.set('link', t.link, t);
+	}
+
+	// Set a compile function
+	if(t.compile){
+		componentWriter.set('compile', t.compile, t);
+	}
 };
+
+// ## Component Provider Parser
+Module.addProvider(TYPE, (target, name, injects, ngModule) => {
+	// First create an empty object to contain the directive definition object
+	let ddo = {};
+
+	componentWriter.forEach((val, key) => {
+		// Loop through the key/val pairs of metadata and assign it to the DDO
+		ddo[key] = val;
+	}, target);
+
+	// Get the property bindings ahead of time
+	if(ddo.controllerAs){
+		ddo.bindToController = propertiesMap(ddo.properties);
+	}
+
+	// Component controllers must be created from a factory. Checkout out
+	// util/directive-controller.js for more information about what's going on here
+	ddo.controller = [
+		'$scope', '$element', '$attrs', '$transclude', '$injector',
+		function($scope, $element, $attrs, $transclude, $injector){
+			return directiveControllerFactory(this, injects, target, ddo, $injector, {
+				$scope,
+				$element,
+				$attrs,
+				$transclude
+			});
+		}
+	];
+
+	// Finally add the component to the raw module
+	ngModule.directive(name, () => ddo);
+});
