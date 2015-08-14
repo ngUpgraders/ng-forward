@@ -64,13 +64,25 @@ export default function bootstrap(component, otherProviders = []){
     });
   }
 
+  let injector;
   // If we were able to create the ngZone, bootstrap the app in the context of the
   // zone
   if(ngZone){
-    ngZone.run(() => angular.bootstrap(rootElement, [selector]));
+    injector = ngZone.run(() => angular.bootstrap(rootElement, [selector]));
   }
   // Otherwise, bootstrap it as normal
   else{
-    angular.bootstrap(rootElement, [selector]);
+    injector = angular.bootstrap(rootElement, [selector]);
+  }
+
+  // return the injector but with get overridden to provide some sugar for 'getting'
+  // component class controller instances
+  return { ...injector,
+    get: (service) => {
+      if (angular.isFunction(service)) {
+        service = `${appWriter.get('selector', service)}Directive`;
+      }
+      return injector.get(service);
+    }
   }
 }

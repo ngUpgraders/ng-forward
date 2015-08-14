@@ -1,5 +1,5 @@
 module.exports = function(config) {
-	let configuration = {
+	var configuration = {
 		basePath: './src',
 		browsers: ['Chrome'],
 		frameworks: ['angular', 'mocha', 'sinon-chai', 'browserify', 'phantomjs-shim'],

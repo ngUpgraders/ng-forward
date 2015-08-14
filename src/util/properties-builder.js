@@ -26,13 +26,13 @@ export function propertiesMap(properties){
   return definition;
 }
 
-export function propertiesBuilder(controller, key, value){
+export function propertiesBuilder(controller, localKey, publicKey){
   // We are going to be installing a lot of properties on the controller to handle the magic
   // of our property bindings. Here we are marking them as hidden but writeable, that way
   // we don't leak our abstraction
   let propertyDefinitions = {};
 
-  [`${STRING}${key}`, `[${value}]`, `[(${value})]`, `__using_binding`].forEach(prop => {
+  [`${STRING}${localKey}`, `[${publicKey}]`, `[(${publicKey})]`, `__using_binding`].forEach(prop => {
     propertyDefinitions[prop] = {
       enumerable: false,
       configurable: false,
@@ -42,22 +42,24 @@ export function propertiesBuilder(controller, key, value){
   });
 
   // Later during controller instantiation we create a special getter/setter that handles the various binding strategies.
-  propertyDefinitions[key] = {
+  propertyDefinitions[localKey] = {
     enumerable: true,
     configurable: true,
     get: function() {
       const getBindingInUseVal = () => {
-        if (this.__using_binding[key]) {
-          let using = this.__using_binding[key];
+        if (this.__using_binding[localKey]) {
+          let using = this.__using_binding[localKey];
 
           if(using === STRING){
-            return this[`${STRING}${key}`];
+            return this[`${STRING}${localKey}`];
           }
           else if(using === BIND_ONEWAY){
-            return this[`[${value}]`]();
+            // one way is special in that it calls its '&' fn to
+            // get the publicKey of the binding
+            return this[`[${publicKey}]`]();
           }
           else if(using === BIND_TWOWAY){
-            return this[`[(${value})]`];
+            return this[`[(${publicKey})]`];
           }
           else{
             throw new Error(`Unknown property binding detected: ${using}`);
@@ -65,37 +67,37 @@ export function propertiesBuilder(controller, key, value){
         }
       };
 
-      // When getting the key first check if we've already determined which binding we are using for this particular
-      // key. If we have, then just return it.
+      // When getting the localKey first check if we've already determined which binding we are using for this particular
+      // localKey. If we have, then just return it.
       this.__using_binding = this.__using_binding || {};
       let bindingInUseVal = getBindingInUseVal();
       if (bindingInUseVal) return bindingInUseVal;
 
       // If we haven't determined which binding we are using yet, we go ahead and access all of them to see if they
       // contain values.
-      let stringVal = this[`${STRING}${key}`];
-      let oneWayVal = this[`[${value}]`]();
-      let twoWayVal = this[`[(${value})]`];
+      let stringVal = this[`${STRING}${localKey}`];
+      let oneWayVal = this[`[${publicKey}]`]();
+      let twoWayVal = this[`[(${publicKey})]`];
 
-      // For each one, if it is a valid value, we'll set it as the binding we are using. setBindingUsed will throw
+      // For each one, if it is a valid publicKey, we'll set it as the binding we are using. setBindingUsed will throw
       // an error if we try to use more than one at a time.
       if (stringVal){
-        setBindingUsed(this, STRING, key);
+        setBindingUsed(this, STRING, localKey);
       }
       if (oneWayVal){
-        setBindingUsed(this, BIND_ONEWAY, key);
+        setBindingUsed(this, BIND_ONEWAY, localKey);
       }
       if (twoWayVal){
-        setBindingUsed(this, BIND_TWOWAY, key);
+        setBindingUsed(this, BIND_TWOWAY, localKey);
       }
 
-      // Now we know which we are using, so get the binding val (or getter function in the case of one-way).
+      // Now we know which we are using, so get the binding val.
       bindingInUseVal = getBindingInUseVal();
       return bindingInUseVal;
     },
     set: function(val) {
-      if (this.__using_binding[key] === BIND_TWOWAY) {
-        this[`[(${value})]`] = val;
+      if (this.__using_binding[localKey] === BIND_TWOWAY) {
+        this[`[(${publicKey})]`] = val;
       }
     }
   };
@@ -105,7 +107,7 @@ export function propertiesBuilder(controller, key, value){
 
 function setBindingUsed(controller, using, key) {
   if (controller.__using_binding[key] && controller.__using_binding[key] !== using) {
-    throw new Error(`Can not use more than one type of attribute binding simultaneously: ${key}, bind-${key}, bind-on-${key}`);
+    throw new Error(`Can not use more than one type of attribute binding simultaneously: ${key}, [${key}], [(${key})]. Choose one.`);
   }
   controller.__using_binding[key] = using;
 }
