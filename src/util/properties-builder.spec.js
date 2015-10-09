@@ -1,6 +1,12 @@
 /* global it, describe */
 import '../tests/frameworks';
 import {propertiesMap, propertiesBuilder} from './properties-builder';
+import {Component} from '../decorators/providers/component';
+import {View} from '../decorators/component/view';
+import bundle from '../bundle';
+import bootstrap from '../bootstrap';
+import {ng} from '../tests/angular';
+import {compileComponent} from '../tests/utils';
 
 describe('properties-builder', () => {
 
@@ -157,4 +163,43 @@ describe('properties-builder', () => {
       });
     });
   });
+
+  describe('Angular Integration', () => {
+    let element;
+    let parentScope;
+    let controller;
+    let isolateScope;
+
+    beforeEach(() => {
+      ng.useReal();
+    });
+
+    beforeEach(() => {
+      @Component({
+        selector: 'thing',
+        properties: ['foo', 'baz:bar']
+      })
+      @View({
+        template: `{{thing.foo}} {{thing.baz}}`
+      })
+      class Thing {
+        quux() {}
+      }
+
+      var x = bundle('thing', Thing);
+      angular.mock.module(x.name);
+
+      let component = Thing;
+      let html = '<thing foo="Hello" [bar]="bar"></thing>';
+      let initialScope = { bar: 'World' };
+
+      ({parentScope, element, controller, isolateScope}
+          = compileComponent({component, html, initialScope}));
+    });
+
+    it('should pass component properties into isolatedScope', () => {
+      expect(element.text()).to.equal("Hello World");
+    });
+  });
+
 });

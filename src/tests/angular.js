@@ -1,5 +1,6 @@
 import {sinon} from './frameworks';
-import realAngular from '../../node_modules/angular'
+import realAngular from 'angular';
+//import mocks from 'angular-mocks';
 
 export let ngMocks = {
 	factory: sinon.spy(),
