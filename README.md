@@ -16,10 +16,10 @@ import 'zone.js';
 import uiRouter from 'angular-ui-router';
 import {Component, View, Inject, EventEmitter, bootstrap} from 'ng-forward';
 
-// In ng-forward you don't have to need to use a single decorator if you don't
-// need any injectables. This class has zero annotations. It's a regular es6
-// class. We wrap this in a service for you during bootstrap.
-class Test{
+// In ng-forward you don't need to use a single decorator if you are creating a
+// service and you don't need any injectables. This class has zero annotations. 
+// It's a regular es6 class. We wrap this in a service for you during bootstrap.
+class TestService{
 	getValue(){
 		return new Promise(resolve => {
 			setTimeout(() => resolve('Async FTW!'), 3000);
@@ -85,11 +85,11 @@ class Nested{ }
 // completely undecorated Test class. Because it's been auto-assigned a service
 // behind the scenes, we are able to inject it just fine. Also we'll inject
 // a reference the $element with a string. This is still very ng1, but it suffices.
-@Inject(Test, '$element')
+@Inject(TestService, '$element')
 class InnerApp{
-	constructor(test, $element){
+	constructor(TestService, $element){
 		this.$element = $element;
-		this.test = test;
+		this.TestService = TestService;
 		this.resolveValue();
 
 		// If you register an event in the 'events' array in @Component, and that
@@ -101,7 +101,7 @@ class InnerApp{
 
 	// Not anything to do with ng-forward... but super cool async / await. Amiright?
 	async resolveValue(){
-		this.num = await this.test.getValue();
+		this.num = await this.TestService.getValue();
 	}
 
 	// Example of how to trigger a non-EventEmitter event. It's just a dom event.
@@ -125,7 +125,7 @@ class InnerApp{
 // inject into controllers or use in your templates.
 @Component({
 	selector: 'app',
-	bindings: [Test, "ui.router"]
+	bindings: [TestService, "ui.router"]
 })
 @View({
 	// Again specifying directives to use. We really wanted to support specifying
