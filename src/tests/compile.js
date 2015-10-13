@@ -27,17 +27,18 @@ export const compileComponent = (ComponentClass) => {
 
 /**
  * A function for compiling an html template against a data object. This is
- * tested directives in regular angular 1. Recommended to use TestComponentBuilder
- * instead.
+ * for testing directives in regular angular 1. No dependencies on the
+ * ng-forward.
  *
- * @param component
+ * Recommended to use TestComponentBuilder instead if you are using ng-forward.
+ *
  * @param html
  * @param initialScope
+ * @param selector
  * @returns {{parentScope: *, element: *, controller: *, isolateScope: *}}
  */
-export const compileHtmlAndScope = ({component, html, initialScope}) => {
+export const compileHtmlAndScope = ({html, initialScope, selector}) => {
 
-  let selector = appWriter.get('selector', component);
   let parentScope, element, controller, isolateScope;
 
   inject(($compile, $rootScope) => {
