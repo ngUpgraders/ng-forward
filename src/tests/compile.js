@@ -1,5 +1,4 @@
-import {appWriter, componentWriter} from '../writers';
-import { debugElementFactory } from './debug-element';
+import { appWriter, componentWriter } from '../writers';
 import { RootTestComponent } from './test-component-builder';
 
 /**
@@ -11,22 +10,15 @@ import { RootTestComponent } from './test-component-builder';
 export const compileComponent = (ComponentClass) => {
 
   let selector = appWriter.get('selector', ComponentClass);
-  let rootTestScope, element, componentInstance;
+  let rootTestScope, debugElement, componentInstance;
 
   inject(($compile, $rootScope) => {
     let controllerAs = componentWriter.get('controllerAs', ComponentClass);
-    let template = componentWriter.get('template', ComponentClass);
     componentInstance = new ComponentClass();
     rootTestScope = $rootScope.$new();
-    rootTestScope[controllerAs] = componentInstance;
-    element = angular.element(`<span>${template}</span>`);
-    element = $compile(element)(rootTestScope);
+    debugElement = angular.element(`<${selector}></${selector}>`);
+    debugElement = $compile(debugElement)(rootTestScope);
     rootTestScope.$digest();
-  });
-
-  let debugElement = debugElementFactory({
-    nativeElement: element[0],
-    componentInstance
   });
 
   return new RootTestComponent({debugElement, rootTestScope});

@@ -26,11 +26,13 @@ class SomeOtherService {
 @View({
   template: `{{someComponent.foo}} {{someComponent.baz}} {{someComponent.quux()}} {{someComponent.local}}`
 })
-@Inject(SomeService, SomeOtherService)
+@Inject(SomeService, SomeOtherService, '$http', '$timeout')
 class SomeComponent {
-  constructor(SomeService, SomeOtherService) {
-    Object.assign(this, {SomeService, SomeOtherService});
+  constructor(SomeService, SomeOtherService, $http, $timeout) {
+    Object.assign(this, {SomeService, SomeOtherService, $http, $timeout});
     this.local = 'a';
+    $http.get('/api');
+    $timeout(() => this.local = 'c', 1000);
   }
   quux() { return `${this.SomeService.getData()} ${this.SomeOtherService.getData()}` }
 }
@@ -50,33 +52,37 @@ class TestComponent {
 
 describe('Test Utils', () => {
 
-  let angular;
   let tcb;
+  let angular;
 
   beforeEach(() => {
-    angular = ng.useReal();
     tcb = new TestComponentBuilder();
+    angular = ng.useReal();
   });
 
   describe('Test Component Builder', () => {
     let mockSomeService;
     let mockSomeOtherService;
+    let $http;
+    let $timeout;
     let rootTC;
     let rootTestEl;
     let someComponentEl;
-    let ngElementKeys = ['find', 'scope', 'controller', 'injector', 'html', 'text', 'on', 'off', 'css'];
 
     beforeEach(bindings(bind => {
       mockSomeService = {
         getData: sinon.stub().returns('mock success')
       };
 
+      $http = { get: sinon.stub() };
+
       return [
-        bind(SomeService).toValue(mockSomeService)
+        bind(SomeService).toValue(mockSomeService),
+        bind('$http').toValue($http)
       ];
     }));
 
-    // testing add more bindings in additional beforeEach
+    // testing adding more bindings in an additional beforeEach
     beforeEach(bindings(bind => {
       mockSomeOtherService = {
         getData: sinon.stub().returns('mock other')
@@ -90,43 +96,61 @@ describe('Test Utils', () => {
     beforeEach(() => {
       rootTC = tcb.create(TestComponent);
       rootTestEl = rootTC.debugElement;
-      someComponentEl = rootTC.debugElement.componentViewChildren[0];
+      someComponentEl = angular.element(rootTC.debugElement.componentViewChildren[0]);
     });
+
+    // todo: write a custom inject function for ng-forward
+    // currently I'm just using angular.mock.inject
+    beforeEach(inject(_$timeout_ => {
+      $timeout = _$timeout_
+    }));
 
     it('should bootstrap the test module', () => {
       expect(angular.module('test-ng-forward')).to.exist;
     });
 
-    it('should return a root test component', () => {
+    it('should return a root test component and decorated jqlite', () => {
       expect(rootTC).to.be.an.instanceOf(RootTestComponent);
 
       // debugElement is an angular.element decorated with extra properties, see next lines
-      expect(rootTC.debugElement.__proto__)
-          .to.contain.all.keys(ngElementKeys);
+      expect(rootTC.debugElement)
+          .to.be.an.instanceOf(angular.element);
 
+      // nativeElement is an alias to the [0] index raw dom element
       expect(rootTC.debugElement.nativeElement)
           .to.be.an.instanceOf(HTMLElement);
 
+      // The actual class instance hosted by the element
       expect(rootTC.debugElement.componentInstance)
           .to.be.an.instanceOf(TestComponent);
 
-      // componentViewChildren is an array of children debugElements
+      // componentViewChildren is an alias to .children()
       expect(rootTC.debugElement.componentViewChildren)
-          .to.be.an('array');
+          .to.be.an.instanceOf(angular.element);
 
-      expect(rootTC.debugElement.componentViewChildren[0].__proto__)
-          .to.contain.all.keys(ngElementKeys);
-
-      expect(rootTC.debugElement.componentViewChildren[0].nativeElement)
+      // Checking to be sure even nested jqlite elements are decorated
+      expect(someComponentEl.nativeElement)
           .to.be.an.instanceOf(HTMLElement);
 
-      expect(rootTC.debugElement.componentViewChildren[0].componentInstance)
+      expect(someComponentEl.componentInstance)
           .to.be.an.instanceOf(SomeComponent);
+
+      expect(someComponentEl.componentViewChildren).to.be.empty;
     });
 
-    it('should allow mocked bindings via bindings() method', () => {
+    it('should allow mock decorated class components and services via bindings() method', () => {
       expect(mockSomeService.getData).to.have.been.called;
       expect(someComponentEl.text()).to.equal("Hello World mock success mock other a");
+    });
+
+    it('should allow mock angular 1 services via bindings() method', () => {
+      expect($http.get).to.have.been.called;
+    });
+
+    it('should allow angular.mock special services (e.g. $timeout.flush)', () => {
+      expect(someComponentEl.text()).to.equal("Hello World mock success mock other a");
+      $timeout.flush();
+      expect(someComponentEl.text()).to.equal("Hello World mock success mock other c");
     });
 
     it('should detect changes on root test component instance ', () => {

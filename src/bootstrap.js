@@ -80,7 +80,8 @@ export default function bootstrap(component, otherProviders = []){
   return { ...injector,
     get: (service) => {
       if (angular.isFunction(service)) {
-        service = `${appWriter.get('selector', service)}Directive`;
+        let selector = appWriter.get('selector', service);
+        service = `${selector}Directive`;
       }
       return injector.get(service);
     }

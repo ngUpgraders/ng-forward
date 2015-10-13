@@ -25,4 +25,6 @@ export let ng = {
 	}
 };
 
-ng.useStub();
+beforeEach(() => {
+	ng.useStub();
+});

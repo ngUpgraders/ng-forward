@@ -1,3 +1,5 @@
+import _ from '../util/jqlite-extensions';
+
 export {
   bindings
 } from './bindings';

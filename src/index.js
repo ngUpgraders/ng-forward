@@ -1,3 +1,4 @@
+import _ from './util/jqlite-extensions';
 import Module from './module';
 import bootstrap from './bootstrap';
 import { Inject } from './decorators/inject';

@@ -31,7 +31,9 @@ export const bindings = (bindFn) => {
  */
 export class Binding {
   constructor(token) {
-    this.token = providerWriter.get('name', token);
+    this.token = angular.isString(token)
+        ? token
+        : providerWriter.get('name', token);
   }
   toValue(value) {
     this.value = value;
