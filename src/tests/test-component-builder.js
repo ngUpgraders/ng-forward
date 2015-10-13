@@ -1,6 +1,6 @@
 import bundle from '../bundle';
 import { compileComponent } from './compile';
-import { Binding } from './bindings';
+import { Binding } from '../util/binding';
 
 /**
  * TestComponentBuilder
