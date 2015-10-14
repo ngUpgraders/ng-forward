@@ -20,7 +20,7 @@ export default function(instance, element, $scope, events){
   const create = (eventKey, emitter) => {
     return emitter.observer({
       next: data => {
-        let event = new Event(eventKey, { detail: data, bubbles: true });
+        let event = new CustomEvent(eventKey, { detail: data, bubbles: true });
         element.dispatchEvent(event);
       }
     });
