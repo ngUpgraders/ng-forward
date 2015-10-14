@@ -1,17 +1,21 @@
 import {providerWriter} from '../writers';
 import flattenArray from './flatten-array';
+import {Provider} from './provider';
 
 const STRING_TEST = a => typeof a === 'string';
-const PROVIDER_TEST = a => typeof a === 'function' && providerWriter.has('name', a);
+const PROVIDER_TEST = a => (typeof a === 'function' || a instanceof Provider) && providerWriter.has('name', a);
 
-export default function filterBindings(rawBindings){
-  let bindings = flattenArray(rawBindings);
+export default function groupIntoModulesAndProviders(providersAndModules){
+  providersAndModules = flattenArray(providersAndModules);
 
-  let modules = bindings.filter(STRING_TEST);
-  let providers = bindings.filter(PROVIDER_TEST);
+  // find all modules
+  let modules = providersAndModules.filter(STRING_TEST);
+  // find all annotated classes and Providers
+  let providers = providersAndModules.filter(PROVIDER_TEST);
 
-  if(bindings.filter(STRING_TEST).filter(PROVIDER_TEST).length > 0){
-    throw new Error('Unidentified injectable type. Sorry this message is not clearer!');
+  if(providersAndModules.length !== modules.length + providers.length){
+    throw new Error('One or more of your providers was not valid. Please make sure all providers are either: ' +
+        'a class, decorated class, Provider instance, or module string');
   }
 
   return { modules, providers };

@@ -16,7 +16,7 @@ let _parsers = {};
 
 // ## DecoratedModule class
 // Define the Module wrapper class.
-class DecoratedModule{
+export class DecoratedModule{
 	constructor(name, modules = false){
 		// The name of the angular module to create
 		this.name = name;

@@ -10,7 +10,7 @@ import parseSelector from '../../util/parse-selector';
 // `providerWriter` sets up provider information, `componentWriter` writes the DDO,
 // and `appWriter` sets up app traversal/bootstrapping information.
 import {providerWriter, componentWriter} from '../../writers';
-// Takes the information from `config.bindings` and turns it into the actual metadata
+// Takes the information from `config.providers` and turns it into the actual metadata
 // needed during app traversal
 import {Injectables} from '../injectables';
 // Provider parser will need to be registered with Module
@@ -32,7 +32,7 @@ export const Directive = componentConfig => t => {
 	}
 
 	const DEFAULT_CONFIG = {
-		bindings: []
+		providers: []
 	};
 
 	let config = extend({}, DEFAULT_CONFIG, componentConfig || {});
@@ -46,21 +46,17 @@ export const Directive = componentConfig => t => {
 		throw new Error('@Directive selectors can only be attributes');
 	}
 
-	// Must perform some basic shape checking on the config object
-	['inputs', 'bindables', 'directives', 'outputs'].forEach(property => {
-
-	});
-	if(config.bindings !== undefined && !Array.isArray(config.bindings)){
-		throw new TypeError(`Directive bindings must be an array`);
+	if(config.providers !== undefined && !Array.isArray(config.providers)){
+		throw new TypeError(`Directive providers must be an array`);
 	}
 
 	// Setup provider information using the parsed selector
 	providerWriter.set('name', name, t);
 	providerWriter.set('type', TYPE, t);
 
-	// Grab the bindings from the config object, parse them, and write the metadata
+	// Grab the providers from the config object, parse them, and write the metadata
 	// to the target.
-	Injectables(...config.bindings)(t);
+	Injectables(...config.providers)(t);
 
 	// Restrict type must be 'element'
 	componentWriter.set('restrict', restrict, t);

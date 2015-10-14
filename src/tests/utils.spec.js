@@ -4,7 +4,7 @@ import {Component} from '../decorators/providers/component';
 import {View} from '../decorators/component/view';
 import {Inject} from '../decorators/inject';
 import {ng} from './angular';
-import {bindings, TestComponentBuilder} from './index';
+import {providers, TestComponentBuilder} from './index';
 import {RootTestComponent} from './test-component-builder';
 import extend from 'extend';
 
@@ -70,7 +70,8 @@ describe('Test Utils', () => {
     let rootTestEl;
     let someComponentEl;
 
-    beforeEach(bindings(bind => {
+    // test the bindings call composed with the beforeEach fn
+    beforeEach(providers(provide => {
       mockSomeService = {
         getData: sinon.stub().returns('mock success')
       };
@@ -78,21 +79,26 @@ describe('Test Utils', () => {
       $http = { get: sinon.stub() };
 
       return [
-        bind(SomeService).toValue(mockSomeService),
-        bind('$http').toValue($http)
+        provide(SomeService, { useValue: mockSomeService }),
+        provide('$http', { useValue: $http })
       ];
     }));
 
     // testing adding more bindings in an additional beforeEach
-    beforeEach(bindings(bind => {
-      mockSomeOtherService = {
-        getData: sinon.stub().returns('mock other')
-      };
+    beforeEach(() => {
 
-      return [
-        bind(SomeOtherService).toValue(mockSomeOtherService)
-      ];
-    }));
+      // test the bindings call inside the beforeEach fn
+      providers(provide => {
+        mockSomeOtherService = {
+          getData: sinon.stub().returns('mock other')
+        };
+
+        return [
+          provide(SomeOtherService, { useValue: mockSomeOtherService })
+        ];
+      });
+
+    });
 
     beforeEach(() => {
       rootTC = tcb.create(TestComponent);

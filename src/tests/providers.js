@@ -1,4 +1,11 @@
-import { Binding, bind } from '../util/binding';
+import { provide } from '../util/provider';
+
+/**
+ * Stores references to all bindings. Is cleared by TestComponentBuilder after a create call.
+ * @type {Array}
+ * @private
+ */
+let _providers = [];
 
 /**
  * A sugar function for use in a beforeEach block. It's passed the bind method for
@@ -9,14 +16,22 @@ import { Binding, bind } from '../util/binding';
  * beforeEach(() => {
  *   bindings(bind => {});
  * })
- * @param bindFn(bind): <Bindings>
+ * @param provideFn(provide):[Provider]
  * @returns {workFn}
  */
-export const bindings = (bindFn) => {
+export const providers = (provideFn) => {
   return isSpecRunning() ? workFn() : workFn;
   function workFn() {
-    Binding.bindings.push(...bindFn(bind));
+    _providers.push(...provideFn(provide));
   }
+};
+
+providers.all = () => {
+  return _providers;
+};
+
+providers.clear = () => {
+  _providers = [];
 };
 
 

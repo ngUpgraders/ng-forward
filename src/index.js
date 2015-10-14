@@ -1,9 +1,12 @@
 import _ from './util/jqlite-extensions';
+
 import Module from './module';
 import bootstrap from './bootstrap';
+
 import { Inject } from './decorators/inject';
 import { Injectables } from './decorators/injectables';
 import { EventEmitter } from './util/event-emitter';
+import { provide, Provider } from './util/provider';
 
 import { Animation } from './decorators/providers/animation';
 import { Component } from './decorators/providers/component';
@@ -23,6 +26,8 @@ export {
 	Inject,
 	Injectables,
 	EventEmitter,
+	provide,
+	Provider,
 
 	Component,
 	Directive,
