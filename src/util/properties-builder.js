@@ -6,6 +6,8 @@ const STRING = '_bind_string_';
 const BIND_ONEWAY = '_bind_oneway_';
 const BIND_TWOWAY = '_bind_twoway_';
 
+function isDefined(value) {return typeof value !== 'undefined';}
+
 // This function is responsible for transforming the properties from @Component to ng1 DDO bindings.
 export function propertiesMap(properties){
   let definition = {};
@@ -47,53 +49,43 @@ export function propertiesBuilder(controller, localKey, publicKey){
     configurable: true,
     get: function() {
       const getBindingInUseVal = () => {
-        if (this.__using_binding[localKey]) {
-          let using = this.__using_binding[localKey];
-
-          if(using === STRING){
+        switch(this.__using_binding[localKey]) {
+          case STRING:
             return this[`${STRING}${localKey}`];
-          }
-          else if(using === BIND_ONEWAY){
+          case BIND_ONEWAY:
             // one way is special in that it calls its '&' fn to
             // get the publicKey of the binding
             return this[`[${publicKey}]`]();
-          }
-          else if(using === BIND_TWOWAY){
+          case BIND_TWOWAY:
             return this[`[(${publicKey})]`];
-          }
-          else{
+          default:
             throw new Error(`Unknown property binding detected: ${using}`);
-          }
         }
       };
 
       // When getting the localKey first check if we've already determined which binding we are using for this particular
       // localKey. If we have, then just return it.
       this.__using_binding = this.__using_binding || {};
-      let bindingInUseVal = getBindingInUseVal();
-      if (bindingInUseVal) return bindingInUseVal;
+      if (this.__using_binding[localKey]) {
+        return getBindingInUseVal();
+      }
 
       // If we haven't determined which binding we are using yet, we go ahead and access all of them to see if they
       // contain values.
-      let stringVal = this[`${STRING}${localKey}`];
-      let oneWayVal = this[`[${publicKey}]`]();
-      let twoWayVal = this[`[(${publicKey})]`];
-
       // For each one, if it is a valid publicKey, we'll set it as the binding we are using. setBindingUsed will throw
       // an error if we try to use more than one at a time.
-      if (stringVal){
+      if (isDefined(this[`${STRING}${localKey}`])){
         setBindingUsed(this, STRING, localKey);
       }
-      if (oneWayVal){
+      if (isDefined(this[`[${publicKey}]`]())){
         setBindingUsed(this, BIND_ONEWAY, localKey);
       }
-      if (twoWayVal){
+      if (isDefined(this[`[(${publicKey})]`])){
         setBindingUsed(this, BIND_TWOWAY, localKey);
       }
 
       // Now we know which we are using, so get the binding val.
-      bindingInUseVal = getBindingInUseVal();
-      return bindingInUseVal;
+      return getBindingInUseVal();
     },
     set: function(val) {
       if (this.__using_binding[localKey] === BIND_TWOWAY) {

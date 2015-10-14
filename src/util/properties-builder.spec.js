@@ -102,6 +102,18 @@ describe('properties-builder', () => {
         expect(controller['[(foo)]']).to.equal('quux');
       });
 
+      it('should allow writing to a two-way property that is initialized to a falsy defined value', function() {
+        // simulate angular setting value with hidden property
+        controller['[foo]'] = sinon.stub();
+        // simulate angular one way fn binding, special for one-way only
+        controller['[(foo)]'] = '';
+
+        expect(controller.foo).to.equal('');
+        controller.foo = 'quux';
+        expect(controller.foo).to.equal('quux');
+        expect(controller['[(foo)]']).to.equal('quux');
+      });
+
       it('should not allow using more than one binding type', () => {
         controller['[foo]'] = sinon.stub().returns('bar');
         expect(controller['[(foo)]']).to.throw;
