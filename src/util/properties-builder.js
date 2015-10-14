@@ -59,7 +59,7 @@ export function propertiesBuilder(controller, localKey, publicKey){
           case BIND_TWOWAY:
             return this[`[(${publicKey})]`];
           default:
-            throw new Error(`Unknown property binding detected: ${using}`);
+            throw new Error(`Unknown property binding detected: ${localKey}`);
         }
       };
 
@@ -82,6 +82,11 @@ export function propertiesBuilder(controller, localKey, publicKey){
       }
       if (isDefined(this[`[(${publicKey})]`])){
         setBindingUsed(this, BIND_TWOWAY, localKey);
+      }
+
+      // Fall back on binding to the interpolated value if nothing else matches
+      if (!isDefined(this.__using_binding[localKey])) {
+        setBindingUsed(this, STRING, localKey);
       }
 
       // Now we know which we are using, so get the binding val.
