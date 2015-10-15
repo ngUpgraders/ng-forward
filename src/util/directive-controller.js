@@ -6,10 +6,10 @@
 // for events and $filter for properties.
 //
 // ## Setup
-// We'll need a1atscript's propertiesBuilder for generating the property definitions
-import {propertiesBuilder} from './properties-builder';
-// Also need the eventsBuilder for creating event emittors
-import eventsBuilder from './events-builder';
+// We'll need a1atscript's inputsBuilder for generating the property definitions
+import {inputsBuilder} from './inputs-builder';
+// Also need the outputsBuilder for creating event emittors
+import outputsBuilder from './outputs-builder';
 // Finally extend for extending the instance of the controller
 import extend from 'extend';
 
@@ -19,24 +19,24 @@ import extend from 'extend';
 export default function createDirectiveController(caller, injects, controller, ddo, $injector, locals){
   // Create an instance of the controller without calling its constructor
   let instance = Object.create(controller.prototype);
-  // Use a1atscript's propertiesBuilder to add the getters/setters then sugar
+  // Use a1atscript's inputsBuilder to add the getters/setters then sugar
   // over `=` and `@` bindings
-  for(let key in ddo.properties){
-    propertiesBuilder(instance, key, ddo.properties[key]);
+  for(let key in ddo.inputMap) {
+    inputsBuilder(instance, key, ddo.inputMap[key]);
   }
-  // Remember, angular has alrady set those bindings on the prototype of the calling
-  // function. Now we need to extend them onto our instance. important
-  // to extend after building the properties that way we fire the setters
+  // Remember, angular has already set those bindings on the `caller`
+  // argument. Now we need to extend them onto our `instance`. It is important
+  // to extend after defining the properties. That way we fire the setters.
   extend(instance, caller);
 
   // Finally, invoke the constructor using the injection array and the captured
   // locals
   $injector.invoke([...injects, controller], instance, locals);
 
-  // Events work similarly, but they need the raw $element and the $scope for
-  // destroying event observables.
+  // Outputs work similarly, but they need the raw $element and the $scope for
+  // destroying output observables.
   let {$element, $scope} = locals;
-  eventsBuilder(instance, $element[0], $scope, ddo.events || {});
+  outputsBuilder(instance, $element[0], $scope, ddo.outputMap || {});
 
   // Return the controller instance
   return instance;

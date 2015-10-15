@@ -16,7 +16,7 @@ export default function(props){
 			map[split[0]] = split[1];
 		}
 		else{
-			throw new Error('Properties must be in the form of "propName: attrName" or in the form of "attrName"');
+			throw new Error('Inputs and outputs must be in the form of "propName: attrName" or in the form of "attrName"');
 		}
 	}
 

@@ -16,7 +16,8 @@ import {Injectables} from '../injectables';
 // Provider parser will need to be registered with Module
 import Module from '../../module';
 import directiveControllerFactory from '../../util/directive-controller';
-import {propertiesMap} from '../../util/properties-builder';
+import {inputsMap} from '../../util/inputs-builder';
+import extend from 'extend';
 
 // The type for right now is `directive`. In angular-decorators there was very little
 // difference between `@Component` and `@Directive` so they shared a common provider
@@ -34,7 +35,7 @@ export const Directive = componentConfig => t => {
 		bindings: []
 	};
 
-	let config = Object.assign({}, DEFAULT_CONFIG, componentConfig || {});
+	let config = extend({}, DEFAULT_CONFIG, componentConfig || {});
 
 	// Grab the provider name and selector type by parsing the selector
 	let {name, type: restrict} = parseSelector(config.selector);
@@ -46,7 +47,7 @@ export const Directive = componentConfig => t => {
 	}
 
 	// Must perform some basic shape checking on the config object
-	['properties', 'bindables', 'directives', 'events'].forEach(property => {
+	['inputs', 'bindables', 'directives', 'outputs'].forEach(property => {
 
 	});
 	if(config.bindings !== undefined && !Array.isArray(config.bindings)){
@@ -75,9 +76,9 @@ Module.addProvider(TYPE, (target, name, injects, ngModule) => {
 		ddo[key] = val;
 	}, target);
 
-	// Get the property bindings ahead of time
+	// Get the input bindings ahead of time
 	if(ddo.controllerAs){
-		ddo.bindToController = propertiesMap(ddo.properties);
+		ddo.bindToController = inputsMap(ddo.inputs);
 	}
 
 	// Finally add the directive to the raw module

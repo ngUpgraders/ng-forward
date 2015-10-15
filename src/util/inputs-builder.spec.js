@@ -1,6 +1,6 @@
 /* global it, describe */
 import '../tests/frameworks';
-import {propertiesMap, propertiesBuilder} from './properties-builder';
+import {inputsMap, inputsBuilder} from './inputs-builder';
 import {Component} from '../decorators/providers/component';
 import {View} from '../decorators/component/view';
 import {Inject} from '../decorators/inject';
@@ -8,15 +8,15 @@ import bundle from '../bundle';
 import bootstrap from '../bootstrap';
 import {ng} from '../tests/angular';
 
-describe('properties-builder', () => {
+describe('inputs-builder', () => {
 
-  describe('propertiesMap', () => {
-    it('should return map of three isolate scope properties per property', () => {
-      let properties = {
+  describe('inputsMap', () => {
+    it('should return map of three isolate scope properties per input', () => {
+      let inputs = {
         foo: 'foo'
       };
 
-      let definition = propertiesMap(properties);
+      let definition = inputsMap(inputs);
       expect(definition).to.eql({
         '_bind_string_foo': '@foo',
         '[foo]': '&',
@@ -24,12 +24,12 @@ describe('properties-builder', () => {
       });
     });
 
-    it('should return map of for properties with local vs. public name', () => {
-      let properties = {
+    it('should return map of inputs with local vs. public name', () => {
+      let inputs = {
         fooLocal: 'fooPublic'
       };
 
-      let definition = propertiesMap(properties);
+      let definition = inputsMap(inputs);
       expect(definition).to.eql({
         '_bind_string_fooLocal': '@fooPublic',
         '[fooPublic]': '&',
@@ -37,15 +37,15 @@ describe('properties-builder', () => {
       });
     });
 
-    it('should return empty map if there are no properties', () => {
-      let properties = {};
+    it('should return empty map if there are no inputs', () => {
+      let inputs = {};
 
-      let definition = propertiesMap(properties);
+      let definition = inputsMap(inputs);
       expect(definition).to.eql({});
     });
   });
 
-  describe('propertiesBuilder', () => {
+  describe('inputsBuilder', () => {
     let controller;
 
     beforeEach(() => {
@@ -55,7 +55,7 @@ describe('properties-builder', () => {
     describe('with localKey same as publicKey', () => {
 
       beforeEach(() => {
-        propertiesBuilder(controller, 'foo', 'foo');
+        inputsBuilder(controller, 'foo', 'foo');
       });
 
       it('should add one visible and several hidden properties to controller', () => {
@@ -71,7 +71,7 @@ describe('properties-builder', () => {
         expect(visibleProps[0]).to.equal('foo');
       });
 
-      it('should only be able to read from string property', () => {
+      it('should only be able to read from string input', () => {
         controller['[foo]'] = sinon.stub();
         // simulate angular setting value with hidden property
         controller['_bind_string_foo'] = 'bar';
@@ -81,7 +81,7 @@ describe('properties-builder', () => {
         expect(controller.foo).to.equal('bar');
       });
 
-      it('should only be able to read from one-way property', () => {
+      it('should only be able to read from one-way input', () => {
         // simulate angular one way fn binding, special for one-way only
         controller['[foo]'] = sinon.stub().returns('bar');
 
@@ -90,7 +90,7 @@ describe('properties-builder', () => {
         expect(controller.foo).to.equal('bar');
       });
 
-      it('should be able to read and write a two-way property', () => {
+      it('should be able to read and write a two-way input', () => {
         // simulate angular setting value with hidden property
         controller['[foo]'] = sinon.stub();
         // simulate angular one way fn binding, special for one-way only
@@ -102,7 +102,7 @@ describe('properties-builder', () => {
         expect(controller['[(foo)]']).to.equal('quux');
       });
 
-      it('should allow writing to a two-way property that is initialized to a falsy defined value', function() {
+      it('should allow writing to a two-way input that is initialized to a falsy defined value', function() {
         // simulate angular setting value with hidden property
         controller['[foo]'] = sinon.stub();
         // simulate angular one way fn binding, special for one-way only
@@ -122,7 +122,7 @@ describe('properties-builder', () => {
 
     describe('with localKey different than publicKey', () => {
       beforeEach(() => {
-        propertiesBuilder(controller, 'fooLocal', 'fooPublic');
+        inputsBuilder(controller, 'fooLocal', 'fooPublic');
       });
 
       it('should add one visible and several hidden properties to controller', () => {
@@ -138,7 +138,7 @@ describe('properties-builder', () => {
         expect(visibleProps[0]).to.equal('fooLocal');
       });
 
-      it('should only be able to read from string property', () => {
+      it('should only be able to read from string input', () => {
         controller['[fooPublic]'] = sinon.stub();
         // simulate angular setting value with hidden property
         controller['_bind_string_fooLocal'] = 'bar';
@@ -148,7 +148,7 @@ describe('properties-builder', () => {
         expect(controller.fooLocal).to.equal('bar');
       });
 
-      it('should only be able to read from one-way property', () => {
+      it('should only be able to read from one-way input', () => {
         // simulate angular one way fn binding, special for one-way only
         controller['[fooPublic]'] = sinon.stub().returns('bar');
 
@@ -157,7 +157,7 @@ describe('properties-builder', () => {
         expect(controller.fooLocal).to.equal('bar');
       });
 
-      it('should be able to read and write a two-way property', () => {
+      it('should be able to read and write a two-way input', () => {
         // simulate angular setting value with hidden property
         controller['[fooPublic]'] = sinon.stub();
         // simulate angular one way fn binding, special for one-way only

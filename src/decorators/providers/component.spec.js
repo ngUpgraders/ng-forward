@@ -2,6 +2,7 @@
 import {Component} from './component';
 import '../../tests/frameworks';
 import {providerWriter, componentWriter} from '../../writers';
+import Module from '../../module';
 
 describe('@Component annotation', function(){
 	it('should decorate a class with correct $provider metadata', function(){
@@ -24,33 +25,27 @@ describe('@Component annotation', function(){
 	});
 
 	it('should throw an error if the selector is not an element', function(){
-		let caughtAttr = false;
-		let caughtClass = false;
+		let providerParser = Module.getParser('component');
 
-		try{
+		expect(() => {
 			@Component({ selector : '[my-attr]' })
 			class MyClass{ }
-		}
-		catch(e){
-			caughtAttr = true;
-		}
+			providerParser(MyClass, 'my-attr', [], { name: 'myModule' });
+		}).to.throw('Processing "MyClass" in "myModule": ' +
+								'@Component selectors can only be elements. Perhaps you meant to use @Directive?');
 
-		try{
+		expect(() => {
 			@Component({ selector : '.my-class' })
 			class MyClass{ }
-		}
-		catch(e){
-			caughtClass = true;
-		}
-
-		caughtAttr.should.be.ok;
-		caughtClass.should.be.ok;
+			providerParser(MyClass, undefined, [], { name: 'myModule' });
+		}).to.throw('Processing "MyClass" in "myModule": ' +
+								'@Component selectors can only be elements. Perhaps you meant to use @Directive?');
 	});
 
 	it('should respect inheritance', function(){
 		@Component({
 			selector: 'parent',
-			properties: [
+			inputs: [
 				'first',
 				'second'
 			]
@@ -60,7 +55,7 @@ describe('@Component annotation', function(){
 		@Component({ selector: 'child' })
 		class ChildCtrl extends ParentCtrl{ }
 
-		componentWriter.get('properties', ChildCtrl).should.eql({
+		componentWriter.get('inputMap', ChildCtrl).should.eql({
 			first: 'first',
 			second: 'second'
 		});
