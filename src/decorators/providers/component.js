@@ -107,7 +107,6 @@ export const Component = componentConfig => t => {
 		componentWriter.set('outputMap', outputMap, t);
 		for(let key in outputMap){
 			events.add(outputMap[key]);
-			events.add(outputMap[key]);
 		}
 	}
 
@@ -151,7 +150,7 @@ Module.addProvider(TYPE, (target, name, injects, ngModule) => {
 		ddo.bindToController = inputsMap(ddo.inputMap);
 	}
 
-	checkComponentConfig(ddo);
+	checkComponentConfig();
 
 	// Component controllers must be created from a factory. Checkout out
 	// util/directive-controller.js for more information about what's going on here
@@ -171,24 +170,31 @@ Module.addProvider(TYPE, (target, name, injects, ngModule) => {
 
 	// Finally add the component to the raw module
 	ngModule.directive(name, () => ddo);
-});
 
-function checkComponentConfig(ddo) {
-	// If the selector type was not an element, throw an error. Components can only
-	// be elements in Angular 2, so we want to enforce that strictly here.
-	if(ddo.restrict !== 'E') {
-		throw new Error('@Component selectors can only be elements. Perhaps you meant to use @Directive?');
+	function createConfigErrorMessage(message) {
+		return `Processing "${target.name}" in "${ngModule.name}": ${message}`;
 	}
 
-	// Must perform some basic shape checking on the config object
-	['inputs', 'bindings', 'directives', 'outputs'].forEach(property => {
-		if(ddo[property] !== undefined && !Array.isArray(ddo[property])){
-			throw new TypeError(`Component ${JSON.stringify(ddo)} must be an array`);
+	function checkComponentConfig() {
+		// If the selector type was not an element, throw an error. Components can only
+		// be elements in Angular 2, so we want to enforce that strictly here.
+		if(ddo.restrict !== 'E') {
+			throw new Error(createConfigErrorMessage(
+				`@Component selectors can only be elements. ` +
+				`Perhaps you meant to use @Directive?`));
 		}
-	});
 
-	if(!ddo.templateUrl && !ddo.template)
-	{
-		throw new Error('Components must have a `template` or `templateUrl` via the `@Component` `@View` decorators');
+		// Must perform some basic shape checking on the config object
+		['inputs', 'bindings', 'directives', 'outputs'].forEach(property => {
+			if(ddo[property] !== undefined && !Array.isArray(ddo[property])){
+				throw new TypeError(createConfigErrorMessage(`Component ${property} must be an array`));
+			}
+		});
+
+		if(!ddo.templateUrl && !ddo.template)
+		{
+			throw new Error(createConfigErrorMessage(
+				`Components must have a template or templateUrl via the @Component or @View decorators`));
+		}
 	}
-}
+});

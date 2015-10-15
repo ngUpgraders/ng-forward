@@ -26,29 +26,20 @@ describe('@Component annotation', function(){
 
 	it('should throw an error if the selector is not an element', function(){
 		let providerParser = Module.getParser('component');
-		let caughtAttr = false;
-		let caughtClass = false;
 
-		try{
+		expect(() => {
 			@Component({ selector : '[my-attr]' })
 			class MyClass{ }
-			providerParser(MyClass);
-		}
-		catch(e){
-			caughtAttr = true;
-		}
+			providerParser(MyClass, 'my-attr', [], { name: 'myModule' });
+		}).to.throw('Processing "MyClass" in "myModule": ' +
+								'@Component selectors can only be elements. Perhaps you meant to use @Directive?');
 
-		try{
+		expect(() => {
 			@Component({ selector : '.my-class' })
 			class MyClass{ }
-			providerParser(MyClass);
-		}
-		catch(e){
-			caughtClass = true;
-		}
-
-		caughtAttr.should.be.ok;
-		caughtClass.should.be.ok;
+			providerParser(MyClass, undefined, [], { name: 'myModule' });
+		}).to.throw('Processing "MyClass" in "myModule": ' +
+								'@Component selectors can only be elements. Perhaps you meant to use @Directive?');
 	});
 
 	it('should respect inheritance', function(){
