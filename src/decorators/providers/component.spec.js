@@ -2,6 +2,7 @@
 import {Component} from './component';
 import '../../tests/frameworks';
 import {providerWriter, componentWriter} from '../../writers';
+import Module from '../../module';
 
 describe('@Component annotation', function(){
 	it('should decorate a class with correct $provider metadata', function(){
@@ -24,12 +25,14 @@ describe('@Component annotation', function(){
 	});
 
 	it('should throw an error if the selector is not an element', function(){
+		let providerParser = Module.getParser('component');
 		let caughtAttr = false;
 		let caughtClass = false;
 
 		try{
 			@Component({ selector : '[my-attr]' })
 			class MyClass{ }
+			providerParser(MyClass);
 		}
 		catch(e){
 			caughtAttr = true;
@@ -38,6 +41,7 @@ describe('@Component annotation', function(){
 		try{
 			@Component({ selector : '.my-class' })
 			class MyClass{ }
+			providerParser(MyClass);
 		}
 		catch(e){
 			caughtClass = true;
@@ -60,7 +64,7 @@ describe('@Component annotation', function(){
 		@Component({ selector: 'child' })
 		class ChildCtrl extends ParentCtrl{ }
 
-		componentWriter.get('inputs', ChildCtrl).should.eql({
+		componentWriter.get('inputMap', ChildCtrl).should.eql({
 			first: 'first',
 			second: 'second'
 		});

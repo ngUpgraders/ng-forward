@@ -4,7 +4,7 @@
 //
 // ## Usage
 // ```js
-// import {Component, View, EventEmitter, Inject} from 'ng-forward';
+// import {Component, EventEmitter, Inject} from 'ng-forward';
 // import {Messenger} from '../messenger';
 //
 // @Component({
@@ -12,8 +12,6 @@
 // 	outputs: ['sent'],
 // 	inputs: ['messageSubject: subject'],
 // 	bind: [Messenger]
-// })
-// @View({
 // 	template: `
 // 		<textarea ng-model="sendMessage.body"></textarea>
 // 		<button on-click="sendMessage.send()"></textarea>
@@ -54,10 +52,8 @@ import events from '../../util/events';
 import directiveControllerFactory from '../../util/directive-controller';
 import {inputsMap} from '../../util/inputs-builder';
 import extend from 'extend';
+import {View} from '../component/view';
 
-// The type for right now is `directive`. In angular-decorators there was very little
-// difference between `@Component` and `@Directive` so they shared a common provider
-// parser defined in `../../util/decorate-directive.js`
 const TYPE = 'component';
 
 // ## Decorator Definition
@@ -78,19 +74,6 @@ export const Component = componentConfig => t => {
 
 	// Grab the provider name and selector type by parsing the selector
 	let {name, type: restrict} = parseSelector(config.selector);
-
-	// If the selector type was not an element, throw an error. Components can only
-	// be elements in Angular 2, so we want to enforce that strictly here.
-	if(restrict !== 'E') {
-		throw new Error('@Component selectors can only be elements. Perhaps you meant to use @Directive?');
-	}
-
-	// Must perform some basic shape checking on the config object
-	['inputs', 'bindings', 'directives', 'outputs'].forEach(property => {
-		if(config[property] !== undefined && !Array.isArray(config[property])){
-			throw new TypeError(`Component ${property} must be an array`);
-		}
-	});
 
 	// Setup provider information using the parsed selector
 	providerWriter.set('name', name, t);
@@ -114,15 +97,16 @@ export const Component = componentConfig => t => {
 	componentWriter.set('bindToController', true, t);
 
 	// Check for Angular 2 style inputs
-	let binders = parsePropertyMap(config.inputs);
-	let previous = componentWriter.get('inputs', t) || {};
-	componentWriter.set('inputs', extend({}, previous, binders), t);
+	let inputMap = parsePropertyMap(config.inputs);
+	let previousInputMap = componentWriter.get('inputMap', t) || {};
+	componentWriter.set('inputMap', extend({}, previousInputMap, inputMap), t);
 
 	// outputs
 	if(config.outputs.length > 0){
 		let outputMap = parsePropertyMap(config.outputs) || {};
-		componentWriter.set('outputs', outputMap, t);
+		componentWriter.set('outputMap', outputMap, t);
 		for(let key in outputMap){
+			events.add(outputMap[key]);
 			events.add(outputMap[key]);
 		}
 	}
@@ -146,6 +130,10 @@ export const Component = componentConfig => t => {
 	if(t.compile){
 		componentWriter.set('compile', t.compile, t);
 	}
+
+	// Extract the view information
+	// (View was merged with Component. See https://github.com/angular/angular/pull/4566)
+	View(config)(t);
 };
 
 // ## Component Provider Parser
@@ -160,8 +148,10 @@ Module.addProvider(TYPE, (target, name, injects, ngModule) => {
 
 	// Get the inputs bindings ahead of time
 	if(ddo.controllerAs){
-		ddo.bindToController = inputsMap(ddo.inputs);
+		ddo.bindToController = inputsMap(ddo.inputMap);
 	}
+
+	checkComponentConfig(ddo);
 
 	// Component controllers must be created from a factory. Checkout out
 	// util/directive-controller.js for more information about what's going on here
@@ -182,3 +172,23 @@ Module.addProvider(TYPE, (target, name, injects, ngModule) => {
 	// Finally add the component to the raw module
 	ngModule.directive(name, () => ddo);
 });
+
+function checkComponentConfig(ddo) {
+	// If the selector type was not an element, throw an error. Components can only
+	// be elements in Angular 2, so we want to enforce that strictly here.
+	if(ddo.restrict !== 'E') {
+		throw new Error('@Component selectors can only be elements. Perhaps you meant to use @Directive?');
+	}
+
+	// Must perform some basic shape checking on the config object
+	['inputs', 'bindings', 'directives', 'outputs'].forEach(property => {
+		if(ddo[property] !== undefined && !Array.isArray(ddo[property])){
+			throw new TypeError(`Component ${JSON.stringify(ddo)} must be an array`);
+		}
+	});
+
+	if(!ddo.templateUrl && !ddo.template)
+	{
+		throw new Error('Components must have a `template` or `templateUrl` via the `@Component` `@View` decorators');
+	}
+}

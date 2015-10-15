@@ -21,8 +21,8 @@ export default function createDirectiveController(caller, injects, controller, d
   let instance = Object.create(controller.prototype);
   // Use a1atscript's inputsBuilder to add the getters/setters then sugar
   // over `=` and `@` bindings
-  for(let key in ddo.inputs){
-    inputsBuilder(instance, key, ddo.inputs[key]);
+  for(let key in ddo.inputMap) {
+    inputsBuilder(instance, key, ddo.inputMap[key]);
   }
   // Remember, angular has already set those bindings on the `caller`
   // argument. Now we need to extend them onto our `instance`. It is important
@@ -36,7 +36,7 @@ export default function createDirectiveController(caller, injects, controller, d
   // Outputs work similarly, but they need the raw $element and the $scope for
   // destroying output observables.
   let {$element, $scope} = locals;
-  outputsBuilder(instance, $element[0], $scope, ddo.outputs || {});
+  outputsBuilder(instance, $element[0], $scope, ddo.outputMap || {});
 
   // Return the controller instance
   return instance;
