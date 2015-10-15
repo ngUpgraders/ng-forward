@@ -46,7 +46,7 @@ export const Directive = componentConfig => t => {
 	}
 
 	// Must perform some basic shape checking on the config object
-	['inputs', 'bindables', 'directives', 'events'].forEach(property => {
+	['inputs', 'bindables', 'directives', 'outputs'].forEach(property => {
 
 	});
 	if(config.bindings !== undefined && !Array.isArray(config.bindings)){

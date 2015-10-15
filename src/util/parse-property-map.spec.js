@@ -1,10 +1,10 @@
 /* global it, describe */
 import '../tests/frameworks';
-import parseInputs from './parse-inputs';
+import parsePropertyMap from './parse-property-map';
 
-describe('parseInputs', function(){
+describe('parsePropertyMap', function(){
 	it('should parse an array of colon-delimited inputs', function(){
-		parseInputs([
+		parsePropertyMap([
 			'a: a1',
 			'b: b2',
 			'c: c2',
@@ -22,7 +22,7 @@ describe('parseInputs', function(){
 	});
 
 	it('should parse an array of simple inputs', function(){
-		parseInputs([
+		parsePropertyMap([
 			'a',
 			'b',
 			'c',

@@ -1,5 +1,5 @@
-/* global Event */
-// # Events Builder
+/* global CustomEvent */
+// # Outputs Builder
 // Takes an instance of a controller and detects event emitters. Subscribes
 // to the emitters to make event dispatching a breeze.
 //
@@ -9,9 +9,9 @@ import {EventEmitter} from './event-emitter';
 
 // ## Function
 // Takes an instance of the controller, element of the component for dispatching
-// the event, $scope for disposing of subscriptions, and a map of the emitters and
-// events that might be on the instance
-export default function(instance, element, $scope, events){
+// the output, $scope for disposing of subscriptions, and a map of the emitters and
+// outputs that might be on the instance
+export default function(instance, element, $scope, outputs){
   // Collection of subscriptions we'll generate
   let subscriptions = [];
 
@@ -27,10 +27,10 @@ export default function(instance, element, $scope, events){
   };
 
   // Iterate over the emmitterKeys to detect if the controller created any
-  // EventEmitters. If it did, subscribe to the emitter to dispatch the events.
-  for(let key in events){
+  // EventEmitters. If it did, subscribe to the emitter to dispatch the outputs.
+  for(let key in outputs){
     if(instance[key] && instance[key] instanceof EventEmitter){
-      subscriptions.push(create(events[key], instance[key]));
+      subscriptions.push(create(outputs[key], instance[key]));
     }
   }
 

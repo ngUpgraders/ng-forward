@@ -8,8 +8,8 @@
 // ## Setup
 // We'll need a1atscript's inputsBuilder for generating the property definitions
 import {inputsBuilder} from './inputs-builder';
-// Also need the eventsBuilder for creating event emittors
-import eventsBuilder from './events-builder';
+// Also need the outputsBuilder for creating event emittors
+import outputsBuilder from './outputs-builder';
 // Finally extend for extending the instance of the controller
 import extend from 'extend';
 
@@ -33,10 +33,10 @@ export default function createDirectiveController(caller, injects, controller, d
   // locals
   $injector.invoke([...injects, controller], instance, locals);
 
-  // Events work similarly, but they need the raw $element and the $scope for
-  // destroying event observables.
+  // Outputs work similarly, but they need the raw $element and the $scope for
+  // destroying output observables.
   let {$element, $scope} = locals;
-  eventsBuilder(instance, $element[0], $scope, ddo.events || {});
+  outputsBuilder(instance, $element[0], $scope, ddo.outputs || {});
 
   // Return the controller instance
   return instance;

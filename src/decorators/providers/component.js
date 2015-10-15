@@ -9,7 +9,7 @@
 //
 // @Component({
 // 	selector: 'send-message',
-// 	events: ['sent'],
+// 	outputs: ['sent'],
 // 	inputs: ['messageSubject: subject'],
 // 	bind: [Messenger]
 // })
@@ -49,7 +49,7 @@ import {providerWriter, componentWriter, appWriter} from '../../writers';
 import {Injectables} from '../injectables';
 // Provider parser will need to be registered with Module
 import Module from '../../module';
-import parseInputs from '../../util/parse-inputs';
+import parsePropertyMap from '../../util/parse-property-map';
 import events from '../../util/events';
 import directiveControllerFactory from '../../util/directive-controller';
 import {inputsMap} from '../../util/inputs-builder';
@@ -70,7 +70,7 @@ export const Component = componentConfig => t => {
 		inputs: [],
 		bindings: [],
 		directives: [],
-		events: []
+		outputs: []
 	};
 
 	let config = Object.assign({}, DEFAULT_CONFIG, componentConfig || {});
@@ -85,7 +85,7 @@ export const Component = componentConfig => t => {
 	}
 
 	// Must perform some basic shape checking on the config object
-	['inputs', 'bindings', 'directives', 'events'].forEach(property => {
+	['inputs', 'bindings', 'directives', 'outputs'].forEach(property => {
 		if(config[property] !== undefined && !Array.isArray(config[property])){
 			throw new TypeError(`Component ${property} must be an array`);
 		}
@@ -113,16 +113,16 @@ export const Component = componentConfig => t => {
 	componentWriter.set('bindToController', true, t);
 
 	// Check for Angular 2 style inputs
-	let binders = parseInputs(config.inputs);
+	let binders = parsePropertyMap(config.inputs);
 	let previous = componentWriter.get('inputs', t) || {};
 	componentWriter.set('inputs', Object.assign({}, previous, binders), t);
 
-	// events
-	if(config.events.length > 0){
-		let eventMap = parseInputs(config.events) || {};
-		componentWriter.set('events', eventMap, t);
-		for(let key in eventMap){
-			events.add(eventMap[key]);
+	// outputs
+	if(config.outputs.length > 0){
+		let outputMap = parsePropertyMap(config.outputs) || {};
+		componentWriter.set('outputs', outputMap, t);
+		for(let key in outputMap){
+			events.add(outputMap[key]);
 		}
 	}
 
