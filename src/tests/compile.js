@@ -1,5 +1,6 @@
 import { appWriter, componentWriter } from '../writers';
 import { RootTestComponent } from './test-component-builder';
+import extend from 'extend';
 
 /**
  * A function for compiling a decorated component into a RootTestComponent
@@ -43,7 +44,7 @@ export const compileHtmlAndScope = ({html, initialScope, selector}) => {
 
   inject(($compile, $rootScope) => {
     parentScope = $rootScope.$new();
-    Object.assign(parentScope, initialScope);
+    extend(parentScope, initialScope);
     element = angular.element(html);
     element = $compile(element)(parentScope);
     parentScope.$digest();

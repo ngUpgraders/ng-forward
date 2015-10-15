@@ -6,6 +6,7 @@ import {Inject} from '../decorators/inject';
 import {ng} from './angular';
 import {bindings, TestComponentBuilder} from './index';
 import {RootTestComponent} from './test-component-builder';
+import extend from 'extend';
 
 
 class SomeService {
@@ -29,7 +30,7 @@ class SomeOtherService {
 @Inject(SomeService, SomeOtherService, '$http', '$timeout')
 class SomeComponent {
   constructor(SomeService, SomeOtherService, $http, $timeout) {
-    Object.assign(this, {SomeService, SomeOtherService, $http, $timeout});
+    extend(this, {SomeService, SomeOtherService, $http, $timeout});
     this.local = 'a';
     $http.get('/api');
     $timeout(() => this.local = 'c', 1000);

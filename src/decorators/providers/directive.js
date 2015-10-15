@@ -17,6 +17,7 @@ import {Injectables} from '../injectables';
 import Module from '../../module';
 import directiveControllerFactory from '../../util/directive-controller';
 import {inputsMap} from '../../util/inputs-builder';
+import extend from 'extend';
 
 // The type for right now is `directive`. In angular-decorators there was very little
 // difference between `@Component` and `@Directive` so they shared a common provider
@@ -34,7 +35,7 @@ export const Directive = componentConfig => t => {
 		bindings: []
 	};
 
-	let config = Object.assign({}, DEFAULT_CONFIG, componentConfig || {});
+	let config = extend({}, DEFAULT_CONFIG, componentConfig || {});
 
 	// Grab the provider name and selector type by parsing the selector
 	let {name, type: restrict} = parseSelector(config.selector);

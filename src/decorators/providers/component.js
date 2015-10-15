@@ -53,6 +53,7 @@ import parsePropertyMap from '../../util/parse-property-map';
 import events from '../../util/events';
 import directiveControllerFactory from '../../util/directive-controller';
 import {inputsMap} from '../../util/inputs-builder';
+import extend from 'extend';
 
 // The type for right now is `directive`. In angular-decorators there was very little
 // difference between `@Component` and `@Directive` so they shared a common provider
@@ -73,7 +74,7 @@ export const Component = componentConfig => t => {
 		outputs: []
 	};
 
-	let config = Object.assign({}, DEFAULT_CONFIG, componentConfig || {});
+	let config = extend({}, DEFAULT_CONFIG, componentConfig || {});
 
 	// Grab the provider name and selector type by parsing the selector
 	let {name, type: restrict} = parseSelector(config.selector);
@@ -115,7 +116,7 @@ export const Component = componentConfig => t => {
 	// Check for Angular 2 style inputs
 	let binders = parsePropertyMap(config.inputs);
 	let previous = componentWriter.get('inputs', t) || {};
-	componentWriter.set('inputs', Object.assign({}, previous, binders), t);
+	componentWriter.set('inputs', extend({}, previous, binders), t);
 
 	// outputs
 	if(config.outputs.length > 0){
