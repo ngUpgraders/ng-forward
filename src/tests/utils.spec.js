@@ -20,7 +20,7 @@ class SomeOtherService {
 
 @Component({
   selector: 'some-component',
-  properties: ['foo', 'baz:bar'],
+  inputs: ['foo', 'baz:bar'],
   bindings: [SomeService]
 })
 @View({

@@ -1,5 +1,5 @@
 // This is an implementation that blends a bit of @hannahhoward's a1atscript implementation of custom
-// properties and @mitranim's ng-decorate one way binding technique.
+// inputs and @mitranim's ng-decorate one way binding technique.
 // See: https://github.com/hannahhoward/a1atscript/blob/master/src/a1atscript/ng2Directives/PropertiesBuilder.js
 // See: https://github.com/Mitranim/ng-decorate/blob/master/src/bindings.ts#L165
 const STRING = '_bind_string_';
@@ -8,29 +8,29 @@ const BIND_TWOWAY = '_bind_twoway_';
 
 function isDefined(value) {return typeof value !== 'undefined';}
 
-// This function is responsible for transforming the properties from @Component to ng1 DDO bindings.
-export function propertiesMap(properties){
+// This function is responsible for transforming the inputs from @Component to ng1 DDO bindings.
+export function inputsMap(inputs){
   let definition = {};
 
-  for (let key in properties) {
-    let lowercaseProperty = properties[key];
+  for (let key in inputs) {
+    let lowercaseInput = inputs[key];
 
-    // For each property we have to create three possible attributes that the end-dev can use. So if we have property
+    // For each input we have to create three possible attributes that the end-dev can use. So if we have input
     // 'color', we create a string-bound attr <component color="red">, a one-way bound attr <component bind-color="expression">,
     // and a two-way bound attr <component bind-on-color="expression">.
 
     // We bind to three hidden properties on the controller class instance, i.e. _bind_string_color, _bind_oneway_color, _bind_twoway_color.
-    definition[`${STRING}${key}`] = `@${lowercaseProperty}`;
-    definition[`[${properties[key]}]`] = `&`;
-    definition[`[(${properties[key]})]`] = `=?`;
+    definition[`${STRING}${key}`] = `@${lowercaseInput}`;
+    definition[`[${inputs[key]}]`] = `&`;
+    definition[`[(${inputs[key]})]`] = `=?`;
   }
 
   return definition;
 }
 
-export function propertiesBuilder(controller, localKey, publicKey){
+export function inputsBuilder(controller, localKey, publicKey){
   // We are going to be installing a lot of properties on the controller to handle the magic
-  // of our property bindings. Here we are marking them as hidden but writeable, that way
+  // of our input bindings. Here we are marking them as hidden but writeable, that way
   // we don't leak our abstraction
   let propertyDefinitions = {};
 
@@ -59,7 +59,7 @@ export function propertiesBuilder(controller, localKey, publicKey){
           case BIND_TWOWAY:
             return this[`[(${publicKey})]`];
           default:
-            throw new Error(`Unknown property binding detected: ${localKey}`);
+            throw new Error(`Unknown input binding detected: ${localKey}`);
         }
       };
 

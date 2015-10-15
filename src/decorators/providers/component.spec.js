@@ -50,7 +50,7 @@ describe('@Component annotation', function(){
 	it('should respect inheritance', function(){
 		@Component({
 			selector: 'parent',
-			properties: [
+			inputs: [
 				'first',
 				'second'
 			]
@@ -60,7 +60,7 @@ describe('@Component annotation', function(){
 		@Component({ selector: 'child' })
 		class ChildCtrl extends ParentCtrl{ }
 
-		componentWriter.get('properties', ChildCtrl).should.eql({
+		componentWriter.get('inputs', ChildCtrl).should.eql({
 			first: 'first',
 			second: 'second'
 		});

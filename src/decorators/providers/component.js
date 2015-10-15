@@ -10,7 +10,7 @@
 // @Component({
 // 	selector: 'send-message',
 // 	events: ['sent'],
-// 	properties: ['messageSubject: subject'],
+// 	inputs: ['messageSubject: subject'],
 // 	bind: [Messenger]
 // })
 // @View({
@@ -49,10 +49,10 @@ import {providerWriter, componentWriter, appWriter} from '../../writers';
 import {Injectables} from '../injectables';
 // Provider parser will need to be registered with Module
 import Module from '../../module';
-import parseProperties from '../../util/parse-properties';
+import parseInputs from '../../util/parse-inputs';
 import events from '../../util/events';
 import directiveControllerFactory from '../../util/directive-controller';
-import {propertiesMap} from '../../util/properties-builder';
+import {inputsMap} from '../../util/inputs-builder';
 
 // The type for right now is `directive`. In angular-decorators there was very little
 // difference between `@Component` and `@Directive` so they shared a common provider
@@ -67,7 +67,7 @@ export const Component = componentConfig => t => {
 	}
 
 	const DEFAULT_CONFIG = {
-		properties: [],
+		inputs: [],
 		bindings: [],
 		directives: [],
 		events: []
@@ -85,7 +85,7 @@ export const Component = componentConfig => t => {
 	}
 
 	// Must perform some basic shape checking on the config object
-	['properties', 'bindings', 'directives', 'events'].forEach(property => {
+	['inputs', 'bindings', 'directives', 'events'].forEach(property => {
 		if(config[property] !== undefined && !Array.isArray(config[property])){
 			throw new TypeError(`Component ${property} must be an array`);
 		}
@@ -108,18 +108,18 @@ export const Component = componentConfig => t => {
 	// Components should always create an isolate scope
 	componentWriter.set('scope', {}, t);
 
-	// Properties should always be bound to the controller instance, not
+	// Inputs should always be bound to the controller instance, not
 	// to the scope
 	componentWriter.set('bindToController', true, t);
 
-	// Check for Angular 2 style properties
-	let binders = parseProperties(config.properties);
-	let previous = componentWriter.get('properties', t) || {};
-	componentWriter.set('properties', Object.assign({}, previous, binders), t);
+	// Check for Angular 2 style inputs
+	let binders = parseInputs(config.inputs);
+	let previous = componentWriter.get('inputs', t) || {};
+	componentWriter.set('inputs', Object.assign({}, previous, binders), t);
 
 	// events
 	if(config.events.length > 0){
-		let eventMap = parseProperties(config.events) || {};
+		let eventMap = parseInputs(config.events) || {};
 		componentWriter.set('events', eventMap, t);
 		for(let key in eventMap){
 			events.add(eventMap[key]);
@@ -157,9 +157,9 @@ Module.addProvider(TYPE, (target, name, injects, ngModule) => {
 		ddo[key] = val;
 	}, target);
 
-	// Get the property bindings ahead of time
+	// Get the inputs bindings ahead of time
 	if(ddo.controllerAs){
-		ddo.bindToController = propertiesMap(ddo.properties);
+		ddo.bindToController = inputsMap(ddo.inputs);
 	}
 
 	// Component controllers must be created from a factory. Checkout out
