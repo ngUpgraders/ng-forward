@@ -6,7 +6,8 @@ import bootstrap from './bootstrap';
 import { Inject } from './decorators/inject';
 import { Injectables } from './decorators/injectables';
 import { EventEmitter } from './util/event-emitter';
-import { provide, Provider } from './util/provider';
+import { provide, Provider } from './classes/provider';
+import { OpaqueToken } from './classes/opaque-token';
 
 import { Animation } from './decorators/providers/animation';
 import { Component } from './decorators/providers/component';
@@ -28,6 +29,7 @@ export {
 	EventEmitter,
 	provide,
 	Provider,
+	OpaqueToken,
 
 	Component,
 	Directive,

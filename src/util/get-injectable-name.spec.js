@@ -12,7 +12,7 @@ describe('getInjectableName', function(){
     class Foo {}
     providerWriter.set('type', 'foo', Foo);
     providerWriter.set('name', 'foo', Foo);
-    getInjectableName(Foo).should.eql('foo');
+    getInjectableName(Foo).should.contain('foo');
   });
 });
 
@@ -25,11 +25,11 @@ describe('getInjectableNameWithJitCreation', function(){
     class Foo {}
     providerWriter.set('type', 'foo', Foo);
     providerWriter.set('name', 'foo', Foo);
-    getInjectableNameWithJitCreation(Foo).should.eql('foo');
+    getInjectableNameWithJitCreation(Foo).should.contain('foo');
   });
 
   it('registers normal classes as a Service and then returns their name', function(){
     class Foo {}
-    getInjectableNameWithJitCreation(Foo).should.eql('Foo');
+    getInjectableNameWithJitCreation(Foo).should.contain('Foo');
   });
 });

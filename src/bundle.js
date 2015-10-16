@@ -12,7 +12,7 @@ import events from './util/events';
 // Takes an array of bindings and separates it into decorated classes and string
 // names. Usually these string names are the names of angular modules.
 import filterProviders from './util/filter-bindings';
-import {Provider} from './util/provider';
+import {Provider} from './classes/provider';
 
 // ## Bundle
 // The bundle function. Pass it the name of the module you want to generate, the root

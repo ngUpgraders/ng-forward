@@ -3,7 +3,7 @@ import {Component} from './component';
 import '../../tests/frameworks';
 import {ng} from '../../tests/angular';
 import {providerWriter, componentWriter, appWriter} from '../../writers';
-import {Provider} from '../../util/provider';
+import {Provider} from '../../classes/provider';
 import events from '../../util/events';
 import Module from '../../module';
 

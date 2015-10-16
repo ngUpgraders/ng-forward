@@ -1,4 +1,4 @@
-import { provide } from '../util/provider';
+import { provide } from '../classes/provider';
 
 /**
  * Stores references to all bindings. Is cleared by TestComponentBuilder after a create call.

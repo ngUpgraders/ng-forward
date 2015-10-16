@@ -5,7 +5,7 @@ import {Component} from './decorators/providers/component';
 import {Directive} from './decorators/providers/directive';
 import {Inject} from './decorators/inject';
 import {DecoratedModule} from './module';
-import {Provider} from './util/provider';
+import {Provider} from './classes/provider';
 
 let fooProvider = new Provider('foo', {useValue: 'bar'});
 

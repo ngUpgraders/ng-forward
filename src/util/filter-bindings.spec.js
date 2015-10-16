@@ -2,7 +2,7 @@
 import '../tests/frameworks';
 import filterProviders from './filter-bindings';
 import {providerWriter} from '../writers';
-import {Provider} from '../util/provider';
+import {Provider} from '../classes/provider';
 
 const Test = t => {
   providerWriter.set('type', 'test', t);

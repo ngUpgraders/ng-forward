@@ -1,7 +1,7 @@
 import { appWriter, providerWriter } from '../writers';
 import Module from '../module';
 import {Inject} from '../decorators/inject';
-import {getInjectableNameWithJitCreation} from './get-injectable-name';
+import {getInjectableNameWithJitCreation} from './../util/get-injectable-name';
 import extend from 'extend';
 
 const TYPE = 'provider';
@@ -21,11 +21,10 @@ export class Provider {
     } catch (e) {
       throw new Error('new Provider() Error: Invalid token');
     }
-    try {
 
-      extend(this, {useClass, useValue, useConstant, useFactory});
+    extend(this, {useClass, useValue, useConstant, useFactory});
 
-    } catch (e) {
+    if (!useClass && !useValue && !useConstant && !useFactory) {
       throw new Error('new Provider() Error: No usage provided (i.e. useClass, useValue, useConstant, useFactory)')
     }
 

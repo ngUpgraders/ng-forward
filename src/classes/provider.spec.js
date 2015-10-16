@@ -8,6 +8,7 @@ import bootstrap from '../bootstrap';
 import { Inject } from '../decorators/inject';
 import { Component } from '../decorators/providers/component';
 import { TestComponentBuilder, providers } from '../tests';
+import { OpaqueToken } from '../classes/opaque-token';
 
 class SomeToken {}
 
@@ -22,17 +23,21 @@ describe('Provider Class', () => {
   });
 
   it('binds a decorated service token', () => {
-    let b = new Provider(SomeToken, {});
+    let b = new Provider(SomeToken, {useValue:true});
     b.token.should.equal('someToken');
   });
 
   it('binds a string-based service token', () => {
-    let b = new Provider('$http', {});
+    let b = new Provider('$http', {useValue:true});
     b.token.should.equal('$http');
   });
 
   it('throws Invalid token if no token provided', () => {
     () => new Provider().should.throw;
+  });
+
+  it('throws No usage provided if no use method is provided', () => {
+    () => new Provider('foo').should.throw;
   });
 
   it('binds to a value', () => {
@@ -84,7 +89,7 @@ describe('angular integration', () => {
     angular = ng.useReal();
   });
 
-  describe('Providers with String Tokens', () => {
+  describe('Provider\'s "use" Methods', () => {
 
     it('creates an angular value with useVal', () => {
       buildRootTestWithProvider(new Provider('foo', { useValue: 'bar' }));
@@ -168,99 +173,26 @@ describe('angular integration', () => {
     });
   });
 
-  describe('Providers with Class Tokens', () => {
+  describe('Provider Tokens', () => {
 
-    let f;
-
-    beforeEach(() => {
-      f = class Foo {};
-    });
-
-    it('creates an angular value with useVal', () => {
-      buildRootTestWithProvider(new Provider(f, { useValue: 'bar' }));
-      let name = providerWriter.get('name', f);
-      root.debugElement.getLocal(name).should.be.eql('bar');
-    });
-
-    it('creates an angular constant with useConstant', () => {
-      buildRootTestWithProvider(new Provider(f, { useConstant: 'bar' }));
-      let name = providerWriter.get('name', f);
-      root.debugElement.getLocal(name).should.be.eql('bar');
-    });
-
-    it('creates an angular service with useClass', () => {
-      class Bar {
-        constructor() {
-          this.property = 'bar';
-        }
-        method() {
-          return 'baz';
-        }
-      }
-
-      buildRootTestWithProvider(new Provider(f, { useClass: Bar }));
-      let name = providerWriter.get('name', f);
-
-      let foo = root.debugElement.getLocal(name);
-      foo.should.be.an.instanceOf(Bar);
-      foo.property.should.be.eql('bar');
-      foo.method().should.be.eql('baz');
-    });
-
-    it('creates an injected angular service with useClass', () => {
-      @Inject('$q')
-      class Bar {
-        constructor($q) {
-          this.$q = $q;
-        }
-      }
-
-      buildRootTestWithProvider(new Provider(f, { useClass: Bar }));
-      let name = providerWriter.get('name', f);
-
-      let foo = root.debugElement.getLocal(name);
-      foo.should.be.an.instanceOf(Bar);
-      foo.$q.should.be.eql(root.debugElement.getLocal('$q'));
-      foo.$q.should.have.property('resolve');
-    });
-
-    it('creates an angular factory from a function with useFactory', () => {
-      function getBar() {
-        return 'bar';
-      }
-
-      buildRootTestWithProvider(new Provider(f, { useFactory: getBar }));
-      let name = providerWriter.get('name', f);
-
-      root.debugElement.getLocal(name).should.eql('bar');
-    });
-
-    it('creates an angular factory with ng1 dependencies from a function with useFactory', () => {
-      function getQ($q) {
-        return $q;
-      }
-
-      buildRootTestWithProvider(new Provider(f, { useFactory: getQ, deps: ['$q'] }));
-      let name = providerWriter.get('name', f);
-
-      root.debugElement.getLocal(name).should.eql(root.debugElement.getLocal('$q'));
-    });
-
-    it.skip('creates an angular factory with class dependencies from a function with useFactory', () => {
-      function getBar(foo) {
-        return foo.bar;
-      }
-
-      class Foo {
-        constructor() {
-          this.bar = 'bar';
-        }
-      }
-
-      buildRootTestWithProvider(new Provider(f, { useFactory: getBar, deps: [Foo] }));
+    it('supports string tokens', () => {
+      buildRootTestWithProvider(new Provider('foo', { useValue: 'bar' }));
 
       root.debugElement.getLocal('foo').should.eql('bar');
     });
-  });
 
+    it('supports OpaqueToken tokens', () => {
+      let t = new OpaqueToken('foo');
+      buildRootTestWithProvider(new Provider(t, { useValue: 'bar' }));
+
+      root.debugElement.getLocal(t).should.eql('bar');
+    });
+
+    it('supports class tokens', () => {
+      class Foo {}
+      buildRootTestWithProvider(new Provider(Foo, { useValue: 'bar' }));
+      let name = providerWriter.get('name', Foo);
+      root.debugElement.getLocal(name).should.be.eql('bar');
+    });
+  });
 });

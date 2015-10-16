@@ -1,6 +1,6 @@
 import {providerWriter} from '../writers';
 import flattenArray from './flatten-array';
-import {Provider} from './provider';
+import {Provider} from './../classes/provider';
 
 const STRING_TEST = a => typeof a === 'string';
 const PROVIDER_TEST = a => (typeof a === 'function' || a instanceof Provider) && providerWriter.has('name', a);
