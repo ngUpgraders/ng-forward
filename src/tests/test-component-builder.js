@@ -2,6 +2,7 @@ import bundle from '../bundle';
 import { providers } from './providers';
 import { appWriter, componentWriter } from '../writers';
 import extend from 'extend';
+import { getInjectableNameWithJitCreation } from '../util/get-injectable-name';
 
 /**
  * TestComponentBuilder
@@ -9,6 +10,8 @@ import extend from 'extend';
  * The preferred way to test components
  */
 export class TestComponentBuilder {
+
+  _providersOverrides = {};
 
   /**
    * Takes a root component, typically a test component whose template houses another component
@@ -20,6 +23,10 @@ export class TestComponentBuilder {
    * @returns {RootTestComponent}
    */
   create(rootComponent) {
+    //if (Object.keys(this._providersOverrides).length > 0) {
+    //  appWriter.set('providers', this._providersOverrides, rootComponent);
+    //}
+
     let decoratedModule = bundle('test-ng-forward', rootComponent);
     angular.mock.module(decoratedModule.name);
     angular.mock.module($provide =>
@@ -31,11 +38,14 @@ export class TestComponentBuilder {
     return rootTC;
   }
 
-  overrideTemplate()      { throw new Error('not implemented'); }
-  overrideView()          { throw new Error('not implemented'); }
-  overrideDirective()     { throw new Error('not implemented'); }
-  overrideBindings()      { throw new Error('not implemented'); }
-  overrideViewBindings()  { throw new Error('not implemented'); }
+  overrideTemplate()      { throw new Error('Method not supported in ng-forward.'); }
+  overrideView()          { throw new Error('Method not supported in ng-forward.'); }
+  overrideDirective()     { throw new Error('Method not supported in ng-forward.'); }
+  overrideProviders(component, providers) {
+    appWriter.set('providers', providers, component);
+    return this;
+  }
+  overrideViewBindings()  { throw new Error('Method not supported in ng-forward.'); }
 }
 
 

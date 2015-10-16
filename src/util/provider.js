@@ -1,7 +1,8 @@
 import { appWriter, providerWriter } from '../writers';
 import Module from '../module';
 import {Inject} from '../decorators/inject';
-import {getInjectableName} from './get-injectable-name';
+import {getInjectableNameWithJitCreation} from './get-injectable-name';
+import extend from 'extend';
 
 const TYPE = 'provider';
 
@@ -9,20 +10,27 @@ const TYPE = 'provider';
  * A binding from a token to a value (only one implemented currently), class, existing, or factory
  */
 export class Provider {
+
+  _dependencies = [];
+
   constructor(token, {useClass, useValue, useConstant, useFactory, deps}) {
     try {
 
-      this.token = getInjectableName(token);
+      this.token = getInjectableNameWithJitCreation(token);
 
     } catch (e) {
-      throw new Error('Provider Error: Invalid token');
+      throw new Error('new Provider() Error: Invalid token');
     }
     try {
 
-      Object.assign(this, {useClass, useValue, useConstant, useFactory, _dependencies: deps});
+      extend(this, {useClass, useValue, useConstant, useFactory});
 
     } catch (e) {
-      throw new Error('Provider Error: No usage provided (i.e. useClass, useValue, useConstant, useFactory)')
+      throw new Error('new Provider() Error: No usage provided (i.e. useClass, useValue, useConstant, useFactory)')
+    }
+
+    if (deps) {
+      this._dependencies = deps.map(getInjectableNameWithJitCreation);
     }
 
     // Setup provider information using the parsed selector
@@ -51,11 +59,7 @@ Module.addProvider(TYPE, (provider, name, injects, ngModule) => {
         Module.getParser('service')(provider.useClass, provider.token, injects, ngModule);
         break;
     case 'useFactory':
-        if(provider._dependencies) {
-          Inject(...provider._dependencies)(provider.useFactory);
-          injects = appWriter.get('$inject', provider.useFactory) || [];
-        }
-        ngModule.factory(provider.token, [...injects, provider.useFactory]);
+        ngModule.factory(provider.token, [...provider._dependencies, provider.useFactory]);
         break;
     default:
         break;

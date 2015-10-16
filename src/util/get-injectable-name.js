@@ -4,7 +4,7 @@ import { providerWriter } from '../writers';
 // injected that are missing provider metadata. Convenience!
 import { Service } from '../decorators/providers/service';
 
-export const getInjectableName = injectable => {
+export const getInjectableName = (injectable) => {
   // Return it if it is already a string like `'$http'` or `'$state'`
   if(typeof injectable === 'string') {
     return injectable;
@@ -14,9 +14,18 @@ export const getInjectableName = injectable => {
   else if(providerWriter.has('type', injectable)) {
     return providerWriter.get('name', injectable);
   }
+};
+
+export const getInjectableNameWithJitCreation = (injectable) => {
+  let name = getInjectableName(injectable);
+
+  if (name) {
+    return name;
+  }
+
   // If it is a function but is missing provider information, apply the Service
   // provider decorator to the function to turn it into a service.
-  else if(typeof injectable === 'function') {
+  if (typeof injectable === 'function') {
     Service(injectable);
     return providerWriter.get('name', injectable);
   }
