@@ -22,6 +22,13 @@ Object.defineProperties(angular.element.prototype, {
     get() {
       return this.children();
     }
+  },
+
+  getLocal: {
+    value: function(...args) {
+      return (this.injector() || this.inheritedData('$injector'))
+          .get(...args);
+    }
   }
 
 });

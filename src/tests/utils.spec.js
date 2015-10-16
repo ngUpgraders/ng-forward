@@ -135,6 +135,10 @@ describe('Test Utils', () => {
       expect(rootTC.debugElement.componentViewChildren)
           .to.be.an.instanceOf(angular.element);
 
+      // getLocal is an alias to $injector
+      expect(rootTC.debugElement.getLocal('$q'))
+          .to.contain.all.keys(['resolve', 'reject', 'defer']);
+
       // Checking to be sure even nested jqlite elements are decorated
       expect(someComponentEl.nativeElement)
           .to.be.an.instanceOf(HTMLElement);
@@ -143,6 +147,9 @@ describe('Test Utils', () => {
           .to.be.an.instanceOf(SomeComponent);
 
       expect(someComponentEl.componentViewChildren).to.be.empty;
+
+      expect(someComponentEl.getLocal('$q'))
+          .to.contain.all.keys(['resolve', 'reject', 'defer']);
     });
 
     it('should allow mock decorated class components and services via bindings() method', () => {

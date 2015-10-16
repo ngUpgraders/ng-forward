@@ -46,8 +46,9 @@ export class TestComponentBuilder {
  * method that triggers a digest.
  */
 export class RootTestComponent {
-  constructor({debugElement, rootTestScope}) {
+  constructor({debugElement, rootTestScope, $injector}) {
     this.debugElement = debugElement;
+    this.debugElement.data('$injector', $injector);
     this._rootTestScope = rootTestScope;
   }
 
@@ -69,18 +70,19 @@ export class RootTestComponent {
 export const compileComponent = (ComponentClass) => {
 
   let selector = appWriter.get('selector', ComponentClass);
-  let rootTestScope, debugElement, componentInstance;
+  let rootTestScope, debugElement, componentInstance, $injector;
 
-  inject(($compile, $rootScope) => {
+  inject(($compile, $rootScope, _$injector_) => {
     let controllerAs = componentWriter.get('controllerAs', ComponentClass);
     componentInstance = new ComponentClass();
     rootTestScope = $rootScope.$new();
     debugElement = angular.element(`<${selector}></${selector}>`);
     debugElement = $compile(debugElement)(rootTestScope);
     rootTestScope.$digest();
+    $injector = _$injector_;
   });
 
-  return new RootTestComponent({debugElement, rootTestScope});
+  return new RootTestComponent({debugElement, rootTestScope, $injector});
 };
 
 
