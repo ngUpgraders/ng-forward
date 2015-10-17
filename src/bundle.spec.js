@@ -7,33 +7,36 @@ import {Inject} from './decorators/inject';
 import {DecoratedModule} from './module';
 import {Provider} from './classes/provider';
 
-let fooProvider = new Provider('foo', {useValue: 'bar'});
-
-@Component({
-  selector: 'nested2',
-  providers: [['module-c'], fooProvider],
-  events: ['event2']
-})
-class Nested2 {}
-
-@Component({
-  selector: 'nested1',
-  providers: ['module-b', [Nested2]],
-  events: ['event1']
-})
-class Nested1 {}
-
-@Component({
-  selector: 'my-app',
-  providers: ['module-a', Nested1]
-})
-class MyApp {}
-
-
 describe('bundle a module', () => {
   let moduleAddStub;
+  let MyApp;
+  let Nested1;
+  let Nested2;
+  let fooProvider;
 
   beforeEach(() => {
+    fooProvider = new Provider('foo', {useValue: 'bar'});
+
+    Nested2 = @Component({
+      selector: 'nested2',
+      providers: [['module-c'], fooProvider],
+      events: ['event2']
+    })
+    class Nested2 {}
+
+    Nested1 = @Component({
+      selector: 'nested1',
+      providers: ['module-b', [Nested2]],
+      events: ['event1']
+    })
+    class Nested1 {}
+
+    MyApp = @Component({
+      selector: 'my-app',
+      providers: ['module-a', Nested1]
+    })
+    class MyApp {}
+
     moduleAddStub = sinon.stub(DecoratedModule.prototype, 'add').returnsThis();
   });
 

@@ -1,22 +1,23 @@
 import Module from '../../module';
-import {Service} from './service';
+import {Injectable, INJECTABLE} from './injectable';
 import {sinon} from '../../tests/frameworks';
 import {providerWriter} from '../../writers';
+import {buildRootTestWithProvider} from '../../tests/internal-utils';
 
-describe('@Service Decorator', function(){
+describe('@Injectable Decorator', function(){
 	it('should decorate a class with a provider name and type', function(){
-		@Service
+		@Injectable()
 		class MyService{ }
 
-		providerWriter.get('type', MyService).should.eql('service');
+		providerWriter.get('type', MyService).should.eql('injectable');
 		providerWriter.get('name', MyService).should.eql('MyService');
 	});
 
 	it('should adhere to inheritance', function(){
-		@Service
+		@Injectable()
 		class BaseClass{ }
 
-		@Service
+		@Injectable()
 		class MyClass extends BaseClass{ }
 
 		providerWriter.get('name', BaseClass).should.eql('BaseClass');
@@ -24,7 +25,7 @@ describe('@Service Decorator', function(){
 	});
 
 	it('should let you specify a name for the service', function(){
-		@Service('Renamed')
+		@Injectable('Renamed')
 		class BaseClass{ }
 
 		providerWriter.get('name', BaseClass).should.eql('Renamed');
@@ -34,7 +35,7 @@ describe('@Service Decorator', function(){
 		let parser, module;
 
 		beforeEach(function(){
-			parser = Module.getParser('service');
+			parser = Module.getParser(INJECTABLE);
 			module = {
 				service : sinon.spy()
 			};
@@ -45,12 +46,26 @@ describe('@Service Decorator', function(){
 		});
 
 		it('should parse an annotated class into an ng service', function(){
-			@Service
+			@Injectable()
 			class MyService{ }
 
 			parser(MyService, 'MyService', [], module);
 
 			module.service.should.have.been.calledWith('MyService', [MyService]);
+		});
+	});
+
+	describe('Angular Integration', () => {
+
+		let root;
+
+		it('registers the injectable as an angular service', () => {
+			@Injectable()
+			class Foo {}
+
+			root = buildRootTestWithProvider(Foo);
+
+			root.debugElement.getLocal(Foo).should.be.an.instanceOf(Foo);
 		});
 	});
 });

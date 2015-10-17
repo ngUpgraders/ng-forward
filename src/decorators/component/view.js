@@ -1,5 +1,5 @@
 import {componentWriter, appWriter} from '../../writers';
-import {Injectables} from '../injectables';
+import {Providers} from '../Providers';
 
 export const View = config => t => {
 	if(config.templateUrl)
@@ -22,6 +22,6 @@ export const View = config => t => {
 	}
 
 	if(config.directives){
-		Injectables(...config.directives)(t);
+		Providers(...config.directives)(t);
 	}
 };

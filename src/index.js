@@ -4,7 +4,7 @@ import Module from './module';
 import bootstrap from './bootstrap';
 
 import { Inject } from './decorators/inject';
-import { Injectables } from './decorators/injectables';
+import { Providers } from './decorators/Providers';
 import { EventEmitter } from './util/event-emitter';
 import { provide, Provider } from './classes/provider';
 import { OpaqueToken } from './classes/opaque-token';
@@ -14,7 +14,7 @@ import { Component } from './decorators/providers/component';
 import { Directive } from './decorators/providers/directive';
 import { Factory } from './decorators/providers/factory';
 import { Pipe } from './decorators/providers/pipe';
-import { Service } from './decorators/providers/service';
+import { Injectable } from './decorators/providers/injectable';
 import { StateComponent } from './decorators/providers/state-component';
 
 import { Require } from './decorators/component/require';
@@ -24,18 +24,18 @@ import { Transclude } from './decorators/component/transclude';
 export {
 	Module,
 	bootstrap,
-	Inject,
-	Injectables,
-	EventEmitter,
+	Providers,
 	provide,
-	Provider,
 	OpaqueToken,
+	EventEmitter,
 
+	Inject,
+	Provider,
 	Component,
 	Directive,
 	Pipe,
 	Factory,
-	Service,
+	Injectable,
 	Animation,
 	StateComponent,
 

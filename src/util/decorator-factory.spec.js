@@ -34,6 +34,15 @@ describe('Decorator Factory', function(){
     providerWriter.get('name', Example).should.eql('Example');
   });
 
+  it('should use the name of the class if a string name is not provided and empty () is used', function(){
+    const test = decoratorFactory('test');
+
+    @test()
+    class Example{ }
+
+    providerWriter.get('name', Example).should.eql('Example');
+  });
+
   it('should generate a random name if you attempt to decorate a function with the same name', function(){
     const test = decoratorFactory('test');
 

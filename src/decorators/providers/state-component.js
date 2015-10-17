@@ -2,7 +2,7 @@
 // A routeable component designed for ui-router
 
 import {componentWriter, providerWriter} from '../../writers';
-import {Injectables} from '../injectables';
+import {Providers} from '../Providers';
 import Module from '../../module';
 
 export const StateComponent = (name, config = {}) => t => {
@@ -26,13 +26,13 @@ export const StateComponent = (name, config = {}) => t => {
 
   if(componentWriter.has('children', t)){
     let children = componentWriter.get('children', t);
-    Injectables(...children)(t);
+    Providers(...children)(t);
     componentWriter.delete('children', t);
   }
 
   if(componentWriter.has('bindings', t)){
     let bindings = componentWriter.get('bindings', t);
-    Injectables(...bindings)(t);
+    Providers(...bindings)(t);
     componentWriter.delete('bindings', t);
   }
 

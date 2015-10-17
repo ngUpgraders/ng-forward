@@ -14,7 +14,8 @@
 //
 // Import the appWriter for reading and writing metadata
 import {appWriter} from '../writers';
-import {getInjectableNameWithJitCreation} from '../util/get-injectable-name';
+import {getInjectableName} from '../util/get-injectable-name';
+import {Providers} from '../decorators/Providers';
 
 // ## @Inject
 // Takes an array of injects
@@ -22,7 +23,11 @@ export const Inject = ( ...injects ) => t => {
 	// At the end of the day, Angular 1's DI requires the injection array to be
 	// an array of strings. Map over the injects to get the string provider name for
 	// each injectable
-	let dependencies = injects.map(getInjectableNameWithJitCreation);
+
+	var providers = injects.filter(d => typeof d !== 'string');
+	Providers(...providers)(t);
+
+	let dependencies = injects.map(getInjectableName).filter(n => n !== undefined);
 
 	// If there is already an $inject array, assume that it was set by a parent class.
 	// The resultant $inject array should be a concat of local dependencies and parent

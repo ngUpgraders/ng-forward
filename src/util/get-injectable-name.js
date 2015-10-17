@@ -1,8 +1,8 @@
 import { providerWriter } from '../writers';
 // ## Intro
-// Import the `@Service` decorator. We'll apply it to functions/classes that are
+// Import the `@Injectable` decorator. We'll apply it to functions/classes that are
 // injected that are missing provider metadata. Convenience!
-import { Service } from '../decorators/providers/service';
+import { Injectable } from '../decorators/providers/injectable';
 import { OpaqueToken } from '../classes/opaque-token';
 
 export const getInjectableName = (injectable) => {
@@ -24,10 +24,10 @@ export const getInjectableNameWithJitCreation = (injectable) => {
     return name;
   }
 
-  // If it is a function but is missing provider information, apply the Service
+  // If it is a function but is missing provider information, apply the Injectable
   // provider decorator to the function to turn it into a service.
   if (typeof injectable === 'function') {
-    Service(injectable);
+    Injectable(injectable);
     return providerWriter.get('name', injectable);
   }
 };

@@ -28,7 +28,7 @@ describe('getInjectableNameWithJitCreation', function(){
     getInjectableNameWithJitCreation(Foo).should.contain('foo');
   });
 
-  it('registers normal classes as a Service and then returns their name', function(){
+  it('registers normal classes as a Injectable and then returns their name', function(){
     class Foo {}
     getInjectableNameWithJitCreation(Foo).should.contain('Foo');
   });

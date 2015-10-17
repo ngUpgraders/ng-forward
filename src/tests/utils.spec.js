@@ -3,62 +3,68 @@ import './frameworks';
 import {Component} from '../decorators/providers/component';
 import {View} from '../decorators/component/view';
 import {Inject} from '../decorators/inject';
+import {Injectable} from '../decorators/providers/injectable';
 import {ng} from './angular';
 import {providers, TestComponentBuilder} from './index';
 import {RootTestComponent} from './test-component-builder';
 import extend from 'extend';
 
-
-class SomeService {
-  getData() { return 'real success' }
-}
-
-
-class SomeOtherService {
-  getData() { return 'real other' }
-}
-
-
-@Component({
-  selector: 'some-component',
-  inputs: ['foo', 'baz:bar'],
-  bindings: [SomeService]
-})
-@View({
-  template: `{{someComponent.foo}} {{someComponent.baz}} {{someComponent.quux()}} {{someComponent.local}}`
-})
-@Inject(SomeService, SomeOtherService, '$http', '$timeout')
-class SomeComponent {
-  constructor(SomeService, SomeOtherService, $http, $timeout) {
-    extend(this, {SomeService, SomeOtherService, $http, $timeout});
-    this.local = 'a';
-    $http.get('/api');
-    $timeout(() => this.local = 'c', 1000);
-  }
-  quux() { return `${this.SomeService.getData()} ${this.SomeOtherService.getData()}` }
-}
-
-
-@Component({selector: 'test'})
-@View({
-  template: `<some-component foo="Hello" [bar]="test.bar"></some-component>`,
-  directives: [SomeComponent]
-})
-class TestComponent {
-  constructor() {
-    this.bar = "World";
-  }
-}
-
-
 describe('Test Utils', () => {
 
   let tcb;
   let angular;
+  let SomeService;
+  let SomeOtherService;
+  let SomeComponent;
+  let TestComponent;
 
   beforeEach(() => {
     tcb = new TestComponentBuilder();
     angular = ng.useReal();
+
+
+    SomeService = @Injectable()
+    class SomeService {
+      getData() { return 'real success' }
+    }
+
+
+    SomeOtherService = @Injectable()
+    class SomeOtherService {
+      getData() { return 'real other' }
+    }
+
+
+    SomeComponent = @Component({
+      selector: 'some-component',
+      inputs: ['foo', 'baz:bar'],
+      bindings: [SomeService]
+    })
+    @View({
+      template: `{{someComponent.foo}} {{someComponent.baz}} {{someComponent.quux()}} {{someComponent.local}}`
+    })
+    @Inject(SomeService, SomeOtherService, '$http', '$timeout')
+    class SomeComponent {
+      constructor(SomeService, SomeOtherService, $http, $timeout) {
+        extend(this, {SomeService, SomeOtherService, $http, $timeout});
+        this.local = 'a';
+        $http.get('/api');
+        $timeout(() => this.local = 'c', 1000);
+      }
+      quux() { return `${this.SomeService.getData()} ${this.SomeOtherService.getData()}` }
+    }
+
+
+    TestComponent = @Component({selector: 'test'})
+    @View({
+      template: `<some-component foo="Hello" [bar]="test.bar"></some-component>`,
+      directives: [SomeComponent]
+    })
+    class TestComponent {
+      constructor() {
+        this.bar = "World";
+      }
+    }
   });
 
   describe('Test Component Builder', () => {

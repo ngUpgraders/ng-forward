@@ -1,8 +1,10 @@
 import { appWriter, providerWriter } from '../writers';
 import Module from '../module';
 import {Inject} from '../decorators/inject';
-import {getInjectableNameWithJitCreation} from './../util/get-injectable-name';
+import {getInjectableNameWithJitCreation} from '../util/get-injectable-name';
+import {Providers} from '../decorators/Providers';
 import extend from 'extend';
+import {INJECTABLE} from '../decorators/providers/injectable';
 
 const TYPE = 'provider';
 
@@ -14,13 +16,8 @@ export class Provider {
   _dependencies = [];
 
   constructor(token, {useClass, useValue, useConstant, useFactory, deps}) {
-    try {
-
-      this.token = getInjectableNameWithJitCreation(token);
-
-    } catch (e) {
-      throw new Error('new Provider() Error: Invalid token');
-    }
+    try { this.token = getInjectableNameWithJitCreation(token); }
+    catch (e) { throw new Error('new Provider() Error: Invalid token'); }
 
     extend(this, {useClass, useValue, useConstant, useFactory});
 
@@ -29,7 +26,10 @@ export class Provider {
     }
 
     if (deps) {
-      this._dependencies = deps.map(getInjectableNameWithJitCreation);
+      // Simulate having both an @Inject and provide: [] on the factory function
+      Inject(...deps)(this.useFactory);
+      Providers(...deps.filter(d => typeof d !== 'string'))(this.useFactory);
+      this._dependencies = appWriter.get('$inject', this.useFactory);
     }
 
     // Setup provider information using the parsed selector
@@ -55,7 +55,7 @@ Module.addProvider(TYPE, (provider, name, injects, ngModule) => {
         break;
     case 'useClass':
         injects = appWriter.get('$inject', provider.useClass) || [];
-        Module.getParser('service')(provider.useClass, provider.token, injects, ngModule);
+        Module.getParser(INJECTABLE)(provider.useClass, provider.token, injects, ngModule);
         break;
     case 'useFactory':
         ngModule.factory(provider.token, [...provider._dependencies, provider.useFactory]);

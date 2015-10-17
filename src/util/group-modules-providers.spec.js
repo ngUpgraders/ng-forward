@@ -1,6 +1,6 @@
 /* global describe, it */
 import '../tests/frameworks';
-import filterProviders from './filter-bindings';
+import groupModulesAndProviders from './group-modules-providers';
 import {providerWriter} from '../writers';
 import {Provider} from '../classes/provider';
 
@@ -9,14 +9,14 @@ const Test = t => {
   providerWriter.set('name', t.name, t);
 };
 
-describe('filterProviders Utility', function(){
+describe('groupIntoModulesAndProviders Utility', function(){
   it('should separate providers and string-based module names', function(){
     @Test
     class Example{ }
 
     let p = new Provider('foo', {useValue: 'bar'});
 
-    let {modules, providers} = filterProviders(['ui-router', 'ui-bootstrap', p, Example]);
+    let {modules, providers} = groupModulesAndProviders(['ui-router', 'ui-bootstrap', p, Example]);
 
     modules.should.eql(['ui-router', 'ui-bootstrap']);
     providers.should.eql([p, Example]);
@@ -28,7 +28,7 @@ describe('filterProviders Utility', function(){
 
     let p = new Provider('foo', {useValue: 'bar'});
 
-    let {modules, providers} = filterProviders([['ui-router'], 'ui-bootstrap', [Example, [p]]]);
+    let {modules, providers} = groupModulesAndProviders([['ui-router'], 'ui-bootstrap', [Example, [p]]]);
 
     modules.should.eql(['ui-router', 'ui-bootstrap']);
     providers.should.eql([Example, p]);

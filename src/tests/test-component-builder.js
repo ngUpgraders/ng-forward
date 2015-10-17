@@ -2,7 +2,6 @@ import bundle from '../bundle';
 import { providers } from './providers';
 import { appWriter, componentWriter } from '../writers';
 import extend from 'extend';
-import { getInjectableNameWithJitCreation } from '../util/get-injectable-name';
 
 /**
  * TestComponentBuilder

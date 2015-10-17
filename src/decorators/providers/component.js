@@ -44,7 +44,7 @@ import parseSelector from '../../util/parse-selector';
 import {providerWriter, componentWriter, appWriter} from '../../writers';
 // Takes the information from `config.providers` and turns it into the actual metadata
 // needed during app traversal
-import {Injectables} from '../injectables';
+import {Providers} from '../Providers';
 // Provider parser will need to be registered with Module
 import Module from '../../module';
 import parsePropertyMap from '../../util/parse-property-map';
@@ -84,7 +84,7 @@ export const Component = componentConfig => t => {
 
 	// Grab the providers from the config object, parse them, and write the metadata
 	// to the target.
-	Injectables(...config.providers)(t);
+	Providers(...config.providers)(t);
 
 	// Restrict type must be 'element'
 	componentWriter.set('restrict', restrict, t);
