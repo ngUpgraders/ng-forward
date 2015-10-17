@@ -46,7 +46,7 @@ class TestService{
 Whoa! What happened to all the Angular? In ng-forward you don't need to use a single decorator if you are creating a service and you don't need to inject any dependencies. It's a regular ES6 class. Ng-forward will handle the work of wrapping this in an angular service when we bootstrap. If you need to inject dependencies, you can use an Inject decorator, which will cover in a bit.
 
 ## Digging Deeper
-No lets look at a more complicated component:
+Now lets look at a more complicated component:
 
 ```js
 @Component({
