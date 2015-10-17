@@ -1,8 +1,8 @@
 import _ from '../util/jqlite-extensions';
 
 export {
-  bindings
-} from './bindings';
+  providers
+} from './providers';
 
 export {
   TestComponentBuilder

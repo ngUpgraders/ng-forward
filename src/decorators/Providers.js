@@ -11,10 +11,10 @@
 //
 // Simple decorator, not likely to be used on its own.
 import {appWriter} from '../writers';
-import filterBindings from '../util/filter-bindings';
+import groupIntoModulesAndProviders from '../util/group-modules-providers';
 
-export const Injectables = (...injectables) => t => {
-  let { modules, providers } = filterBindings(injectables);
+export const Providers = (...modulesAndProviders) => t => {
+  let { modules, providers } = groupIntoModulesAndProviders(modulesAndProviders);
 
   let parentModules = appWriter.get('modules', t) || [];
   appWriter.set('modules', [...modules, ...parentModules], t);

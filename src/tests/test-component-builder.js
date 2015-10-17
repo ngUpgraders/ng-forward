@@ -1,6 +1,7 @@
 import bundle from '../bundle';
-import { compileComponent } from './compile';
-import { Binding } from '../util/binding';
+import { providers } from './providers';
+import { appWriter, componentWriter } from '../writers';
+import extend from 'extend';
 
 /**
  * TestComponentBuilder
@@ -8,6 +9,8 @@ import { Binding } from '../util/binding';
  * The preferred way to test components
  */
 export class TestComponentBuilder {
+
+  _providersOverrides = {};
 
   /**
    * Takes a root component, typically a test component whose template houses another component
@@ -19,23 +22,31 @@ export class TestComponentBuilder {
    * @returns {RootTestComponent}
    */
   create(rootComponent) {
+    //if (Object.keys(this._providersOverrides).length > 0) {
+    //  appWriter.set('providers', this._providersOverrides, rootComponent);
+    //}
+
     let decoratedModule = bundle('test-ng-forward', rootComponent);
     angular.mock.module(decoratedModule.name);
     angular.mock.module($provide =>
-        Binding.bindings.forEach(({token, value}) =>
-            $provide.value(token, value)));
+        providers.all().forEach(({token, useValue}) =>
+            $provide.value(token, useValue)));
 
     let rootTC = compileComponent(rootComponent);
-    Binding.clear();
+    providers.clear();
     return rootTC;
   }
 
-  overrideTemplate()      { throw new Error('not implemented'); }
-  overrideView()          { throw new Error('not implemented'); }
-  overrideDirective()     { throw new Error('not implemented'); }
-  overrideBindings()      { throw new Error('not implemented'); }
-  overrideViewBindings()  { throw new Error('not implemented'); }
+  overrideTemplate()      { throw new Error('Method not supported in ng-forward.'); }
+  overrideView()          { throw new Error('Method not supported in ng-forward.'); }
+  overrideDirective()     { throw new Error('Method not supported in ng-forward.'); }
+  overrideProviders(component, providers) {
+    appWriter.set('providers', providers, component);
+    return this;
+  }
+  overrideViewBindings()  { throw new Error('Method not supported in ng-forward.'); }
 }
+
 
 /**
  * RootTestComponent is what is returned from a TestComponentBuilder.create call.
@@ -44,8 +55,9 @@ export class TestComponentBuilder {
  * method that triggers a digest.
  */
 export class RootTestComponent {
-  constructor({debugElement, rootTestScope}) {
+  constructor({debugElement, rootTestScope, $injector}) {
     this.debugElement = debugElement;
+    this.debugElement.data('$injector', $injector);
     this._rootTestScope = rootTestScope;
   }
 
@@ -56,3 +68,58 @@ export class RootTestComponent {
     this._rootTestScope.$digest();
   }
 }
+
+
+/**
+ * A function for compiling a decorated component into a RootTestComponent
+ *
+ * @param ComponentClass
+ * @returns {RootTestComponent}
+ */
+export const compileComponent = (ComponentClass) => {
+
+  let selector = appWriter.get('selector', ComponentClass);
+  let rootTestScope, debugElement, componentInstance, $injector;
+
+  inject(($compile, $rootScope, _$injector_) => {
+    let controllerAs = componentWriter.get('controllerAs', ComponentClass);
+    componentInstance = new ComponentClass();
+    rootTestScope = $rootScope.$new();
+    debugElement = angular.element(`<${selector}></${selector}>`);
+    debugElement = $compile(debugElement)(rootTestScope);
+    rootTestScope.$digest();
+    $injector = _$injector_;
+  });
+
+  return new RootTestComponent({debugElement, rootTestScope, $injector});
+};
+
+
+/**
+ * A function for compiling an html template against a data object. This is
+ * for testing directives in regular angular 1. No dependencies on the
+ * ng-forward.
+ *
+ * Recommended to use TestComponentBuilder instead if you are using ng-forward.
+ *
+ * @param html
+ * @param initialScope
+ * @param selector
+ * @returns {{parentScope: *, element: *, controller: *, isolateScope: *}}
+ */
+export const compileHtmlAndScope = ({html, initialScope, selector}) => {
+
+  let parentScope, element, controller, isolateScope;
+
+  inject(($compile, $rootScope) => {
+    parentScope = $rootScope.$new();
+    extend(parentScope, initialScope);
+    element = angular.element(html);
+    element = $compile(element)(parentScope);
+    parentScope.$digest();
+    isolateScope = element.isolateScope();
+    controller = element.controller(`${selector}`);
+  });
+
+  return {parentScope, element, controller, isolateScope};
+};

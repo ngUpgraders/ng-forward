@@ -42,9 +42,9 @@ import parseSelector from '../../util/parse-selector';
 // `providerWriter` sets up provider information, `componentWriter` writes the DDO,
 // and `appWriter` sets up app traversal/bootstrapping information.
 import {providerWriter, componentWriter, appWriter} from '../../writers';
-// Takes the information from `config.bindings` and turns it into the actual metadata
+// Takes the information from `config.providers` and turns it into the actual metadata
 // needed during app traversal
-import {Injectables} from '../injectables';
+import {Providers} from '../Providers';
 // Provider parser will need to be registered with Module
 import Module from '../../module';
 import parsePropertyMap from '../../util/parse-property-map';
@@ -60,12 +60,12 @@ const TYPE = 'component';
 export const Component = componentConfig => t => {
 	// The only required config is a selector. If one wasn't passed, throw immediately
 	if( !componentConfig.selector ) {
-		throw new Error('Component selector must be provided');
+		throw new Error(`Component Decorator Error in "${t.name}": Component selector must be provided`);
 	}
 
 	const DEFAULT_CONFIG = {
 		inputs: [],
-		bindings: [],
+		providers: [],
 		directives: [],
 		outputs: []
 	};
@@ -82,9 +82,9 @@ export const Component = componentConfig => t => {
 	// The appWriter needs the raw selector. This lets it bootstrap the root component
 	appWriter.set('selector', config.selector, t);
 
-	// Grab the bindings from the config object, parse them, and write the metadata
+	// Grab the providers from the config object, parse them, and write the metadata
 	// to the target.
-	Injectables(...config.bindings)(t);
+	Providers(...config.providers)(t);
 
 	// Restrict type must be 'element'
 	componentWriter.set('restrict', restrict, t);
@@ -95,6 +95,14 @@ export const Component = componentConfig => t => {
 	// Inputs should always be bound to the controller instance, not
 	// to the scope
 	componentWriter.set('bindToController', true, t);
+
+
+	// Must perform some basic shape checking on the config object
+	['inputs', 'providers', 'directives', 'outputs'].forEach(property => {
+		if(config[property] !== undefined && !Array.isArray(config[property])){
+			throw new TypeError(`Component Decorator Error in "${t.name}": Component ${property} must be an array`);
+		}
+	});
 
 	// Check for Angular 2 style inputs
 	let inputMap = parsePropertyMap(config.inputs);
@@ -184,15 +192,7 @@ Module.addProvider(TYPE, (target, name, injects, ngModule) => {
 				`Perhaps you meant to use @Directive?`));
 		}
 
-		// Must perform some basic shape checking on the config object
-		['inputs', 'bindings', 'directives', 'outputs'].forEach(property => {
-			if(ddo[property] !== undefined && !Array.isArray(ddo[property])){
-				throw new TypeError(createConfigErrorMessage(`Component ${property} must be an array`));
-			}
-		});
-
-		if(!ddo.templateUrl && !ddo.template)
-		{
+		if(!ddo.templateUrl && !ddo.template)	{
 			throw new Error(createConfigErrorMessage(
 				`Components must have a template or templateUrl via the @Component or @View decorators`));
 		}

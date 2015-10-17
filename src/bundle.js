@@ -11,23 +11,25 @@ import Module from './module';
 import events from './util/events';
 // Takes an array of bindings and separates it into decorated classes and string
 // names. Usually these string names are the names of angular modules.
-import filterBindings from './util/filter-bindings';
+import groupModulesAndProviders from './util/group-modules-providers';
+import {Provider} from './classes/provider';
 
 // ## Bundle
 // The bundle function. Pass it the name of the module you want to generate, the root
 // provider, and an option list of additional bindings the provider may need to
 // successfully bootstrap. The idea is that you only need to provide bindings if you
 // are testing a component or service in isolation
-export default function bundle(moduleName, provider, bindings = []){
+export default function bundle(moduleName, provider, otherProviders = []){
   // Get a list of decorated classes that some decorated class `t` depends on
-  const getProviders = t => appWriter.get('providers', t) || [];
+  const getProvidersFrom = t => appWriter.get('providers', t) || [];
   // Get a list of `angular.module` names some decorated class `t` depends on
-  const getModules = t => appWriter.get('modules', t) || [];
+  const getModulesFrom = t => appWriter.get('modules', t) || [];
+  // Look in a Set of Providers to see if it contains one with a specific token
+  const setHasProviderWithToken = (_set, token) => [..._set].filter(p => token && p.token === token).length > 0;
 
   // Kick the process off by getting the list of `angular.module`s and decorated
   // classes the root provider requires
-  let {modules: startingModules, providers: startingProviders} = filterBindings([provider, ...bindings]);
-
+  let {modules: startingModules, providers: startingProviders} = groupModulesAndProviders([provider, ...otherProviders]);
 
   // This set will be used to hold providers as they are traversed.
   // Since sets can only contain unique values, we'll use this set to see if the provider
@@ -41,14 +43,22 @@ export default function bundle(moduleName, provider, bindings = []){
   // Recursive parsing function. Takes a provider and adds modules to the modules
   // set. Then traverses the providers it depends on.
   function parseProvider(provider){
-    // Check to see if the provider is defined and hasn't been traversed already 
-    if( provider && !providers.has(provider) ){
+    if (provider) {
+      // Check to see if the provider is defined and hasn't been traversed already
+      // todo: do a better check of both token and value, figure out if we want to overwrite or discard duplicate
+      if (providers.has(provider) || setHasProviderWithToken(providers, provider.token)) {
+        return;
+      }
+
       // Add the provider to the providers set
       providers.add(provider);
-      // Add the moduels to the modules set
-      getModules(provider).forEach(mod => modules.add(mod));
-      // Parse the inner providers
-      getProviders(provider).forEach(parseProvider);
+
+      // Get a reference to the useClass provider's annotated class, or the raw annotated class
+      let annotated = provider.useClass || provider.useFactory || provider;
+      // Add the annotated class' modules to the modules set
+      getModulesFrom(annotated).forEach(mod => modules.add(mod));
+      // Parse the annotated class' inner providers
+      getProvidersFrom(annotated).forEach(parseProvider);
     }
   }
 

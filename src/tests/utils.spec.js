@@ -3,62 +3,68 @@ import './frameworks';
 import {Component} from '../decorators/providers/component';
 import {View} from '../decorators/component/view';
 import {Inject} from '../decorators/inject';
+import {Injectable} from '../decorators/providers/injectable';
 import {ng} from './angular';
-import {bindings, TestComponentBuilder} from './index';
+import {providers, TestComponentBuilder} from './index';
 import {RootTestComponent} from './test-component-builder';
 import extend from 'extend';
-
-
-class SomeService {
-  getData() { return 'real success' }
-}
-
-
-class SomeOtherService {
-  getData() { return 'real other' }
-}
-
-
-@Component({
-  selector: 'some-component',
-  inputs: ['foo', 'baz:bar'],
-  bindings: [SomeService]
-})
-@View({
-  template: `{{someComponent.foo}} {{someComponent.baz}} {{someComponent.quux()}} {{someComponent.local}}`
-})
-@Inject(SomeService, SomeOtherService, '$http', '$timeout')
-class SomeComponent {
-  constructor(SomeService, SomeOtherService, $http, $timeout) {
-    extend(this, {SomeService, SomeOtherService, $http, $timeout});
-    this.local = 'a';
-    $http.get('/api');
-    $timeout(() => this.local = 'c', 1000);
-  }
-  quux() { return `${this.SomeService.getData()} ${this.SomeOtherService.getData()}` }
-}
-
-
-@Component({selector: 'test'})
-@View({
-  template: `<some-component foo="Hello" [bar]="test.bar"></some-component>`,
-  directives: [SomeComponent]
-})
-class TestComponent {
-  constructor() {
-    this.bar = "World";
-  }
-}
-
 
 describe('Test Utils', () => {
 
   let tcb;
   let angular;
+  let SomeService;
+  let SomeOtherService;
+  let SomeComponent;
+  let TestComponent;
 
   beforeEach(() => {
     tcb = new TestComponentBuilder();
     angular = ng.useReal();
+
+
+    SomeService = @Injectable()
+    class SomeService {
+      getData() { return 'real success' }
+    }
+
+
+    SomeOtherService = @Injectable()
+    class SomeOtherService {
+      getData() { return 'real other' }
+    }
+
+
+    SomeComponent = @Component({
+      selector: 'some-component',
+      inputs: ['foo', 'baz:bar'],
+      bindings: [SomeService]
+    })
+    @View({
+      template: `{{someComponent.foo}} {{someComponent.baz}} {{someComponent.quux()}} {{someComponent.local}}`
+    })
+    @Inject(SomeService, SomeOtherService, '$http', '$timeout')
+    class SomeComponent {
+      constructor(SomeService, SomeOtherService, $http, $timeout) {
+        extend(this, {SomeService, SomeOtherService, $http, $timeout});
+        this.local = 'a';
+        $http.get('/api');
+        $timeout(() => this.local = 'c', 1000);
+      }
+      quux() { return `${this.SomeService.getData()} ${this.SomeOtherService.getData()}` }
+    }
+
+
+    TestComponent = @Component({selector: 'test'})
+    @View({
+      template: `<some-component foo="Hello" [bar]="test.bar"></some-component>`,
+      directives: [SomeComponent]
+    })
+    class TestComponent {
+      constructor() {
+        this.bar = "World";
+      }
+    }
   });
 
   describe('Test Component Builder', () => {
@@ -70,7 +76,8 @@ describe('Test Utils', () => {
     let rootTestEl;
     let someComponentEl;
 
-    beforeEach(bindings(bind => {
+    // test the bindings call composed with the beforeEach fn
+    beforeEach(providers(provide => {
       mockSomeService = {
         getData: sinon.stub().returns('mock success')
       };
@@ -78,21 +85,26 @@ describe('Test Utils', () => {
       $http = { get: sinon.stub() };
 
       return [
-        bind(SomeService).toValue(mockSomeService),
-        bind('$http').toValue($http)
+        provide(SomeService, { useValue: mockSomeService }),
+        provide('$http', { useValue: $http })
       ];
     }));
 
     // testing adding more bindings in an additional beforeEach
-    beforeEach(bindings(bind => {
-      mockSomeOtherService = {
-        getData: sinon.stub().returns('mock other')
-      };
+    beforeEach(() => {
 
-      return [
-        bind(SomeOtherService).toValue(mockSomeOtherService)
-      ];
-    }));
+      // test the bindings call inside the beforeEach fn
+      providers(provide => {
+        mockSomeOtherService = {
+          getData: sinon.stub().returns('mock other')
+        };
+
+        return [
+          provide(SomeOtherService, { useValue: mockSomeOtherService })
+        ];
+      });
+
+    });
 
     beforeEach(() => {
       rootTC = tcb.create(TestComponent);
@@ -129,6 +141,10 @@ describe('Test Utils', () => {
       expect(rootTC.debugElement.componentViewChildren)
           .to.be.an.instanceOf(angular.element);
 
+      // getLocal is an alias to $injector
+      expect(rootTC.debugElement.getLocal('$q'))
+          .to.contain.all.keys(['resolve', 'reject', 'defer']);
+
       // Checking to be sure even nested jqlite elements are decorated
       expect(someComponentEl.nativeElement)
           .to.be.an.instanceOf(HTMLElement);
@@ -137,6 +153,9 @@ describe('Test Utils', () => {
           .to.be.an.instanceOf(SomeComponent);
 
       expect(someComponentEl.componentViewChildren).to.be.empty;
+
+      expect(someComponentEl.getLocal('$q'))
+          .to.contain.all.keys(['resolve', 'reject', 'defer']);
     });
 
     it('should allow mock decorated class components and services via bindings() method', () => {

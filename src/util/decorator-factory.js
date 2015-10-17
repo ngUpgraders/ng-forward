@@ -6,12 +6,9 @@ export default (type, strategyType = 'provider') => {
 	let names = new Set();
 
 	const createUniqueName = name => {
-		if( names.has(name) )
-		{
+		if( names.has(name) ) {
 			return createUniqueName(`${name}${randomInt()}`, type);
-		}
-		else
-		{
+		} else {
 			return name;
 		}
 	};
@@ -22,10 +19,17 @@ export default (type, strategyType = 'provider') => {
 
 	// Return the factory
 	let decorator = maybeT => {
-		if(typeof maybeT === 'string')
+
+		const writeWithUniqueName = t => {
+			let name = createUniqueName(t.name);
+			providerWriter.set('type', type, t);
+			providerWriter.set('name', name, t);
+			names.add(name);
+		};
+
+		if (typeof maybeT === 'string')
 		{
-			if( names.has(maybeT) )
-			{
+			if(names.has(maybeT)) {
 				throw NAME_TAKEN_ERROR(maybeT);
 			}
 
@@ -35,12 +39,13 @@ export default (type, strategyType = 'provider') => {
 				names.add(maybeT);
 			};
 		}
+		else if (maybeT === undefined)
+		{
+			return t => writeWithUniqueName(t);
+		}
 		else
 		{
-			let name = createUniqueName(maybeT.name);
-			providerWriter.set('type', type, maybeT);
-			providerWriter.set('name', name, maybeT);
-			names.add(name);
+			writeWithUniqueName(maybeT)
 		}
 	};
 

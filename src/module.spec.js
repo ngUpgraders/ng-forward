@@ -13,6 +13,7 @@ describe('Decorator Supported Module', function(){
 		let module = Module('test', []);
 
 		module.should.be.defined;
+		module.name.should.equal('test');
 		ng.module.should.have.been.called;
 	});
 

@@ -1,4 +1,5 @@
 import {dashToCamel} from './helpers';
+import {getInjectableName} from './get-injectable-name';
 
 Object.defineProperties(angular.element.prototype, {
 
@@ -21,6 +22,13 @@ Object.defineProperties(angular.element.prototype, {
   componentViewChildren: {
     get() {
       return this.children();
+    }
+  },
+
+  getLocal: {
+    value: function(injectable) {
+      return (this.injector() || this.inheritedData('$injector'))
+          .get(getInjectableName(injectable));
     }
   }
 
