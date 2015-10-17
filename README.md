@@ -13,7 +13,7 @@
 
 ## Getting Started
 
-An ng-forward app is in many ways built like an Angular 2 app. Your app is made up of a tree of components, starting with a single top level component your entire app runs in side. Components can depend on services, which like Angular are plain old ES6 classes. The [official Angular 2 docs](https://angular.io/) are actually a good place to start to familiarize yourself with Angular 2 coding style. 
+An ng-forward app is in many ways built like an Angular 2 app. Your app is made up of a tree of components, starting with a single top level component your entire app runs inside. Components can depend on services, which like Angular 2.x are plain old ES6 classes. The [official Angular 2 docs](https://angular.io/) are actually a good place to start to familiarize yourself with Angular 2 coding style. 
 
 ### Components
 
