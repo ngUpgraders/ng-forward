@@ -17,12 +17,12 @@ export class Provider {
 
   constructor(token, {useClass, useValue, useConstant, useFactory, deps}) {
     try { this.token = getInjectableNameWithJitCreation(token); }
-    catch (e) { throw new Error('new Provider() Error: Invalid token'); }
+    catch (e) { throw new Error(`new Provider() Error: Invalid token ${token}`); }
 
     extend(this, {useClass, useValue, useConstant, useFactory});
 
     if (!useClass && !useValue && !useConstant && !useFactory) {
-      throw new Error('new Provider() Error: No usage provided (i.e. useClass, useValue, useConstant, useFactory)')
+      throw new Error(`new Provider(${token}) Error: No usage provided (i.e. useClass, useValue, useConstant, useFactory)`)
     }
 
     if (deps) {

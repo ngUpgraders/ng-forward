@@ -16,10 +16,12 @@
 import {appWriter, providerWriter} from '../writers';
 import {getInjectableName} from '../util/get-injectable-name';
 import {Providers} from '../decorators/Providers';
+import {OpaqueToken} from '../classes/opaque-token';
 
 // ## @Inject
 // Takes an array of injects
 export const Inject = ( ...injects ) => t => {
+	const notStringBased = inj => typeof inj !== 'string' && !(inj instanceof OpaqueToken);
 	const ensureInjectable = inj => {
 		if (!providerWriter.get('name', inj) || !providerWriter.get('type', inj)) {
 			throw new Error(`Processing "${t.name}" @Inject parameter: "${inj.name || inj.toString()}" is not a valid injectable.
@@ -35,7 +37,7 @@ export const Inject = ( ...injects ) => t => {
 	// each injectable
 
 	var providers = injects
-			.filter(inj => typeof inj !== 'string')
+			.filter(notStringBased)
 			.map(ensureInjectable);
 
 	Providers(...providers)(t);

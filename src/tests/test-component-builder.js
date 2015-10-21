@@ -1,6 +1,7 @@
 import bundle from '../bundle';
 import { providers } from './providers';
 import { appWriter, componentWriter } from '../writers';
+import { View } from '../decorators/component/view'
 import extend from 'extend';
 
 /**
@@ -22,10 +23,6 @@ export class TestComponentBuilder {
    * @returns {RootTestComponent}
    */
   create(rootComponent) {
-    //if (Object.keys(this._providersOverrides).length > 0) {
-    //  appWriter.set('providers', this._providersOverrides, rootComponent);
-    //}
-
     let decoratedModule = bundle('test-ng-forward', rootComponent);
     angular.mock.module(decoratedModule.name);
     angular.mock.module($provide =>
@@ -37,13 +34,22 @@ export class TestComponentBuilder {
     return rootTC;
   }
 
-  overrideTemplate()      { throw new Error('Method not supported in ng-forward.'); }
-  overrideView()          { throw new Error('Method not supported in ng-forward.'); }
-  overrideDirective()     { throw new Error('Method not supported in ng-forward.'); }
+  overrideTemplate(component, template) {
+    componentWriter.set('template', template, component);
+    return this;
+  }
+
   overrideProviders(component, providers) {
     appWriter.set('providers', providers, component);
     return this;
   }
+
+  overrideView(component, config) {
+    View(config)(component);
+    return this;
+  }
+
+  overrideDirective()     { throw new Error('Method not supported in ng-forward.'); }
   overrideViewBindings()  { throw new Error('Method not supported in ng-forward.'); }
 }
 
