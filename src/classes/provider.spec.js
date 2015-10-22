@@ -10,7 +10,7 @@ import { Injectable } from '../decorators/providers/injectable';
 import { Component } from '../decorators/providers/component';
 import { TestComponentBuilder, providers } from '../tests';
 import { OpaqueToken } from '../classes/opaque-token';
-import { quickBuildRootTest } from '../tests/internal-utils';
+import { quickRootTestComponent } from '../tests/internal-utils';
 
 
 class SomeToken {}
@@ -69,13 +69,13 @@ describe('Provider Class', () => {
     describe('Provider\'s "use" Methods', () => {
 
       it('creates an angular value with useVal', () => {
-        root = quickBuildRootTest({ providers: [new Provider('foo', { useValue: 'bar' })] });
+        root = quickRootTestComponent({ providers: [new Provider('foo', { useValue: 'bar' })] });
 
         root.debugElement.getLocal('foo').should.eql('bar');
       });
 
       it('creates an angular constant with useConstant', () => {
-        root = quickBuildRootTest({ providers: [new Provider('foo', { useConstant: 'bar' })] });
+        root = quickRootTestComponent({ providers: [new Provider('foo', { useConstant: 'bar' })] });
 
         root.debugElement.getLocal('foo').should.be.eql('bar');
       });
@@ -89,7 +89,7 @@ describe('Provider Class', () => {
             return 'baz';
           }
         }
-        root = quickBuildRootTest({ providers: [new Provider('foo', { useClass: Bar })] });
+        root = quickRootTestComponent({ providers: [new Provider('foo', { useClass: Bar })] });
 
         let foo = root.debugElement.getLocal('foo');
         foo.should.be.an.instanceOf(Bar);
@@ -105,7 +105,7 @@ describe('Provider Class', () => {
           }
         }
 
-        root = quickBuildRootTest({ providers: [new Provider('foo', { useClass: Bar })] });
+        root = quickRootTestComponent({ providers: [new Provider('foo', { useClass: Bar })] });
 
         let foo = root.debugElement.getLocal('foo');
         foo.should.be.an.instanceOf(Bar);
@@ -118,7 +118,7 @@ describe('Provider Class', () => {
           return 'bar';
         }
 
-        root = quickBuildRootTest({ providers: [new Provider('foo', { useFactory: getBar })] });
+        root = quickRootTestComponent({ providers: [new Provider('foo', { useFactory: getBar })] });
 
         root.debugElement.getLocal('foo').should.eql('bar');
       });
@@ -128,7 +128,7 @@ describe('Provider Class', () => {
           return $q;
         }
 
-        root = quickBuildRootTest({ providers: [new Provider('foo', {
+        root = quickRootTestComponent({ providers: [new Provider('foo', {
           useFactory: getQ,
           deps: ['$q']
         })] });
@@ -148,7 +148,7 @@ describe('Provider Class', () => {
           return foo.bar;
         }
 
-        root = quickBuildRootTest({ providers: [new Provider('foo', {
+        root = quickRootTestComponent({ providers: [new Provider('foo', {
           useFactory: getBar,
           deps: [Foo]
         })] });
@@ -184,7 +184,7 @@ describe('Provider Class', () => {
           return foo.bar.baz.quux;
         }
 
-        root = quickBuildRootTest({ providers: [new Provider('getQuux', {
+        root = quickRootTestComponent({ providers: [new Provider('getQuux', {
           useFactory: getQuux,
           deps: [Foo]
         })] });
@@ -196,21 +196,21 @@ describe('Provider Class', () => {
     describe('Provider Tokens', () => {
 
       it('supports string tokens', () => {
-        root = quickBuildRootTest({ providers: [new Provider('foo', { useValue: 'bar' })] });
+        root = quickRootTestComponent({ providers: [new Provider('foo', { useValue: 'bar' })] });
 
         root.debugElement.getLocal('foo').should.eql('bar');
       });
 
       it('supports OpaqueToken tokens', () => {
         let t = new OpaqueToken('foo');
-        root = quickBuildRootTest({ providers: [new Provider(t, { useValue: 'bar' })] });
+        root = quickRootTestComponent({ providers: [new Provider(t, { useValue: 'bar' })] });
 
         root.debugElement.getLocal(t).should.eql('bar');
       });
 
       it('supports class tokens', () => {
         class Foo {}
-        root = quickBuildRootTest({ providers: [new Provider(Foo, { useValue: 'bar' })] });
+        root = quickRootTestComponent({ providers: [new Provider(Foo, { useValue: 'bar' })] });
         let name = providerWriter.get('name', Foo);
         root.debugElement.getLocal(name).should.be.eql('bar');
       });

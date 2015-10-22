@@ -8,7 +8,7 @@
 // ## Setup
 // We'll need a1atscript's inputsBuilder for generating the property definitions
 import {inputsBuilder} from './inputs-builder';
-// Also need the outputsBuilder for creating event emittors
+// Also need the outputsBuilder for creating event emitters
 import outputsBuilder from './outputs-builder';
 // Finally extend for extending the instance of the controller
 import extend from 'extend';

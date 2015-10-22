@@ -3,7 +3,7 @@ import {TestComponentBuilder} from './test-component-builder';
 import {Component} from '../decorators/providers/component';
 import {View} from '../decorators/component/view';
 
-export const quickBuildRootTest = ({
+export const quickRootTestComponent = ({
       providers=[],
       directives=[],
       template='<div></div>'
@@ -11,7 +11,7 @@ export const quickBuildRootTest = ({
 
   ng.useReal();
 
-  @Component({ selector: 'test-component', template, directives, providers })
+  @Component({ selector: 'test', template, directives, providers })
   class Test {}
 
   return new TestComponentBuilder().create(Test);

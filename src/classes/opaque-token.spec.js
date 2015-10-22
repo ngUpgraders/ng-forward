@@ -4,7 +4,7 @@ import { OpaqueToken } from '../classes/opaque-token';
 import { Component } from '../decorators/providers/component';
 import { Inject } from '../decorators/inject';
 import { provide } from '../classes/provider';
-import { quickBuildRootTest } from '../tests/internal-utils';
+import { quickRootTestComponent } from '../tests/internal-utils';
 
 describe("Opaque Token", () => {
   it('creates a simple token object', () => {
@@ -33,7 +33,7 @@ describe("Opaque Token", () => {
     })
     class Game {}
 
-    let root = quickBuildRootTest({ directives: [Game], template: `<game></game>` });
+    let root = quickRootTestComponent({ directives: [Game], template: `<game></game>` });
     root.debugElement.text().should.equal('3');
   })
 });

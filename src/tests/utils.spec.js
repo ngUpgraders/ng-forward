@@ -109,7 +109,7 @@ describe('Test Utils', () => {
     beforeEach(() => {
       rootTC = tcb.create(TestComponent);
       rootTestEl = rootTC.debugElement;
-      someComponentEl = angular.element(rootTC.debugElement.componentViewChildren[0]);
+      someComponentEl = rootTC.debugElement.componentViewChildren[0];
     });
 
     // todo: write a custom inject function for ng-forward
@@ -119,7 +119,7 @@ describe('Test Utils', () => {
     }));
 
     it('should bootstrap the test module', () => {
-      expect(angular.module('test-ng-forward')).to.exist;
+      expect(angular.module('test.module')).to.exist;
     });
 
     it('should return a root test component and decorated jqlite', () => {
@@ -138,7 +138,7 @@ describe('Test Utils', () => {
           .to.be.an.instanceOf(TestComponent);
 
       // componentViewChildren is an alias to .children()
-      expect(rootTC.debugElement.componentViewChildren)
+      expect(rootTC.debugElement.componentViewChildren[0])
           .to.be.an.instanceOf(angular.element);
 
       // getLocal is an alias to $injector

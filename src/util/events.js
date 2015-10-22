@@ -1,5 +1,6 @@
 import {Directive, Inject} from '../index';
 import parseSelector from './parse-selector';
+import {dasherize} from '../util/helpers';
 
 let events = new Set([
   'click',
@@ -39,7 +40,7 @@ function resolve(ngModule){
   let directives = [];
 
   events.forEach(event => {
-    const selector = `[(${event})]`;
+    const selector = `[(${dasherize(event)})]`;
     @Directive({ selector })
     @Inject('$parse', '$element', '$attrs', '$scope')
     class EventHandler{

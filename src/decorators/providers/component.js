@@ -154,9 +154,8 @@ Module.addProvider(TYPE, (target, name, injects, ngModule) => {
 	}, target);
 
 	// Get the inputs bindings ahead of time
-	if(ddo.controllerAs){
-		ddo.bindToController = inputsMap(ddo.inputMap);
-	}
+	let bindProp = angular.version.minor >= 4 ? 'bindToController' : 'scope';
+	ddo[bindProp] = inputsMap(ddo.inputMap);
 
 	checkComponentConfig();
 

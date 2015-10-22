@@ -23,7 +23,7 @@ export class TestComponentBuilder {
    * @returns {RootTestComponent}
    */
   create(rootComponent) {
-    let decoratedModule = bundle('test-ng-forward', rootComponent);
+    let decoratedModule = bundle('test.module', rootComponent);
     angular.mock.module(decoratedModule.name);
     angular.mock.module($provide =>
         providers.all().forEach(({token, useValue}) =>

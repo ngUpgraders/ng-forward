@@ -21,7 +21,7 @@ Object.defineProperties(angular.element.prototype, {
 
   componentViewChildren: {
     get() {
-      return this.children();
+      return [...this.children()].map(child => angular.element(child));
     }
   },
 

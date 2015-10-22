@@ -2,7 +2,7 @@ import Module from '../../module';
 import {Injectable, INJECTABLE} from './injectable';
 import {sinon} from '../../tests/frameworks';
 import {providerWriter} from '../../writers';
-import {quickBuildRootTest} from '../../tests/internal-utils';
+import {quickRootTestComponent} from '../../tests/internal-utils';
 
 describe('@Injectable Decorator', function(){
 	it('should decorate a class with a provider name and type', function(){
@@ -63,7 +63,7 @@ describe('@Injectable Decorator', function(){
 			@Injectable()
 			class Foo {}
 
-			root = quickBuildRootTest({ providers: [Foo] });
+			root = quickRootTestComponent({ providers: [Foo] });
 
 			root.debugElement.getLocal(Foo).should.be.an.instanceOf(Foo);
 		});
