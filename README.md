@@ -435,10 +435,11 @@ bootstrap(AppCtrl);
 ```
 
 Note some imports at the top of the file:
-1. babel/polyfill (right now Babel.js is the preferred transpiler for ng-forward. We'll be looking at Typescript soon)
-2. angular -- version 1
-3. zone.js -- Zone.js is an optional component for ng-forward. However, it gives you an extremely cool feature -- it removes the need for `$scope.$apply` calls (for the most part). If you don't use zone.js, you can inject `$scope` manually and call `$apply` but obviously you'll need to change that code if you convert to Angular 2.x
-4. angular-ui-router -- totally optional, but closer in syntax to the Angular 2 Router
+
+1. babel/polyfill: Right now Babel.js is the preferred transpiler for ng-forward. We'll be looking at Typescript soon.
+2. angular: Good ol' version 1
+3. zone.js: Zone.js is an optional component for ng-forward. However, it gives you an extremely cool feature -- it removes the need for `$scope.$apply` calls (for the most part). If you don't use zone.js, you can inject `$scope` manually and call `$apply` but obviously you'll need to change that code if you convert to Angular 2.x
+4. angular-ui-router: totally optional, but closer in syntax to the Angular 2 Router
 5. All the elements we need of ng-forward
 
 ## FAQ
