@@ -473,6 +473,14 @@ Our goal in ng-forward will be to adjust to changes but support the old syntax w
 
 No. Definitely not. In addition to some of the differences called out above, there are several other features that are simply not possible to implement using Angular 1.x as a base. We'll trying to add what we can over time, but something will just have to wait for Angular 2.x
 
+#### What does a migration from regular Angular 1 code to ng-forward code look like?
+
+Here's an example of the steps you might take:
+- [Before Migration](https://gist.github.com/timkindberg/2c9ae631ee1a7428e421)
+- [Part 1](https://gist.github.com/timkindberg/95166e525685db1f6394)
+- [Part 2](https://gist.github.com/timkindberg/78226481690a20f9f2a0)
+- [After Migration](https://gist.github.com/timkindberg/73280001a84a15370ade) 
+
 #### Do you support writing in plain ES5?
 
 Our goal is to support the ES5 syntax used by Angular 2.x. Currently, this part of ng-forward is not well developed but we intend to support it in the future.
