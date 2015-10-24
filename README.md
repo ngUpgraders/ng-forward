@@ -6,13 +6,13 @@
 
 ***ng-forward*** is the default solution for people who want to start writing code using Angular 2 conventions and styles that runs today on Angular 1.3+.
 
-***ng-forward*** is a collaboration between authors of previous Angular decorator libraries. It's development is assisted and promoted by the Angular team. Ng-forward can be used as part of an upgrade strategy, which may also include (ng-upgrade)[http://angularjs.blogspot.com/2015/08/angular-1-and-angular-2-coexistence.html].
+***ng-forward*** is a collaboration between authors of previous Angular decorator libraries. It's development is assisted and promoted by the Angular team. Ng-forward can be used as part of an upgrade strategy, which may also include [ng-upgrade](http://angularjs.blogspot.com/2015/08/angular-1-and-angular-2-coexistence.html).
 
 We are targeting four types of developers:
 - Those who do not know if or when they will upgrade to Angular 2, but they want all the benefits of organizing their code into Components
 - Those who are starting Angular 1.x projects today who want the easiest possible upgrade path to Angular 2 and the best Angular 1 code.
 - Those who want a production safe way to prepare their Angular 1 projects **now** for the easiest possible upgrade path **later**.
-- Those who are actively migrating to Angular 2, who'd like to use ng-forward as the first step in their migration strategy. Once you've used ng-forward to update all the syntax in your project, you can then optionally use (ng-upgrade)[http://angularjs.blogspot.com/2015/08/angular-1-and-angular-2-coexistence.html] or go straight to Angular 2.
+- Those who are actively migrating to Angular 2, who'd like to use ng-forward as the first step in their migration strategy. Once you've used ng-forward to update all the syntax in your project, you can then optionally use [ng-upgrade](http://angularjs.blogspot.com/2015/08/angular-1-and-angular-2-coexistence.html) or go straight to Angular 2.
 
 *Currently in the Alpha phase, please contribute: [ng-forward issues](https://github.com/ngUpgraders/ng-forward/issues)*
 
@@ -446,7 +446,7 @@ Note some imports at the top of the file:
 
 #### What is the difference between the official Angular upgrade strategy (ng-upgrade) and ng-forward?
 
-From the words of Pete Bacon Darwin, Angular 1 Project Manager @petebacondarwin:
+From the words of Pete Bacon Darwin (@petebacondarwin), Angular 1 Lead Developer:
 > [We suggest] that ng-forward could be used as part of an upgrade strategy, which could also include ng-upgrade. I think the jury is still out on the very best strategy and I expect that there isn't a one size fits all solution.
 
 > [We give] equal sway to the two projects and I think there is value in developers considering both. [There] are a variety of options available, of which ng-forward plays a part; that ng-forward can also be used even whether or not upgrade is your aim, as it can make you ng1 code and development cleaner.
