@@ -1,45 +1,23 @@
-import _ from './util/jqlite-extensions';
+import './util/jqlite-extensions';
 
-import Module from './module';
-import bootstrap from './bootstrap';
+export Module from './module';
+export bootstrap from './bootstrap';
+export bundle from './bundle';
 
-import { Inject } from './decorators/inject';
-import { Providers } from './decorators/Providers';
-import { EventEmitter } from './util/event-emitter';
-import { provide, Provider } from './classes/provider';
-import { OpaqueToken } from './classes/opaque-token';
+export { Inject } from './decorators/inject';
+export { Providers } from './decorators/Providers';
+export { EventEmitter } from './util/event-emitter';
+export { provide, Provider } from './classes/provider';
+export { OpaqueToken } from './classes/opaque-token';
 
-import { Animation } from './decorators/providers/animation';
-import { Component } from './decorators/providers/component';
-import { Directive } from './decorators/providers/directive';
-import { Factory } from './decorators/providers/factory';
-import { Pipe } from './decorators/providers/pipe';
-import { Injectable } from './decorators/providers/injectable';
-import { StateComponent } from './decorators/providers/state-component';
+export { Animation } from './decorators/providers/animation';
+export { Component } from './decorators/providers/component';
+export { Directive } from './decorators/providers/directive';
+export { Factory } from './decorators/providers/factory';
+export { Pipe } from './decorators/providers/pipe';
+export { Injectable } from './decorators/providers/injectable';
+export { StateComponent } from './decorators/providers/state-component';
 
-import { Require } from './decorators/component/require';
-import { View } from './decorators/component/view';
-import { Transclude } from './decorators/component/transclude';
-
-export {
-	Module,
-	bootstrap,
-	Providers,
-	provide,
-	OpaqueToken,
-	EventEmitter,
-
-	Inject,
-	Provider,
-	Component,
-	Directive,
-	Pipe,
-	Factory,
-	Injectable,
-	Animation,
-	StateComponent,
-
-	Require,
-	View,
-	Transclude
-};
+export { Require } from './decorators/component/require';
+export { View } from './decorators/component/view';
+export { Transclude } from './decorators/component/transclude';
