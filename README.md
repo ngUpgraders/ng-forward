@@ -4,10 +4,15 @@
 
 [![Join the chat at https://gitter.im/ngUpgraders/ng-forward](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ngUpgraders/ng-forward?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-***ng-forward*** is  default solution for people who want to start writing code using Angular 2.x conventions and styles that runs today on Angular 1.x.
+***ng-forward*** is the default solution for people who want to start writing code using Angular 2 conventions and styles that runs today on Angular 1.3+.
 
-***ng-forward*** is a collaboration between several authors of previous Angular decorator libraries, and while it is not the official upgrade path for Angular 1.x to 2.x (see [ng-upgrade](http://angularjs.blogspot.com/2015/08/angular-1-and-angular-2-coexistence.html)), it's development was assisted and promoted by the Angular team. The target audience is primarily people who want to learn Angular 2 coding conventions, and people who are starting Angular 1.x projects today who want an eventual easy upgrade path to Angular 2.x.
+***ng-forward*** is a collaboration between authors of previous Angular decorator libraries. It's development is assisted and promoted by the Angular team. Ng-forward can be used as part of an upgrade strategy, which may also include (ng-upgrade)[http://angularjs.blogspot.com/2015/08/angular-1-and-angular-2-coexistence.html].
 
+We are targeting four types of developers:
+- Those who do not know if or when they will upgrade to Angular 2, but they want all the benefits of organizing their code into Components
+- Those who are starting Angular 1.x projects today who want the easiest possible upgrade path to Angular 2 and the best Angular 1 code.
+- Those who want a production safe way to prepare their Angular 1 projects **now** for the easiest possible upgrade path **later**.
+- Those who are actively migrating to Angular 2, who'd like to use ng-forward as the first step in their migration strategy. Once you've used ng-forward to update all the syntax in your project, you can then optionally use (ng-upgrade)[http://angularjs.blogspot.com/2015/08/angular-1-and-angular-2-coexistence.html] or go straight to Angular 2.
 
 *Currently in the Alpha phase, please contribute: [ng-forward issues](https://github.com/ngUpgraders/ng-forward/issues)*
 
@@ -15,27 +20,36 @@
 
 ## Getting Started
 
-An ng-forward app is in many ways built like an Angular 2 app. Your app is made up of a tree of components, starting with a single top level component your entire app runs inside. Components can depend on services, which like Angular 2.x are plain old ES6 classes. The [official Angular 2 docs](https://angular.io/) are actually a good place to start to familiarize yourself with Angular 2 coding style. 
+An ng-forward app is in many ways built like an Angular 2 app. Your app is made up of a tree of components, starting with a single top level component your entire app runs inside. Components can depend on services, which like Angular 2 are plain old ES6 classes. The [official Angular 2 docs](https://angular.io/) are actually a good place to start to familiarize yourself with Angular 2 coding style.
 
 ### Components
 
 The syntax for components in ng-forward mirrors Angular 2 components as much as possible, with a few key differences. Here's a simple component:
 
 ```js
-@Component({ selector: 'nested' })
-@View({ template: '<h3>Nested</h3>' })
+import { Component } from 'ng-forward';
+
+@Component({ 
+	selector: 'nested', 
+	template: '<h3>Nested</h3>' 
+})
 class Nested{ }
 ```
 
 So far this syntax here is identical to Angular 2. We have a component annotation that specifies this component will apply to any DOM element using the tag 'nested'.
 
-If you've used previous decorator libraries, you'll notice ng-forward doesn't require you to use any calls to @Module, new Module or .Module. ng-forward auto-creates a module for you during bootstrap.
+If you've used previous decorator libraries, you'll notice ng-forward doesn't require you to use any calls to @Module, new Module or .Module. ng-forward auto-creates a module for you during bootstrap. If you need create a module to co-exist with other non-ng-forward ng1 modules, you can use (`bundle`)[https://gist.github.com/timkindberg/95166e525685db1f6394] to bundle up your app or portions of your app.
+
+> **Behind the Scenes**: We make a call to angular.directive on your behalf. We always set restrict to 'E' (element). The class becomes the directives controller. And we set controllerAs to a camelCased copy of your selector value, e.g. `my-component` becomes `myComponent`.
 
 ### Services
 
 Let's take a look at a simple service:
 
 ```js
+import { Injectable } from 'ng-forward';
+
+@Injectable()
 class TestService{
 	getValue(){
 		return new Promise(resolve => {
@@ -45,16 +59,18 @@ class TestService{
 }
 ```
 
-Whoa! What happened to all the Angular? In ng-forward you don't need to use a single decorator if you are creating a service and you don't need to inject any dependencies. It's a regular ES6 class. Ng-forward will handle the work of wrapping this in an angular service when we bootstrap. If you need to inject dependencies, you can use an Inject decorator, which will cover in a bit.
+Again, it's a regular ES6 class. Just tell the injector that it's injectable with the `@Injectable()` annotation and you can start to inject it into other components and services. Ng-forward will handle the work of wrapping this in an angular service when we bootstrap. If you need to inject dependencies, you can use an Inject decorator, which will cover in a bit.
+
+> **Behind the Scenes**: We make a call to angular.service on your behalf. The class becomes the service singleton instance.
 
 ## Digging Deeper
 Now lets look at a more complicated component:
 
 ```js
+import { Component, Inject } from 'ng-forward';
+
 @Component({
 	selector: 'inner-app'
-})
-@View({
 	directives: [Nested],
 	template: `
 		<h2>Inner app</h2>
@@ -115,15 +131,16 @@ Wow. There's a lot more going on here, so let's walk throw some key aspects of t
 ### Directives
 
 ```js
-@View({
+@Component({
+	...
 	directives: [Nested],
 	template: ...
 })
 ```
 
-Here we're setting the view of the Component. Note the directives property -- by setting the directives properties, we're telling ng-forward what other directives we'll use in the template. In this case, we're saying we'll reference the Nested component within this template. Under the hood, ng-forward will use this to make sure these directives get into our final angular module. For now, there is no need to specify core directives (e.g. ng-if, ng-show, ng-repeat, etc).
+Here we're setting view properties of the Component. Note the directives property -- by setting the directives properties, we're telling ng-forward what other directives we'll use in the template. In this case, we're saying we'll reference the Nested component within this template. Under the hood, ng-forward will use this to make sure these directives get into our final angular module. For now, there is no need to specify core directives (e.g. ng-if, ng-show, ng-repeat, etc).
 
-*Angular 2.x difference: Because Angular 1.x has no shadow dom, these directives will become active everywhere they're used in a template in the app. One of the features of Angular 2 is the ability to have directives only active inside certain components. Because of the way Angular 1.x's injector works, this is not possible to implement in ng-forward currently*
+*Angular 2 difference: Because Angular 1.x has no shadow dom, these directives will become active everywhere they're used in a template in the app. One of the features of Angular 2 is the ability to have directives only active inside certain components. Because of the way Angular 1.x's injector works, this is not possible to implement in ng-forward currently.*
 
 ### Built-in Events
 
@@ -139,8 +156,8 @@ Let's take a look at the template for this component:
 		</button>
 ```
 
-ng-forward has built custom directives for all the standard dom events:
-click, change, scroll, etc so you can use ng2 syntax for interacting with these events. Here we attach a click handler to a button, which in turn calls a function on a component. This is equivalent to using standard ng-click and works the same way.
+ng-forward has built custom directives for all the (standard dom events)[https://github.com/ngUpgraders/ng-forward/blob/master/src/util/events.js#L6-L36]:
+click, change, scroll, etc so you can use ng2 syntax for interacting with these events. Here we attach a click handler to a button, which in turn calls a function on a component. This is equivalent to using standard ng-click and works the same way, but matches Angular 2 syntax.
 
 ### Inputs
  
@@ -152,9 +169,11 @@ Now let's look at passing inputs to components. In the component class you'll se
 	@Input('message3') msg3;
 ```
 
-These lines specify what attributes can be passed as properties when we call our InnerApp component. If you don't pass a parameter to Input, the name of the property on the class is the same name you'll use when you call the component. If you pass a parameter, that becomes the name you use in when you call this comment from a parent component.
+These lines specify what attributes can be passed as properties when we call our InnerApp component. If you don't pass a parameter to Input, the name of the property on the class is the same name you'll use when you call the component. If you pass a parameter, that becomes the name you use when you call this property from a parent component.
 
-Here's a part of the template that makes a simple reference to a properties passed from a parent:
+> **Behind the Scenes:** The inputs essentially become isolate scope properties. Remember all the '@', '=', and '&'? Kiss those good bye. Each property gets registered several times so it can be used in various ways. Read on...
+
+Here's a part of the template that makes a simple reference to properties passed from a parent:
 
 ``` 
 <h4>One Way String from Parent (read-only)</h4>
@@ -176,7 +195,7 @@ So we've seen the template, let's look at a line that's unique to ng-forward now
 @Inject(TestService, '$element')
 ```
 
-Right here, we're specifying what dependencies we want to inject into the constructor function for our component. The Inject decorator can also be used to inject dependencies into a service. If we're using a service written in ng-forward, we just pass a reference to it. If we need to get a built in Angular 1.x service, or a service from a legacy module, we just pass a string. Here we need `$element`, so we pass that as a string.
+Right here, we're specifying what dependencies we want to inject into the constructor function for our component. The Inject decorator can also be used to inject dependencies into a service. If we're using a service written in ng-forward, we just pass a reference to it. If we need to get a built in Angular 1.x service, or a service from a legacy module, we just pass a string. Here we need `$element`, so we pass that as a string. Components can ask for the same 'locals' that directive controllers can ask for: `$scope, $element, $attrs, and $transclude`, plus any global injectable.
 
 *Angular 2 Difference: In Angular, particularly if you're writing in TypeScript, you don't need Inject at all. We aren't assuming typescript for ng-forward, so right now using types for dependency injection is not supported*
 
@@ -185,7 +204,7 @@ Right here, we're specifying what dependencies we want to inject into the constr
 Now let's look at Outputs, an Angular 2 mechanism for triggering custom events that a parent component can attach handlers to:
 
 ``` js
-	@Output() event1 = new EventEmitter();
+	@Output() event1;
 	@Output('event2') evt2 = new EventEmitter();
 ```
 
@@ -193,17 +212,20 @@ and here's where we call them in the component
 
 ```js
 	triggerEventNormally() {
-		this.$element.triggerHandler('event1');
+		this.$element.triggerHandler('event1'); 
+		// or for bubbling of custom events...
+		this.$element.nativeElement.dispatchEvent(new CustomEvent('event1', { data, bubbles: true }));
 	}
 
 	triggerEventViaEventEmitter() {
+		// this won't bubble, but most custom events probably shouldn't...
 		this.evt2.next()
 	}
 ```
 
 Note there's two ways trigger an event. We can simply trigger a DOM event as seen in `triggerEventNormally`. In this cause the event won't bubble up unless you tell it to.
 
-We can also use the new ng2 Event Emitter syntax, as seen in `triggerEventViaEventEmitter` which will cause the event to bubble by default
+We can also use the new ng2 Event Emitter syntax, as seen in `triggerEventViaEventEmitter`. This uses the Rxjs Event Emitter to trigger the event.
 
 ## Bootstrapping Apps
 
@@ -213,8 +235,6 @@ Let's look at the final building block of the ng-forward app, the top level comp
 @Component({
 	selector: 'app',
 	bindings: [TestService, "ui.router"]
-})
-@View({
 	directives: [InnerApp, Nested],
 	template: `
 		<h1>App</h1>
@@ -251,28 +271,28 @@ bootstrap(AppCtrl);
 
 There are a few extra elements we need to look at here that ng-forward uses to bootstrap our app.
 
-### Bindings
+### Providers
 
 ```js
-	bindings: [TestService, "ui.router"]
+	providers: [TestService, "ui.router"]
 ```
 
-Bindings are used to specify what services are injectable in our app. They're the closest thing ng-forward has to angular.module from 1.x. If you need to use a legacy module, you'll pass it here as a string. Otherwise, just pass the services your component will need.
+Providers are used to specify what services are injectable in our app. They're the closest thing ng-forward has to angular.module from 1.x. If you need to use a legacy module, you'll pass it here as a string. Otherwise, just pass the services your component will need.
 
-*Angular 2 difference: You might be wondering why you'd pass TestService as a binding here, and then still have to inject it in the innerApp component. In Angular 2, bindings is actually a way to specify what services are available inside the component in a hierarchical fashion. In ng-forward, any services you pass to bindings on any component will be available to inject on any other component, because the Angular 1.x injector doesn't support this hierarchy*
+*Angular 2 difference: You might be wondering why you'd pass TestService as a provider here, and then still have to inject it in the innerApp component. In Angular 2, providers is actually a way to specify what services are available inside the component in a hierarchical fashion. In ng-forward, any services you pass to providers on any component will be available to inject on any other component, because the Angular 1.x injector doesn't support this hierarchy. You should still try to limit cross usage to prevent pain during upgrade.*
 
-*Tip: Use strings in Inject decorators to specify legacy services. Use strings in bindings to specify legacy modules*
+*Tip: Use strings in the `@Inject` decorator to specify legacy services, e.g. '$q'. Use strings in `providers` or `directives` to specify legacy modules, e.g. 'ui.router'*
+
+> **Behind the Scenes**: the `providers` and `directives` component properties do exactly the same thing in ng-forward. They just tell ng-forward what dependencies to bundle up into your module during the bootstrap (or bundle) call. However, we recommend using directives for directives and providers for services and ng1 modules, as it will make upgrading easier.
 
 
 ### Calling Child Components
 
-Once again we'll setup directives we need for our template
+Once again we'll setup directives we need for our template. Remember this serves two purposes, it matches the Angular 2 syntax, and it tells ng-forward to bundle these items into our module.
 
 ```js
 directives: [InnerApp, Nested]
 ```
-
-Once again, we're specifying what directives we use in our component. You might ask why we put Nested here since we don't actually call in directly. In ng-forward, this isn't actually neccesary. However, in Angular 2.x, any directives you don't specify here won't be available anywhere inside the component template, including if you call them in child components. To keep our code Angular 2.x compatible, we'll specify both directives here, even ng-forward would work fine without Nested.
 
 Let's look at how we call the InnerApp component
 
@@ -290,7 +310,7 @@ Let's look at how we call the InnerApp component
 		</inner-app>
 ```
      
-Here we see various bindings and events in use. We are listening forthe event1 and event2 events on inner-app. You use parenthesis to bind to events. With message 1, 2 and 3, we show the three ways you can bind to component properties: prop (with no prefix) will pass in a simple string, [prop] will one-way bind to an expression, and [(prop)] will two way bind to an expression.
+Here we see various bindings and events in use. We are listening for the event1 and event2 events on inner-app. You use parenthesis to bind to events. With message 1, 2 and 3, we show the three ways you can bind to component properties: prop (with no prefix) will pass in a simple string, [prop] will one-way bind to an expression, and [(prop)] will two way bind to an expression.
 
 ### Bootstrapping
 
@@ -298,7 +318,9 @@ Here we see various bindings and events in use. We are listening forthe event1 a
 bootstrap(AppCtrl);
 ```
 
-This is the final step to setting up an ng-forward app. It will look for the selector in your html and call ng1's bootstrap method on it. Behind the scenes, ng-forward will handle all the work of setting up your modules, translate components to ng 1.x syntax, etc.
+This is the final step to setting up an ng-forward app. 
+
+> **Behind the Scenes:** ng-forward will handle all the work of bundling up your module, translate components to ng 1.x syntax, etc. Then it will look for the selector in your html and call ng1's bootstrap method on it. 
 
 Let's look at the completed code:
 
@@ -414,18 +436,19 @@ bootstrap(AppCtrl);
 
 Note some imports at the top of the file:
 1. babel/polyfill (right now Babel.js is the preferred transpiler for ng-forward. We'll be looking at Typescript soon)
-2. angular
+2. angular -- version 1
 3. zone.js -- Zone.js is an optional component for ng-forward. However, it gives you an extremely cool feature -- it removes the need for `$scope.$apply` calls (for the most part). If you don't use zone.js, you can inject `$scope` manually and call `$apply` but obviously you'll need to change that code if you convert to Angular 2.x
-4. angular-ui-router
+4. angular-ui-router -- totally optional, but closer in syntax to the Angular 2 Router
 5. All the elements we need of ng-forward
 
 ## FAQ
 
 #### What is the difference between the official Angular upgrade strategy (ng-upgrade) and ng-forward?
 
-The official Angular upgrade is primarily aimed at upgrading existing complete applications to Angular 2.x
+From the words of Pete Bacon Darwin, Angular 1 Project Manager @petebacondarwin:
+> [We suggest] that ng-forward could be used as part of an upgrade strategy, which could also include ng-upgrade. I think the jury is still out on the very best strategy and I expect that there isn't a one size fits all solution.
 
-Ng-forward is primarily a teaching tool for people to understand Angular 2.x syntax, and also for people who are starting apps either right now or the near future, who don't want to use Angular 2.x till it's production ready, but want upgrading to be very simple.
+> [We give] equal sway to the two projects and I think there is value in developers considering both. [There] are a variety of options available, of which ng-forward plays a part; that ng-forward can also be used even whether or not upgrade is your aim, as it can make you ng1 code and development cleaner.
 
 #### I'm using an existing decorator library. What are my options for converting to ng-forward?
 
