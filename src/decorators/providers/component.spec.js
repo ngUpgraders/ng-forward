@@ -362,6 +362,14 @@ describe('@Component', function(){
 
 		describe('inputs', () => {
 
+			beforeEach(() => {
+				this.clock = sinon.useFakeTimers();
+			});
+
+			afterEach(() => {
+				this.clock.restore();
+			});
+
 			it('adds each input as an allowed attribute on the element', () => {
 				@Component({ selector: 'foo', template: '{{foo.bar}} {{foo.baz}}', inputs: ['bar', 'baz'] })
 				class MyClass{ }
@@ -374,15 +382,11 @@ describe('@Component', function(){
 				root.debugElement.text().should.eql('1 2');
 			});
 
-			it.skip('disallows setting instance properties not marked as an input', () => {
+			it('disallows setting instance properties not marked as an input', () => {
 				@Component({ selector: 'foo', template: '{{foo.bar}} {{foo.baz}}', inputs: ['baz'] })
 				class MyClass{
 					constructor() {
-						//uncomment this and the test passes, WTF!
-						//something to do with saving a reference to this probably
-						//console.log('constructor:', this);
 						this.bar = "false";
-						this.baz = "false";
 					}
 				}
 
@@ -394,10 +398,181 @@ describe('@Component', function(){
 				root.debugElement.text().should.eql('false true');
 			});
 
-			it('one way binds to an expression to inputs with the [input] syntax');
-			it('allows changing local property on one way [input] until new input is received');
-			it('two way binds an expression to inputs with the [(input)] syntax');
-			it('allows using the desugared syntax [input]="prop" (input-change)="prop=$event" for two way binding');
+			// todo: Valid breaking test. Please fix ng-forward so this passes!
+			it.skip('allows setting inputs to default values', () => {
+				@Component({ selector: 'foo', template: '{{foo.foo}}', inputs: ['foo'] })
+				class MyClass{
+					foo = 'bar';
+				}
+
+				let root = quickRootTestComponent({
+					directives: [MyClass],
+					template: `<foo></foo>`
+				});
+
+				root.debugElement.text().should.eql('bar');
+			});
+
+			// todo: Valid breaking test. Please fix ng-forward so this passes!
+			it.skip('one way binds to an expression to inputs with the [input] syntax', () => {
+				@Component({
+					selector: 'child',
+					inputs: ['foo'],
+					template: '{{child.foo}}'
+				})
+				class Child {
+					setFoo(val) { this.foo = val; }
+				}
+
+				@Component({
+					selector: 'parent',
+					directives: [Child],
+					template: `
+						<h1 class="greeting">{{parent.foo}} World!</h1>
+						<child [foo]="parent.foo"></child>
+					`
+				})
+				class Parent {
+					foo = "Hello";
+					setFoo(val) { this.foo = val; }
+				}
+
+				let root = quickRootTestComponent({
+					directives: [Parent],
+					template: `<parent></parent>`
+				});
+
+				let rootEl = root.debugElement;
+				let parentEl = rootEl.find('parent');
+				let parentH1El = parentEl.find('h1');
+				let childEl = parentEl.find('child');
+
+        parentH1El.text().should.eql('Hello World!');
+				childEl.text().should.eql('Hello');
+
+				childEl.componentInstance.setFoo('Hola');
+				root.detectChanges();
+
+				parentH1El.text().should.eql('Hello World!');
+				childEl.text().should.eql('Hola');
+
+				parentEl.componentInstance.setFoo('Howdy');
+				root.detectChanges();
+
+				parentH1El.text().should.eql('Howdy World!');
+				childEl.text().should.eql('Howdy');
+			});
+
+			it('two way binds an expression to inputs with the [(input)] syntax', () => {
+				@Component({
+					selector: 'child',
+					inputs: ['foo'],
+					template: '{{child.foo}}'
+				})
+				class Child {
+					setFoo(val) { this.foo = val; }
+				}
+
+				@Component({
+					selector: 'parent',
+					directives: [Child],
+					template: `
+						<h1 class="greeting">{{parent.foo}} World!</h1>
+						<child [(foo)]="parent.foo"></child>
+					`
+				})
+				class Parent {
+					foo = "Hello";
+					setFoo(val) { this.foo = val; }
+				}
+
+				let root = quickRootTestComponent({
+					directives: [Parent],
+					template: `<parent></parent>`
+				});
+
+				let rootEl = root.debugElement;
+				let parentEl = rootEl.find('parent');
+				let parentH1El = parentEl.find('h1');
+				let childEl = parentEl.find('child');
+
+				parentH1El.text().should.eql('Hello World!');
+				childEl.text().should.eql('Hello');
+
+				childEl.componentInstance.setFoo('Hola');
+				root.detectChanges();
+
+				parentH1El.text().should.eql('Hola World!');
+				childEl.text().should.eql('Hola');
+
+				parentEl.componentInstance.setFoo('Howdy');
+				root.detectChanges();
+
+				parentH1El.text().should.eql('Howdy World!');
+				childEl.text().should.eql('Howdy');
+			});
+
+			// todo: Valid breaking test. Please fix ng-forward so this passes!
+			it.skip('allows manual two way binding via a combined input and output, e.g. [input]="prop" (input-change)="prop=$event"', () => {
+				@Component({
+					selector: 'child',
+					inputs: ['foo'],
+					outputs: ['fooChanged'],
+					template: '{{child.foo}}'
+				})
+				class Child {
+					fooChanged = new EventEmitter();
+					setFoo(val) {
+						this.foo = val;
+						this.fooChanged.next(val);
+					}
+				}
+
+				@Component({
+					selector: 'parent',
+					directives: [Child],
+					template: `
+						<h1 class="greeting">{{parent.foo}} World!</h1>
+						<child [foo]="parent.foo" (foo-changed)="parent.fooChanged($event)"></child>
+					`
+				})
+				class Parent {
+					foo = "Hello";
+					setFoo(val) { this.foo = val; }
+					fooChanged($event) { this.foo = $event.detail; }
+				}
+
+				let root = quickRootTestComponent({
+					directives: [Parent],
+					template: `<parent></parent>`
+				});
+
+				let rootEl = root.debugElement;
+				let parentEl = rootEl.find('parent');
+				let parentH1El = parentEl.find('h1');
+				let childEl = parentEl.find('child');
+
+				parentH1El.text().should.eql('Hello World!');
+				childEl.text().should.eql('Hello');
+
+				childEl.componentInstance.setFoo('Hola');
+				root.detectChanges();
+
+				parentH1El.text().should.eql('Hello World!');
+				childEl.text().should.eql('Hola');
+
+				this.clock.tick();
+				root.detectChanges();
+
+				parentH1El.text().should.eql('Hola World!');
+				childEl.text().should.eql('Hola');
+
+				parentEl.componentInstance.setFoo('Howdy');
+				root.detectChanges();
+
+				parentH1El.text().should.eql('Howdy World!');
+				childEl.text().should.eql('Howdy');
+			});
 
 			describe('binding to scope or bindToController based on angular version', () => {
 				const quickBuildBindingTest = () => {
@@ -441,6 +616,7 @@ describe('@Component', function(){
 
 		describe('outputs', () => {
 			beforeEach(() => {
+				// Need to flush timeouts, event emitter .next is wrapped in a setTimeout
 				this.clock = sinon.useFakeTimers();
 			});
 
@@ -497,6 +673,25 @@ describe('@Component', function(){
 				root.debugElement.componentInstance.bar.should.be.true;
 			});
 
+			it('passes along event detail via dom event', () => {
+				@Component({ selector: 'foo', template: 'x', outputs: ['output'] })
+				class Foo { }
+
+				let root = quickRootTestComponent({
+					directives: [Foo],
+					template: `<foo ng-init="test.bar=false" (output)="test.bar=$event.detail"></foo>`
+				});
+
+				root.debugElement.componentInstance.bar.should.be.false;
+
+				let detail = 'hello';
+
+				root.debugElement.componentViewChildren[0].nativeElement.dispatchEvent(new CustomEvent('output', {detail}));
+				this.clock.tick();
+
+				root.debugElement.componentInstance.bar.should.eql('hello');
+			});
+
 			it('creates a directive triggered by event emitter', () => {
 				@Component({ selector: 'foo', template: 'x', outputs: ['output'] })
 				class Foo {
@@ -533,6 +728,27 @@ describe('@Component', function(){
 				this.clock.tick();
 
 				root.debugElement.componentInstance.bar.should.be.true;
+			});
+
+			it('passes along event detail via event emitter', () => {
+				@Component({ selector: 'foo', template: 'x', outputs: ['output'] })
+				class Foo {
+					output = new EventEmitter();
+				}
+
+				let root = quickRootTestComponent({
+					directives: [Foo],
+					template: `<foo ng-init="test.bar=false" (output)="test.bar=$event.detail"></foo>`
+				});
+
+				root.debugElement.componentInstance.bar.should.be.false;
+
+				let detail = 'hello';
+
+				root.debugElement.componentViewChildren[0].componentInstance.output.next(detail);
+				this.clock.tick();
+
+				root.debugElement.componentInstance.bar.should.eql('hello');
 			});
 
 			it('creates a directive triggered by local named event emitter', () => {
