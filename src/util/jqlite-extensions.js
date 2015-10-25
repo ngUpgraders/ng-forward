@@ -30,6 +30,42 @@ Object.defineProperties(angular.element.prototype, {
       return (this.injector() || this.inheritedData('$injector'))
           .get(getInjectableName(injectable));
     }
+  },
+
+  query: {
+    value: function(predicate, scope) {
+      throw new Error('Not yet implemented in ng-forward.')
+    }
+  },
+
+  queryAll: {
+    value: function(predicate, scope) {
+      throw new Error('Not yet implemented in ng-forward.')
+    }
+  },
+
+  getDirectiveInstance: {
+    value: function(index) {
+      throw new Error('Not yet implemented in ng-forward.')
+    }
+  },
+
+  triggerEventHandler: {
+    value: function(eventName, eventObj) {
+      throw new Error('Not yet implemented in ng-forward.')
+    }
+  },
+
+  inject: {
+    value: function(type) {
+      throw new Error('Not yet implemented in ng-forward.');
+    }
+  },
+
+  hasDirective: {
+    value: function(type) {
+      throw new Error('Not yet implemented in ng-forward.');
+    }
   }
 
 });
