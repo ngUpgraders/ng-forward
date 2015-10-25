@@ -1,26 +1,36 @@
-/* global __dirname */
 import gulp from 'gulp';
-import path from 'path';
+import ts from 'gulp-typescript';
+import {rollup} from 'rollup';
 import babel from 'gulp-babel';
-import {Server as KarmaServer} from 'karma';
+import rename from 'gulp-rename';
+import rimraf from 'rimraf';
 
-gulp.task('build', function () {
-	return gulp.src('src/**/*.js')
-		.pipe(babel({
-			stage: 0
-		}))
+gulp.task('clean', done => {
+	rimraf('./dist', done);
+});
+
+gulp.task('transpile', () => {
+	let tsProject = ts.createProject('tsconfig.json');
+	let result = tsProject.src()
+		.pipe(ts(tsProject));
+
+		return result.js.pipe(gulp.dest('dist'));
+});
+
+gulp.task('bundle', ['transpile'], (async () => {
+	let bundle = await rollup({
+		entry: './dist/lib/index.js'
+	});
+
+	await bundle.write({
+		format: 'cjs',
+		dest: './dist/ng-forward.es6.js'
+	});
+}));
+
+gulp.task('build', ['bundle'], () => {
+	return gulp.src('./dist/ng-forward.es6.js')
+		.pipe(babel())
+		.pipe(rename('ng-forward.js'))
 		.pipe(gulp.dest('dist'));
-});
-
-gulp.task('default', function(){
-	gulp.watch('./src/**/*.js', ['build']);
-});
-
-gulp.task('test', ['build'], function(done){
-  let server = new KarmaServer({
-		configFile: path.join(__dirname, 'karma.conf.js'),
-		singleRun: true
-	}, done);
-
-	server.start();
 });

@@ -1,0 +1,20 @@
+{
+    "version": "1.6.0",
+    "compilerOptions": {
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "target": "es6",
+        "declaration": false,
+        "noImplicitAny": true,
+        "removeComments": true,
+        "noLib": false,
+        "outDir": "dist/"
+    },
+    "fileGlobs": [
+        "./lib/**/*.ts",
+        "./typings/**/*.ts"
+    ],
+    "exclude": [
+      "node_modules"
+    ]
+}
