@@ -4,6 +4,7 @@ import {rollup} from 'rollup';
 import babel from 'gulp-babel';
 import rename from 'gulp-rename';
 import rimraf from 'rimraf';
+import uglify from 'gulp-uglify';
 
 gulp.task('clean', done => {
 	rimraf('./dist', done);
@@ -30,7 +31,8 @@ gulp.task('bundle', ['transpile'], (async () => {
 
 gulp.task('build', ['bundle'], () => {
 	return gulp.src('./dist/ng-forward.es6.js')
-		.pipe(babel())
+		.pipe(babel({ modules: 'umd' }))
+		.pipe(uglify())
 		.pipe(rename('ng-forward.js'))
 		.pipe(gulp.dest('dist'));
 });
