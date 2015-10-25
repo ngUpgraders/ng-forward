@@ -1,0 +1,25 @@
+{
+  "name": "ng-forward",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@reactivex/rxjs": "^5.0.0-alpha.4",
+    "reflect-metadata": "^0.1.2"
+  },
+  "devDependencies": {
+    "babel": "^5.8.29",
+    "gulp": "^3.9.0",
+    "gulp-babel": "^5.3.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-rollup": "^1.0.1",
+    "gulp-typescript": "^2.9.2",
+    "rimraf": "^2.4.3",
+    "rollup": "^0.19.2"
+  }
+}
