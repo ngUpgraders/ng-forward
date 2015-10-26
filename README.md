@@ -478,7 +478,7 @@ No. Definitely not. In addition to some of the differences called out above, the
 Here's an example of the steps you might take:
 - [Before Migration](https://gist.github.com/timkindberg/2c9ae631ee1a7428e421)
 - [Part 1 A](https://gist.github.com/timkindberg/95166e525685db1f6394) /  [Part 1 B](https://gist.github.com/timkindberg/af2e4f84420dd334e4cd)
-- [Part 2 A](https://gist.github.com/timkindberg/78226481690a20f9f2a0) / [Part 2 B](https://gist.github.com/timkindberg/78226481690a20f9f2a0)
+- [Part 2 A](https://gist.github.com/timkindberg/78226481690a20f9f2a0) / [Part 2 B](https://gist.github.com/timkindberg/f66b608fcd329f697eec)
 - [After Migration](https://gist.github.com/timkindberg/73280001a84a15370ade) 
 
 #### Do you support writing in plain ES5?
