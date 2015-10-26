@@ -10,6 +10,21 @@
     },
     "jquery/jquery.d.ts": {
       "commit": "44cbde48eecd1918ed54b3be49a9752688b6c65a"
+    },
+    "mocha/mocha.d.ts": {
+      "commit": "3191f6e0088eee07c4d8fd24e4d27a40a60d9eb9"
+    },
+    "sinon/sinon.d.ts": {
+      "commit": "3191f6e0088eee07c4d8fd24e4d27a40a60d9eb9"
+    },
+    "assertion-error/assertion-error.d.ts": {
+      "commit": "3191f6e0088eee07c4d8fd24e4d27a40a60d9eb9"
+    },
+    "chai/chai.d.ts": {
+      "commit": "3191f6e0088eee07c4d8fd24e4d27a40a60d9eb9"
+    },
+    "sinon-chai/sinon-chai.d.ts": {
+      "commit": "a9ded5b70ede34486731ef6c2e6865f5e9911fc3"
     }
   }
 }

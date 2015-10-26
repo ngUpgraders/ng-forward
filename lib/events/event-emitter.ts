@@ -1,3 +1,4 @@
+///<reference path="../../node_modules/@reactivex/rxjs/dist/es6/Subject.d.ts"/>
 /* global setTimeout */
 // # EventEmitter class
 // Angular 2's [EventEmitter](https://github.com/angular/angular/blob/master/modules/angular2/src/facade/async.ts#L97)

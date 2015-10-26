@@ -46,7 +46,7 @@ function resolve(): any[]{
     @Inject('$parse', '$element', '$attrs', '$scope')
     class EventHandler{
       public expression: any;
-      
+
       constructor($parse: ng.IParseService, public $element: JQuery, $attrs: ng.IAttributes, public $scope: ng.IScope){
 
         let { name: attrName } = parseSelector(selector);
