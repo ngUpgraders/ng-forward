@@ -1,3 +1,5 @@
+///<reference path="../../node_modules/reflect-metadata/reflect-metadata.d.ts"/>
+
 export default class Metastore{
 	constructor(private namespace:string){
 		

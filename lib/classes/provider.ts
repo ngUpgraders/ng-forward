@@ -58,7 +58,10 @@ export class Provider {
 
   get type(): string {
     if (this._type) return this._type;
-    return this._type = Object.keys(this).filter((k: any) => k.startsWith('use') && this[k] !== undefined)[0];
+    
+    this._type = Object.keys(this).find((k: string) : boolean => k.startsWith('use') && this[k] !== undefined);
+    
+    return this._type;
   }
   
   get dependencies(): string[]{

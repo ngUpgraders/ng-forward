@@ -1,33 +1,35 @@
-module.exports = function(config) {
-	var configuration = {
-		basePath: './src',
+var tsConfig = require('./tsconfig.json');
+
+tsConfig.compilerOptions.target = 'es5';
+
+module.exports = function(config){
+	config.set({
+		basePath: 'dist',
 		browsers: ['Chrome'],
-		frameworks: ['angular', 'mocha', 'sinon-chai', 'browserify', 'phantomjs-shim'],
+		frameworks: ['angular', 'mocha', 'browserify'],
 		reporters: ['mocha'],
 		angular: ['mocks'],
+
 		files: [
-			{ pattern: './**/*.spec.js', watched: false }
+			'lib/**/*.spec.js'
 		],
+
 		preprocessors: {
-			'./**/*.js': ['browserify']
+			'lib/**/*.js': ['browserify']
 		},
+
 		browserify: {
 			debug: true,
+			noParse: [
+				// require.resolve('sinon'),
+				require.resolve('sinon-chai')
+			],
 			transform: [
-				['babelify', {stage: 0}]
+				['babelify', { stage: 0 }],
+				['aliasify', { aliases: {
+					'@reactivex/rxjs/dist/es6/Subject': '@reactivex/rxjs/dist/cjs/Subject'
+				}}]
 			]
-		},
-		customLaunchers: {
-			ChromeTravis: {
-				base: 'Chrome',
-				flags: ['--no-sandbox']
-			}
 		}
-	};
-
-	if(process.env.TRAVIS){
-		configuration.browsers = ['ChromeTravis'];
-	}
-
-	config.set(configuration);
+	});
 };
