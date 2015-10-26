@@ -387,6 +387,7 @@ describe('@Component', function(){
 				class MyClass{
 					constructor() {
 						this.bar = "false";
+						this.baz = "false";
 					}
 				}
 
@@ -398,8 +399,7 @@ describe('@Component', function(){
 				root.debugElement.text().should.eql('false true');
 			});
 
-			// todo: Valid breaking test. Please fix ng-forward so this passes!
-			it.skip('allows setting inputs to default values', () => {
+			it('allows setting inputs to default values', () => {
 				@Component({ selector: 'foo', template: '{{foo.foo}}', inputs: ['foo'] })
 				class MyClass{
 					foo = 'bar';
@@ -413,16 +413,47 @@ describe('@Component', function(){
 				root.debugElement.text().should.eql('bar');
 			});
 
-			// todo: Valid breaking test. Please fix ng-forward so this passes!
-			it.skip('one way binds to an expression to inputs with the [input] syntax', () => {
+			it('one way binds a string to inputs with the regular syntax', () => {
 				@Component({
 					selector: 'child',
 					inputs: ['foo'],
 					template: '{{child.foo}}'
 				})
-				class Child {
-					setFoo(val) { this.foo = val; }
-				}
+				class Child {}
+
+				@Component({
+					selector: 'parent',
+					directives: [Child],
+					template: `
+						<child foo="Hello"></child>
+					`
+				})
+				class Parent {}
+
+				let root = quickRootTestComponent({
+					directives: [Parent],
+					template: `<parent></parent>`
+				});
+
+				let rootEl = root.debugElement;
+				let parentEl = rootEl.find('parent');
+				let childEl = parentEl.find('child');
+
+				childEl.text().should.eql('Hello');
+
+				childEl.componentInstance.foo = 'Hola';
+				root.detectChanges();
+
+				childEl.text().should.eql('Hola');
+			});
+
+			it('one way binds to an expression to inputs with the [input] syntax', () => {
+				@Component({
+					selector: 'child',
+					inputs: ['foo'],
+					template: '{{child.foo}}'
+				})
+				class Child {}
 
 				@Component({
 					selector: 'parent',
@@ -432,10 +463,7 @@ describe('@Component', function(){
 						<child [foo]="parent.foo"></child>
 					`
 				})
-				class Parent {
-					foo = "Hello";
-					setFoo(val) { this.foo = val; }
-				}
+				class Parent { foo = "Hello"; }
 
 				let root = quickRootTestComponent({
 					directives: [Parent],
@@ -450,13 +478,13 @@ describe('@Component', function(){
         parentH1El.text().should.eql('Hello World!');
 				childEl.text().should.eql('Hello');
 
-				childEl.componentInstance.setFoo('Hola');
+				childEl.componentInstance.foo = 'Hola';
 				root.detectChanges();
 
 				parentH1El.text().should.eql('Hello World!');
 				childEl.text().should.eql('Hola');
 
-				parentEl.componentInstance.setFoo('Howdy');
+				parentEl.componentInstance.foo = 'Howdy';
 				root.detectChanges();
 
 				parentH1El.text().should.eql('Howdy World!');
@@ -469,9 +497,7 @@ describe('@Component', function(){
 					inputs: ['foo'],
 					template: '{{child.foo}}'
 				})
-				class Child {
-					setFoo(val) { this.foo = val; }
-				}
+				class Child {}
 
 				@Component({
 					selector: 'parent',
@@ -483,7 +509,6 @@ describe('@Component', function(){
 				})
 				class Parent {
 					foo = "Hello";
-					setFoo(val) { this.foo = val; }
 				}
 
 				let root = quickRootTestComponent({
@@ -499,21 +524,162 @@ describe('@Component', function(){
 				parentH1El.text().should.eql('Hello World!');
 				childEl.text().should.eql('Hello');
 
-				childEl.componentInstance.setFoo('Hola');
+				childEl.componentInstance.foo = 'Hola';
 				root.detectChanges();
 
 				parentH1El.text().should.eql('Hola World!');
 				childEl.text().should.eql('Hola');
 
-				parentEl.componentInstance.setFoo('Howdy');
+				parentEl.componentInstance.foo = 'Howdy';
 				root.detectChanges();
 
 				parentH1El.text().should.eql('Howdy World!');
 				childEl.text().should.eql('Howdy');
 			});
 
-			// todo: Valid breaking test. Please fix ng-forward so this passes!
-			it.skip('allows manual two way binding via a combined input and output, e.g. [input]="prop" (input-change)="prop=$event"', () => {
+			it('one way binds a string to inputs with getter/setter with the regular syntax', () => {
+				@Component({
+					selector: 'child',
+					inputs: ['foo'],
+					template: '{{child.foo}} {{child.baz}}'
+				})
+				class Child {
+					set foo(val) {
+						this._foo = val;
+						this.baz = val;
+					}
+					get foo() { return this._foo; }
+				}
+
+				@Component({
+					selector: 'parent',
+					directives: [Child],
+					template: `
+						<child foo="Hello"></child>
+					`
+				})
+				class Parent {}
+
+				let root = quickRootTestComponent({
+					directives: [Parent],
+					template: `<parent></parent>`
+				});
+
+				let rootEl = root.debugElement;
+				let parentEl = rootEl.find('parent');
+				let childEl = parentEl.find('child');
+
+				childEl.text().should.eql('Hello Hello');
+
+				childEl.componentInstance.foo = 'Hola';
+				root.detectChanges();
+
+				childEl.text().should.eql('Hola Hola');
+			});
+
+			it('one way binds to an expression to inputs with getter/setter with the [input] syntax', () => {
+				@Component({
+					selector: 'child',
+					inputs: ['foo'],
+					template: '{{child.foo}} {{child.baz}}'
+				})
+				class Child {
+					set foo(val) {
+						this._foo = val;
+						this.baz = val;
+					}
+					get foo() { return this._foo; }
+				}
+
+				@Component({
+					selector: 'parent',
+					directives: [Child],
+					template: `
+						<h1 class="greeting">{{parent.foo}} World!</h1>
+						<child [foo]="parent.foo"></child>
+					`
+				})
+				class Parent { foo = "Hello"; }
+
+				let root = quickRootTestComponent({
+					directives: [Parent],
+					template: `<parent></parent>`
+				});
+
+				let rootEl = root.debugElement;
+				let parentEl = rootEl.find('parent');
+				let parentH1El = parentEl.find('h1');
+				let childEl = parentEl.find('child');
+
+        parentH1El.text().should.eql('Hello World!');
+				childEl.text().should.eql('Hello Hello');
+
+				childEl.componentInstance.foo = 'Hola';
+				root.detectChanges();
+
+				parentH1El.text().should.eql('Hello World!');
+				childEl.text().should.eql('Hola Hola');
+
+				parentEl.componentInstance.foo = 'Howdy';
+				root.detectChanges();
+
+				parentH1El.text().should.eql('Howdy World!');
+				childEl.text().should.eql('Howdy Howdy');
+			});
+
+			it('two way binds an expression to inputs with getter/setter with the [(input)] syntax', () => {
+				@Component({
+					selector: 'child',
+					inputs: ['foo'],
+					template: '{{child.foo}} {{child.baz}}'
+				})
+				class Child {
+					set foo(val) {
+						this._foo = val;
+						this.baz = val;
+					}
+					get foo() { return this._foo; }
+				}
+
+				@Component({
+					selector: 'parent',
+					directives: [Child],
+					template: `
+						<h1 class="greeting">{{parent.foo}} World!</h1>
+						<child [(foo)]="parent.foo"></child>
+					`
+				})
+				class Parent {
+					foo = "Hello";
+				}
+
+				let root = quickRootTestComponent({
+					directives: [Parent],
+					template: `<parent></parent>`
+				});
+
+				let rootEl = root.debugElement;
+				let parentEl = rootEl.find('parent');
+				let parentH1El = parentEl.find('h1');
+				let childEl = parentEl.find('child');
+
+				parentH1El.text().should.eql('Hello World!');
+				childEl.text().should.eql('Hello Hello');
+
+				childEl.componentInstance.foo = 'Hola';
+				root.detectChanges();
+
+				parentH1El.text().should.eql('Hola World!');
+				childEl.text().should.eql('Hola Hola');
+
+				parentEl.componentInstance.foo = 'Howdy';
+				root.detectChanges();
+
+				parentH1El.text().should.eql('Howdy World!');
+				childEl.text().should.eql('Howdy Howdy');
+			});
+
+			it('allows manual two way binding via a combined input and output, e.g. [input]="prop" (input-change)="prop=$event"', () => {
 				@Component({
 					selector: 'child',
 					inputs: ['foo'],
@@ -522,7 +688,7 @@ describe('@Component', function(){
 				})
 				class Child {
 					fooChanged = new EventEmitter();
-					setFoo(val) {
+					setAndTriggerFoo(val) {
 						this.foo = val;
 						this.fooChanged.next(val);
 					}
@@ -538,7 +704,6 @@ describe('@Component', function(){
 				})
 				class Parent {
 					foo = "Hello";
-					setFoo(val) { this.foo = val; }
 					fooChanged($event) { this.foo = $event.detail; }
 				}
 
@@ -555,7 +720,7 @@ describe('@Component', function(){
 				parentH1El.text().should.eql('Hello World!');
 				childEl.text().should.eql('Hello');
 
-				childEl.componentInstance.setFoo('Hola');
+				childEl.componentInstance.setAndTriggerFoo('Hola');
 				root.detectChanges();
 
 				parentH1El.text().should.eql('Hello World!');
@@ -567,7 +732,7 @@ describe('@Component', function(){
 				parentH1El.text().should.eql('Hola World!');
 				childEl.text().should.eql('Hola');
 
-				parentEl.componentInstance.setFoo('Howdy');
+				parentEl.componentInstance.foo = 'Howdy';
 				root.detectChanges();
 
 				parentH1El.text().should.eql('Howdy World!');
