@@ -6,7 +6,7 @@ module.exports = function(config){
 	config.set({
 		basePath: 'dist',
 		browsers: ['Chrome'],
-		frameworks: ['angular', 'mocha', 'browserify'],
+		frameworks: ['angular', 'mocha', 'browserify', 'sinon-chai', 'phantomjs-shim'],
 		reporters: ['mocha'],
 		angular: ['mocks'],
 
@@ -20,6 +20,7 @@ module.exports = function(config){
 
 		browserify: {
 			debug: true,
+			watch: true,
 			noParse: [
 				// require.resolve('sinon'),
 				require.resolve('sinon-chai')
