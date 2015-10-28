@@ -39,7 +39,7 @@
 // of the selector as well as the type of selector it was (element, attribute, or
 // CSS class).
 import parseSelector from '../util/parse-selector';
-// `providerWriter` sets up provider information, `componentWriter` writes the DDO,
+// `providerStore` sets up provider information, `componentStore` writes the DDO,
 // and `appWriter` sets up app traversal/bootstrapping information.
 import {providerStore, componentStore, bundleStore} from '../writers';
 // Takes the information from `config.providers` and turns it into the actual metadata
@@ -59,24 +59,24 @@ export const Component = (
 		{
 			selector,
 			controllerAs,
+			template,
+			templateUrl,
 			providers = [],
 			inputs = [],
 			outputs = [],
 			pipes = [],
-			directives = [],
-			template,
-			templateUrl
+			directives = []
 		} : 
 		{
 			selector: string,
 			controllerAs?: string,
+			template?: string,
+			templateUrl?: string,
 			providers?: any[],
 			inputs?: string[],
 			outputs?: string[],
 			pipes?: any[],
-			directives?: any[],
-			template?: string,
-			templateUrl?: string
+			directives?: any[]
 		}
 	) => (t: any) => {
 	// The only required config is a selector. If one wasn't passed, throw immediately
@@ -111,13 +111,17 @@ export const Component = (
 	// to the scope
 	componentStore.set('bindToController', true, t);
 
-	// TODO: Get this working again
 	// Must perform some basic shape checking on the config object
-	// ['inputs', 'providers', 'directives', 'outputs'].forEach(property => {
-	// 	if(config[property] !== undefined && !Array.isArray(config[property])){
-	// 		throw new TypeError(`Component Decorator Error in "${t.name}": Component ${property} must be an array`);
-	// 	}
-	// });
+	[
+		['inputs', inputs],
+		['providers', providers],
+		['directives', directives],
+		['outputs', outputs]
+	].forEach(([propName, propVal]) => {
+		if(propVal !== undefined && !Array.isArray(propVal)){
+			throw new TypeError(`Component Decorator Error in "${t.name}": Component ${propName} must be an array`);
+		}
+	});
 
 	// Check for Angular 2 style inputs
 	let inputMap = parsePropertyMap(inputs);
@@ -153,8 +157,31 @@ export const Component = (
 		componentStore.set('compile', t.compile, t);
 	}
 
-	// Extract the view information
-	// (View was merged with Component. See https://github.com/angular/angular/pull/4566)
+	View({
+		selector,
+		template,
+		templateUrl,
+		pipes,
+		directives
+	})(t);
+};
+
+export const View = (
+		{
+			selector,
+			template,
+			templateUrl,
+			pipes = [],
+			directives = []
+		} :
+		{
+			selector: string,
+			template?: string,
+			templateUrl?: string,
+			pipes?: any[],
+			directives?: any[]
+		}
+) => (t: any) => {
 	if(templateUrl)	{
 		componentStore.set('templateUrl', templateUrl, t);
 	}
@@ -162,7 +189,7 @@ export const Component = (
 		componentStore.set('template', template, t);
 	}
 	else {
-		throw new Error(`@Component config must include either a template or a template url for component with selector ${selector} on ${t}`);
+		throw new Error(`@Component config must include either a template or a template url for component with selector ${selector} on ${t.name}`);
 	}
 
 	Providers(...directives)(t);
@@ -190,14 +217,12 @@ Module.addProvider(TYPE, (target: any, name: string, injects: string[], ngModule
 	ddo.controller = [
 		'$scope', '$element', '$attrs', '$transclude', '$injector',
 		function($scope: any, $element: any, $attrs: any, $transclude: any, $injector: any): any{
-			let instance = directiveControllerFactory(this, injects, target, ddo, $injector, {
+			return directiveControllerFactory(this, injects, target, ddo, $injector, {
 				$scope,
 				$element,
 				$attrs,
 				$transclude
 			});
-
-			return instance;
 		}
 	];
 

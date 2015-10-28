@@ -6,12 +6,13 @@
 // ## Setup
 // Import the EventEmitter class
 import EventEmitter from '../events/event-emitter';
+import INgForwardJQuery from "../util/jqlite-extensions";
 
 // ## Function
 // Takes an instance of the controller, element of the component for dispatching
 // the output, $scope for disposing of subscriptions, and a map of the emitters and
 // outputs that might be on the instance
-export default function(instance: any, element: JQuery, $scope: ng.IScope, outputs: any){
+export default function(instance: any, element: INgForwardJQuery, $scope: ng.IScope, outputs: any){
   // Collection of subscriptions we'll generate
   let subscriptions: any[] = [];
 

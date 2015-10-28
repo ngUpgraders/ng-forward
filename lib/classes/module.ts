@@ -43,7 +43,7 @@ export class DecoratedModule{
 		// So we must iterate over our array of providers.
 		for(let provider of providers)
 		{
-			// The providerWriter contains the type of provider the class will be transformed
+			// The providerStore contains the type of provider the class will be transformed
 			// into as well as the name of the eventual provider. If this information has
 			// not been set on the class, then we aren't dealing with a decorated class.
 			if( !providerStore.has('type', provider) ){
@@ -142,7 +142,7 @@ export class DecoratedModule{
 // `DecoratedModule` class in a simple factory function.
 let Module: any = function(name: string, modules?: any): DecoratedModule{
 	return new DecoratedModule(name, modules);
-}
+};
 
 // A static function for adding new parsers. You pass it a type like 'factory' and
 // a parsing function. This parsing function is what is called in the `DecoratedModule.add`

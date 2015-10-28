@@ -11,6 +11,7 @@ module.exports = function(config){
 		angular: ['mocks'],
 
 		files: [
+			'../node_modules/reflect-metadata/Reflect.js',
 			'lib/**/*.spec.js'
 		],
 
@@ -22,7 +23,6 @@ module.exports = function(config){
 			debug: true,
 			watch: true,
 			noParse: [
-				// require.resolve('sinon'),
 				require.resolve('sinon-chai')
 			],
 			transform: [
