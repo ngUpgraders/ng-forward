@@ -1,4 +1,4 @@
-export default function(selector: string): { name: string, type: string }{
+export default function(selector: string): any{
 	let selectorArray: string[];
 	let type: string;
 

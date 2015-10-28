@@ -4,6 +4,7 @@ import {Inject} from '../decorators/inject';
 import {getInjectableNameWithJitCreation} from '../util/get-injectable-name';
 import {Providers} from '../decorators/Providers';
 import {INJECTABLE} from '../decorators/injectable';
+import {OpaqueToken} from "./opaque-token";
 
 const TYPE = 'provider';
 
@@ -19,7 +20,7 @@ export class Provider {
   private _dependencies: string[] = [];
   private _type: string;
 
-  constructor(token: string, 
+  constructor(token: string|OpaqueToken|Function,
     {
       useClass,
       useValue, 
@@ -96,7 +97,7 @@ Module.addProvider(TYPE, (provider: Provider, name: string, injects: string[], n
  * Sugar for creating a new binding.
  * @param token
  */
-export const provide = (token: string, 
+export const provide = (token: string|OpaqueToken|Function,
     {
       useClass,
       useValue, 

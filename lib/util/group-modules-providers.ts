@@ -15,7 +15,7 @@ export default function groupModulesAndProviders(modulesAndProviders: any[]): { 
 
   if(modulesAndProviders.length !== modules.length + providers.length){
     throw new Error('One or more of your providers was not valid. Please make sure all providers are either: ' +
-        'a class, decorated class, Provider instance, or module string');
+        'decorated class, Provider instance, or module string');
   }
 
   return { modules, providers };

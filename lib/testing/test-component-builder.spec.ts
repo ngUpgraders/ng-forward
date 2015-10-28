@@ -1,0 +1,187 @@
+import {expect} from '../tests/frameworks';
+import {Component} from '../decorators/component';
+import {Inject} from '../decorators/inject';
+import {Injectable} from '../decorators/injectable';
+import {ng} from '../tests/angular';
+import {providers, TestComponentBuilder} from './index';
+import {RootTestComponent} from './test-component-builder';
+
+describe('Test Utils', () => {
+
+  let tcb;
+  let angular;
+  let SomeService;
+  let SomeOtherService;
+  let SomeComponent;
+  let TestComponent;
+
+  beforeEach(() => {
+    tcb = new TestComponentBuilder();
+    angular = ng.useReal();
+
+    @Injectable()
+    class _SomeService {
+      getData() { return 'real success' }
+    }
+    SomeService = _SomeService;
+
+    @Injectable()
+    class _SomeOtherService {
+      getData() { return 'real other' }
+    }
+    SomeOtherService = _SomeOtherService;
+
+    @Component({
+      selector: 'some-component',
+      inputs: ['foo', 'baz:bar'],
+      bindings: [SomeService],
+      template: `{{someComponent.foo}} {{someComponent.baz}} {{someComponent.quux()}} {{someComponent.local}}`
+    })
+    @Inject(SomeService, SomeOtherService, '$http', '$timeout')
+    class _SomeComponent {
+      private local = 'a';
+      constructor(private SomeService, private SomeOtherService, private $http, private $timeout) {
+        $http.get('/api');
+        $timeout(() => this.local = 'c', 1000);
+      }
+      quux() { return `${this.SomeService.getData()} ${this.SomeOtherService.getData()}` }
+    }
+    SomeComponent = _SomeComponent;
+
+    @Component({
+      selector: 'test',
+      template: `<some-component foo="Hello" [bar]="test.bar"></some-component>`,
+      directives: [SomeComponent]
+    })
+    class _TestComponent {
+      private bar = "World";
+      constructor() {}
+    }
+    TestComponent = _TestComponent;
+  });
+
+  describe('Test Component Builder', () => {
+    let mockSomeService;
+    let mockSomeOtherService;
+    let $http;
+    let $timeout;
+    let rootTC;
+    let rootTestEl;
+    let someComponentEl;
+
+    // test the bindings call composed with the beforeEach fn
+    beforeEach(providers(provide => {
+      mockSomeService = {
+        getData: sinon.stub().returns('mock success')
+      };
+
+      $http = { get: sinon.stub() };
+
+      return [
+        provide(SomeService, { useValue: mockSomeService }),
+        provide('$http', { useValue: $http })
+      ];
+    }));
+
+    // testing adding more bindings in an additional beforeEach
+    beforeEach(() => {
+
+      // test the bindings call inside the beforeEach fn
+      providers(provide => {
+        mockSomeOtherService = {
+          getData: sinon.stub().returns('mock other')
+        };
+
+        return [
+          provide(SomeOtherService, { useValue: mockSomeOtherService })
+        ];
+      });
+
+    });
+
+    beforeEach(() => {
+      rootTC = tcb.create(TestComponent);
+      rootTestEl = rootTC.debugElement;
+      someComponentEl = rootTC.debugElement.componentViewChildren[0];
+    });
+
+    // todo: write a custom inject function for ng-forward
+    // currently I'm just using angular.mock.inject
+    beforeEach(inject(_$timeout_ => {
+      $timeout = _$timeout_
+    }));
+
+    it('should bootstrap the test module', () => {
+      expect(angular.module('test.module')).to.exist;
+    });
+
+    it('should return a root test component and decorated jqlite', () => {
+      expect(rootTC).to.be.an.instanceOf(RootTestComponent);
+
+      // debugElement is an angular.element decorated with extra properties, see next lines
+      expect(rootTC.debugElement)
+          .to.be.an.instanceOf(angular.element);
+
+      // nativeElement is an alias to the [0] index raw dom element
+      expect(rootTC.debugElement.nativeElement)
+          .to.be.an.instanceOf(HTMLElement);
+
+      // The actual class instance hosted by the element
+      expect(rootTC.debugElement.componentInstance)
+          .to.be.an.instanceOf(TestComponent);
+
+      // componentViewChildren is an alias to .children()
+      expect(rootTC.debugElement.componentViewChildren[0])
+          .to.be.an.instanceOf(angular.element);
+
+      // getLocal is an alias to $injector
+      expect(rootTC.debugElement.getLocal('$q'))
+          .to.contain.all.keys(['resolve', 'reject', 'defer']);
+
+      // Checking to be sure even nested jqlite elements are decorated
+      expect(someComponentEl.nativeElement)
+          .to.be.an.instanceOf(HTMLElement);
+
+      expect(someComponentEl.componentInstance)
+          .to.be.an.instanceOf(SomeComponent);
+
+      expect(someComponentEl.componentViewChildren).to.be.empty;
+
+      expect(someComponentEl.getLocal('$q'))
+          .to.contain.all.keys(['resolve', 'reject', 'defer']);
+    });
+
+    it('should allow mock decorated class components and services via bindings() method', () => {
+      expect(mockSomeService.getData).to.have.been.called;
+      expect(someComponentEl.text()).to.equal("Hello World mock success mock other a");
+    });
+
+    it('should allow mock angular 1 services via bindings() method', () => {
+      expect($http.get).to.have.been.called;
+    });
+
+    it('should allow angular.mock special services (e.g. $timeout.flush)', () => {
+      expect(someComponentEl.text()).to.equal("Hello World mock success mock other a");
+      $timeout.flush();
+      expect(someComponentEl.text()).to.equal("Hello World mock success mock other c");
+    });
+
+    it('should detect changes on root test component instance ', () => {
+      expect(someComponentEl.text()).to.equal("Hello World mock success mock other a");
+
+      rootTestEl.componentInstance.bar = "Angular 2";
+      rootTC.detectChanges();
+
+      expect(someComponentEl.text()).to.equal("Hello Angular 2 mock success mock other a");
+    });
+
+    it('should detect changes on component instance under test', () => {
+      expect(someComponentEl.text()).to.equal("Hello World mock success mock other a");
+
+      someComponentEl.componentInstance.local = "b";
+      rootTC.detectChanges();
+
+      expect(someComponentEl.text()).to.equal("Hello World mock success mock other b");
+    });
+  });
+});

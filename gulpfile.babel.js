@@ -25,7 +25,8 @@ gulp.task('build/ts-to-es6', () => {
 
 gulp.task('build/rollup-es6', (async () => {
 	let bundle = await rollup({
-		entry: './dist/lib/index.js'
+		entry: './dist/lib/index.js',
+		external: ['reflect-metadata']
 	});
 
 	await bundle.write({
@@ -65,6 +66,9 @@ gulp.task('test/files-watch', () => {
 
 gulp.task('dev', done => {
 	runSequence(
+			'clean-dist',
+			'build/ts-to-es6',
+			'build/rollup-es6',
 			'build/es6-to-umd-es5',
 			['test/karma-watch', 'test/files-watch'],
 			done

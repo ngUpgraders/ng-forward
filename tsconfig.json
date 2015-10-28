@@ -5,10 +5,11 @@
         "experimentalDecorators": true,
         "target": "es6",
         "declaration": false,
-        "noImplicitAny": true,
+        "noImplicitAny": false,
         "removeComments": true,
         "noLib": false,
-        "outDir": "dist/"
+        "outDir": "dist/",
+        "sourceMap": true
     },
     "fileGlobs": [
         "./lib/**/*.ts",

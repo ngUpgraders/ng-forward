@@ -7,7 +7,7 @@
 // of the selector as well as the type of selector it was (element, attribute, or
 // CSS class).
 import parseSelector from '../util/parse-selector';
-// `providerWriter` sets up provider information, `componentWriter` writes the DDO,
+// `providerStore` sets up provider information, `componentStore` writes the DDO,
 // and `appWriter` sets up app traversal/bootstrapping information.
 import {providerStore, componentStore} from '../writers';
 // Takes the information from `config.providers` and turns it into the actual metadata
