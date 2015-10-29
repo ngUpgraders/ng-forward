@@ -54,6 +54,7 @@
     "karma-chrome-launcher": "^0.2.1",
     "karma-mocha": "^0.2.0",
     "karma-mocha-reporter": "^1.1.1",
+    "karma-phantomjs-shim": "^1.1.1",
     "karma-sinon-chai": "ngUpgraders/karma-lolex-sinon-chai",
     "karma-sourcemap-loader": "^0.3.6",
     "mocha": "^2.3.3",
