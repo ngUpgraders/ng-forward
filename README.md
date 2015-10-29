@@ -160,7 +160,6 @@ ng-forward has built custom directives for all the (standard dom events)[https:/
 click, change, scroll, etc so you can use ng2 syntax for interacting with these events. Here we attach a click handler to a button, which in turn calls a function on a component. This is equivalent to using standard ng-click and works the same way, but matches Angular 2 syntax.
 
 ### Inputs
-
 Now let's look at passing inputs to components. In the component class you'll see these lines:
 
 ```js
@@ -189,7 +188,6 @@ Here's a part of the template that makes a simple reference to properties passed
 Note the references to one or two way binding. In Angular 2, properties by default are one way bound. We use some trickery under the hood in ng-forward to simulate one way binding in Angular 1.x. When we look at the parent component we'll show you how you can override one way binding and make a two way bound data property.
 
 ### Inject
-
 So we've seen the template, let's look at a line that's unique to ng-forward now:
 ```js
 @Inject(TestService, '$element')
