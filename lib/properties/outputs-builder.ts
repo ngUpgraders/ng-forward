@@ -1,4 +1,3 @@
-/* global CustomEvent */
 // # Outputs Builder
 // Takes an instance of a controller and detects event emitters. Subscribes
 // to the emitters to make event dispatching a breeze.
@@ -7,6 +6,7 @@
 // Import the EventEmitter class
 import EventEmitter from '../events/event-emitter';
 import INgForwardJQuery from "../util/jqlite-extensions";
+import CustomEvent from '../util/custom-event';
 
 // ## Function
 // Takes an instance of the controller, element of the component for dispatching

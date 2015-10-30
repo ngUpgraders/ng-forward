@@ -8,6 +8,7 @@ import Module from '../classes/module';
 import events from '../events/events';
 import { quickRootTestComponent } from '../tests/utils';
 import EventEmitter from '../events/event-emitter';
+import CustomEvent from '../util/custom-event';
 
 describe('@Component', function(){
 
