@@ -6,7 +6,7 @@ module.exports = function(config){
 	var options = {
 		basePath: 'dist',
 		browsers: ['Chrome'],
-		frameworks: ['angular', 'mocha', 'browserify', 'sinon-chai', 'phantomjs-shim'],
+		frameworks: ['angular', 'mocha', 'browserify', 'sinon-chai'],
 		reporters: ['mocha'],
 		angular: ['mocks'],
 
