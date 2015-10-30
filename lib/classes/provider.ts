@@ -2,7 +2,7 @@ import { bundleStore, providerStore } from '../writers';
 import Module from './module';
 import {Inject} from '../decorators/inject';
 import {getInjectableNameWithJitCreation} from '../util/get-injectable-name';
-import {Providers} from '../decorators/Providers';
+import {Providers} from '../decorators/providers';
 import {INJECTABLE} from '../decorators/injectable';
 import {OpaqueToken} from "./opaque-token";
 

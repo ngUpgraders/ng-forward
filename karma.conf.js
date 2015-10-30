@@ -3,7 +3,7 @@ var tsConfig = require('./tsconfig.json');
 tsConfig.compilerOptions.target = 'es5';
 
 module.exports = function(config){
-	config.set({
+	var options = {
 		basePath: 'dist',
 		browsers: ['Chrome'],
 		frameworks: ['angular', 'mocha', 'browserify', 'sinon-chai', 'phantomjs-shim'],
@@ -31,6 +31,19 @@ module.exports = function(config){
 					'@reactivex/rxjs/dist/es6/Subject': '@reactivex/rxjs/dist/cjs/Subject'
 				}}]
 			]
+		},
+
+		customLaunchers: {
+			Chrome_travis_ci: {
+				base: 'Chrome',
+				flags: ['--no-sandbox']
+			}
 		}
-	});
+	};
+
+	if(process.env.TRAVIS){
+		options.browsers = ['Chrome_travis_ci'];
+	}
+	
+	config.set(options);
 };

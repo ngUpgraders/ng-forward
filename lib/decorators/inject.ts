@@ -15,7 +15,7 @@
 // Import the appWriter for reading and writing metadata
 import {bundleStore, providerStore} from '../writers';
 import {getInjectableName} from '../util/get-injectable-name';
-import {Providers} from '../decorators/Providers';
+import {Providers} from '../decorators/providers';
 import {OpaqueToken} from '../classes/opaque-token';
 
 // ## @Inject
