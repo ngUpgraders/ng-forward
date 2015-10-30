@@ -11,6 +11,7 @@ module.exports = function(config){
 		angular: ['mocks'],
 
 		files: [
+			'../node_modules/babel-core/browser-polyfill.js',
 			'../node_modules/reflect-metadata/Reflect.js',
 			'lib/**/*.spec.js'
 		],
@@ -44,6 +45,6 @@ module.exports = function(config){
 	if(process.env.TRAVIS){
 		options.browsers = ['Chrome_travis_ci'];
 	}
-	
+
 	config.set(options);
 };
