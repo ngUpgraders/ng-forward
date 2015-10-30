@@ -9,8 +9,8 @@
     "url": "https://github.com/ngUpgraders/ng-forward"
   },
   "scripts": {
-    "test": "gulp test",
-    "prepublish": "gulp test"
+    "test": "gulp build",
+    "prepublish": "gulp build"
   },
   "keywords": [
     "angular",
