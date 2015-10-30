@@ -24,7 +24,7 @@ module.exports = function(config){
 			debug: true,
 			watch: true,
 			noParse: [
-				require.resolve('sinon-chai')
+				// require.resolve('sinon-chai')
 			],
 			transform: [
 				['babelify', { stage: 0 }],

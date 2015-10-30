@@ -1,6 +1,9 @@
+import sinonSpies from 'sinon';
 import chai from 'chai';
-import sinon from 'sinon';
 
 chai.should();
-let expect = chai.expect;
-export { expect, sinon };
+
+let {expect} = chai;
+let sinon = sinonSpies;
+
+export {expect, sinon};
