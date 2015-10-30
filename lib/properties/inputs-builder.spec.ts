@@ -73,6 +73,10 @@ describe('inputs-builder', () => {
 
         // but has no effect on hidden string input property
         expect(controller['@foo']).to.equal('bar');
+
+        // now if its externally changed both are set again
+        controller['@foo'] = 'bazinga';
+        expect(controller.foo).to.equal('bazinga');
       });
 
       it('should only be able to read from one-way input', () => {
@@ -86,6 +90,10 @@ describe('inputs-builder', () => {
 
         // but has no effect on hidden string input property
         expect(controller['[foo]']).to.equal('bar');
+
+        // now if its externally changed both are set again
+        controller['[foo]'] = 'bazinga';
+        expect(controller.foo).to.equal('bazinga');
       });
 
       it('should be able to read and write a two-way input', () => {
@@ -99,6 +107,10 @@ describe('inputs-builder', () => {
 
         // and has effect on hidden string input property
         expect(controller['[(foo)]']).to.equal('quux');
+
+        // and now if its externally changed both are set again
+        controller['[(foo)]'] = 'bazinga';
+        expect(controller.foo).to.equal('bazinga');
       });
 
       it('should allow writing to a two-way input that is initialized to a falsy defined value', function() {
