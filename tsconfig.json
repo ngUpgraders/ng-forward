@@ -4,7 +4,7 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "target": "es6",
-        "declaration": false,
+        "declaration": true,
         "noImplicitAny": false,
         "removeComments": true,
         "noLib": false,

@@ -83,7 +83,7 @@ export class RootTestComponent {
  * @param ComponentClass
  * @returns {RootTestComponent}
  */
-export const compileComponent = (ComponentClass:any) => {
+export function compileComponent(ComponentClass:any){
 
   let selector = bundleStore.get('selector', ComponentClass);
   let rootTestScope, debugElement, componentInstance, $injector;
@@ -114,7 +114,7 @@ export const compileComponent = (ComponentClass:any) => {
  * @param selector
  * @returns {{parentScope: *, element: *, controller: *, isolateScope: *}}
  */
-export const compileHtmlAndScope = ({html, initialScope, selector}) => {
+export function compileHtmlAndScope({html, initialScope, selector}){
 
   let parentScope, element, controller, isolateScope;
 

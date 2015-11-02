@@ -20,7 +20,7 @@ export interface INgForwardJQuery extends IAugmentedJQuery {
   find(element: any): INgForwardJQuery;
   find(obj: JQuery): INgForwardJQuery;
 
-  nativeElement: HTMLElement;
+  nativeElement: IAugmentedJQuery.HTMLElement;
   componentInstance: any;
   componentViewChildren: INgForwardJQuery[];
   getLocal(injectable:any): any;

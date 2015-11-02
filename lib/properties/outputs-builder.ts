@@ -5,7 +5,7 @@
 // ## Setup
 // Import the EventEmitter class
 import EventEmitter from '../events/event-emitter';
-import INgForwardJQuery from "../util/jqlite-extensions";
+import {INgForwardJQuery} from "../util/jqlite-extensions";
 import CustomEvent from '../util/custom-event';
 
 // ## Function

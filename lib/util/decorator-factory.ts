@@ -2,7 +2,7 @@ import {providerStore} from '../writers';
 
 const randomInt = () => Math.floor(Math.random() * 100);
 
-interface UniqueNameDecorator{
+export interface UniqueNameDecorator{
 	(maybeT: any): any;
 	clearNameCache(): void;
 }
@@ -31,12 +31,12 @@ export default function(type: string, strategyType: string = 'provider'): Unique
 				providerStore.set('name', name, t);
 				names.add(name);
 			};
-	
+
 			if (typeof maybeT === 'string') {
 				if(names.has(maybeT)) {
 					throw NAME_TAKEN_ERROR(maybeT);
 				}
-	
+
 				return (t: any) : void => {
 					providerStore.set('type', type, t);
 					providerStore.set('name', maybeT, t);
@@ -46,12 +46,12 @@ export default function(type: string, strategyType: string = 'provider'): Unique
 			else if (maybeT === undefined) {
 				return (t: any) : void => writeWithUniqueName(t);
 			}
-			
+
 			writeWithUniqueName(maybeT)
 		};
-		
+
 		d.clearNameCache = () => names.clear();
-		
+
 		return d;
 	})();
 };
