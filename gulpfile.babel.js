@@ -28,11 +28,11 @@ async function deleteDistFolder(){
 
 function typescriptToES6(){
 	let result = tsProject.src()
-		.pipe(sourcemaps.init())
+		// .pipe(sourcemaps.init())
 		.pipe(ts(tsProject));
 		
 	return merge([
-		result.js.pipe(sourcemaps.write()).pipe(gulp.dest('dist')),
+		result.js./*pipe(sourcemaps.write()).*/pipe(gulp.dest('dist')),
 		result.dts.pipe(gulp.dest('dist'))
 	]);
 }
@@ -52,9 +52,9 @@ function buildES6Dist(){
 
 function buildCJSDist(){
 	let transpile = gulp.src('./dist/es6/**/*.js')
-		.pipe(sourcemaps.init({ loadMaps: true }))
+		// .pipe(sourcemaps.init({ loadMaps: true }))
 		.pipe(babel({ modules: 'common', stage: 0 }))
-		.pipe(sourcemaps.write())
+		// .pipe(sourcemaps.write())
 		.pipe(gulp.dest('./dist/cjs'));
 		
 	let move = gulp.src('./dist/es6/**/*.d.ts')
@@ -127,26 +127,13 @@ gulp.task('build/create-sfx-bundle', ['build/bundle-to-es5'], createSFXBundle);
 gulp.task('build/cleanup', ['build/create-sfx-bundle'], cleanupDistFolder);
 gulp.task('build', ['build/cleanup'], createPackage);
 
-
-
-
-
-// gulp.task('build', ['build/rollup']);
-
 gulp.task('dev', done => {
 	runSequence(
-			'clean-dist',
-			'build/ts-to-es6',
-			'build/rollup-es6',
-			'build/es6-to-umd-es5',
+			'build',
 			['test/karma-watch', 'test/files-watch'],
 			done
-	)
+	);
 });
-
-gulp.task('default', ['build']);
-
-
 
 gulp.task('test/karma-watch', (done) => {
 	let server = new KarmaServer({
@@ -159,3 +146,5 @@ gulp.task('test/karma-watch', (done) => {
 gulp.task('test/files-watch', () => {
 	gulp.watch('lib/**/*.ts', ['build/ts-to-es6']);
 });
+
+gulp.task('default', ['build']);

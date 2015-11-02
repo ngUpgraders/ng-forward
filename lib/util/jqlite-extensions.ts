@@ -6,9 +6,9 @@ import IAugmentedJQueryStatic = angular.IAugmentedJQueryStatic;
 
 export interface INgForwardJQueryStatic extends IAugmentedJQueryStatic {
   (selector: string, context?: any): INgForwardJQuery;
-  (element: Element): INgForwardJQuery;
+  (element: any): INgForwardJQuery;
   (object: {}): INgForwardJQuery;
-  (elementArray: Element[]): INgForwardJQuery;
+  (elementArray: any[]): INgForwardJQuery;
   (object: JQuery): INgForwardJQuery;
   (func: Function): INgForwardJQuery;
   (array: any[]): INgForwardJQuery;
@@ -20,7 +20,7 @@ export interface INgForwardJQuery extends IAugmentedJQuery {
   find(element: any): INgForwardJQuery;
   find(obj: JQuery): INgForwardJQuery;
 
-  nativeElement: IAugmentedJQuery.HTMLElement;
+  nativeElement: any;
   componentInstance: any;
   componentViewChildren: INgForwardJQuery[];
   getLocal(injectable:any): any;
