@@ -10,7 +10,7 @@
   },
   "scripts": {
     "test": "tsd install && gulp build",
-    "prepublish": "gulp build"
+    "prepublish": "tsd install && gulp build"
   },
   "keywords": [
     "angular",
