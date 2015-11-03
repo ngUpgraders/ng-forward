@@ -29,9 +29,9 @@ The syntax for components in ng-forward mirrors Angular 2 components as much as 
 ```js
 import { Component } from 'ng-forward';
 
-@Component({ 
-	selector: 'nested', 
-	template: '<h3>Nested</h3>' 
+@Component({
+	selector: 'nested',
+	template: '<h3>Nested</h3>'
 })
 class Nested{ }
 ```
@@ -100,10 +100,10 @@ class InnerApp{
 	@Input() message1;
 	@Input() message2;
 	@Input('message3') msg3;
-	
+
 	@Output() event1 = new EventEmitter();
 	@Output('event2') evt2 = new EventEmitter();
-	
+
 	constructor(TestService, $element){
 		this.$element = $element;
 		this.TestService = TestService;
@@ -160,7 +160,6 @@ ng-forward has built custom directives for all the (standard dom events)[https:/
 click, change, scroll, etc so you can use ng2 syntax for interacting with these events. Here we attach a click handler to a button, which in turn calls a function on a component. This is equivalent to using standard ng-click and works the same way, but matches Angular 2 syntax.
 
 ### Inputs
- 
 Now let's look at passing inputs to components. In the component class you'll see these lines:
 
 ```js
@@ -175,7 +174,7 @@ These lines specify what attributes can be passed as properties when we call our
 
 Here's a part of the template that makes a simple reference to properties passed from a parent:
 
-``` 
+```
 <h4>One Way String from Parent (read-only)</h4>
 <p>{{innerApp.msg3}}</p>
 
@@ -185,11 +184,10 @@ Here's a part of the template that makes a simple reference to properties passed
 <h4>Two Way Binding to/from Parent (read/write)</h4>
 <input ng-model="innerApp.message2"/>
 ```
-	
+
 Note the references to one or two way binding. In Angular 2, properties by default are one way bound. We use some trickery under the hood in ng-forward to simulate one way binding in Angular 1.x. When we look at the parent component we'll show you how you can override one way binding and make a two way bound data property.
 
 ### Inject
-	     
 So we've seen the template, let's look at a line that's unique to ng-forward now:
 ```js
 @Inject(TestService, '$element')
@@ -212,7 +210,7 @@ and here's where we call them in the component
 
 ```js
 	triggerEventNormally() {
-		this.$element.triggerHandler('event1'); 
+		this.$element.triggerHandler('event1');
 		// or for bubbling of custom events...
 		this.$element.nativeElement.dispatchEvent(new CustomEvent('event1', { data, bubbles: true }));
 	}
@@ -309,7 +307,7 @@ Let's look at how we call the InnerApp component
 		           [message1]="app.message1" [(message2)]="app.message2" message3="Hey, inner app... nothin'">
 		</inner-app>
 ```
-     
+
 Here we see various bindings and events in use. We are listening for the event1 and event2 events on inner-app. You use parenthesis to bind to events. With message 1, 2 and 3, we show the three ways you can bind to component properties: prop (with no prefix) will pass in a simple string, [prop] will one-way bind to an expression, and [(prop)] will two way bind to an expression.
 
 ### Bootstrapping
@@ -318,9 +316,9 @@ Here we see various bindings and events in use. We are listening for the event1 
 bootstrap(AppCtrl);
 ```
 
-This is the final step to setting up an ng-forward app. 
+This is the final step to setting up an ng-forward app.
 
-> **Behind the Scenes:** ng-forward will handle all the work of bundling up your module, translate components to ng 1.x syntax, etc. Then it will look for the selector in your html and call ng1's bootstrap method on it. 
+> **Behind the Scenes:** ng-forward will handle all the work of bundling up your module, translate components to ng 1.x syntax, etc. Then it will look for the selector in your html and call ng1's bootstrap method on it.
 
 Let's look at the completed code:
 
@@ -478,8 +476,8 @@ No. Definitely not. In addition to some of the differences called out above, the
 Here's an example of the steps you might take:
 - [Before Migration](https://gist.github.com/timkindberg/2c9ae631ee1a7428e421)
 - [Part 1 A](https://gist.github.com/timkindberg/95166e525685db1f6394) /  [Part 1 B](https://gist.github.com/timkindberg/af2e4f84420dd334e4cd)
-- [Part 2 A](https://gist.github.com/timkindberg/78226481690a20f9f2a0) / [Part 2 B](https://gist.github.com/timkindberg/f66b608fcd329f697eec)
-- [After Migration](https://gist.github.com/timkindberg/73280001a84a15370ade) 
+- [Part 2 A](https://gist.github.com/timkindberg/78226481690a20f9f2a0) / [Part 2 B](https://gist.github.com/timkindberg/78226481690a20f9f2a0)
+- [After Migration](https://gist.github.com/timkindberg/73280001a84a15370ade)
 
 #### Do you support writing in plain ES5?
 
