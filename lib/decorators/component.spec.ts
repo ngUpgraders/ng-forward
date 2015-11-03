@@ -926,7 +926,7 @@ describe('@Component', function(){
 				root.debugElement.componentInstance.bar.should.be.true;
 			});
 
-			it('bubbles events if they are dispatched  with bubbles set to true', () => {
+			xit('bubbles events if they are dispatched  with bubbles set to true', () => {
 				@Component({ selector: 'bar', template: 'x', outputs: ['barChange'] })
 				class Bar { }
 

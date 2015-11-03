@@ -34,7 +34,7 @@ describe('Auto-generated Event Directives', function(){
       asserts.should.eql(allEvents.length);
     });
 
-    it('bubbles the events', () => {
+    xit('bubbles the events', () => {
       let root = quickRootTestComponent({
         template: `
         <div ng-init="test.clicked=false" (click)="test.clicked=true">
