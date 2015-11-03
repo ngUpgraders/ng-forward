@@ -1,6 +1,6 @@
 {
   "name": "ng-forward",
-  "version": "0.0.1-ts-alpha.1",
+  "version": "0.0.1-ts-alpha.2",
   "description": "The default solution for those that want to write Angular 2.x style code in Angular 1.x",
   "main": "./index.js",
   "jsnext:main": "./es6/index.js",
@@ -9,8 +9,7 @@
     "url": "https://github.com/ngUpgraders/ng-forward"
   },
   "scripts": {
-    "test": "tsd install && gulp build",
-    "prepublish": "tsd install && gulp build"
+    "test": "tsd install && gulp build"
   },
   "keywords": [
     "angular",
