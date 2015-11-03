@@ -6,12 +6,12 @@ module.exports = function(config){
 	var options = {
 		basePath: 'dist',
 		browsers: ['Chrome'],
-		frameworks: ['angular', 'mocha', 'browserify', 'sinon-chai' /*, 'phantomjs-shim' */],
+		frameworks: ['angular', 'mocha', 'browserify', 'sinon-chai'],
 		reporters: ['mocha'],
 		angular: ['mocks'],
 
 		files: [
-			'../node_modules/babel-core/browser-polyfill.js',
+			'../node_modules/babel/node_modules/babel-core/browser-polyfill.js',
 			'../node_modules/reflect-metadata/Reflect.js',
 			'lib/**/*.spec.js'
 		],
