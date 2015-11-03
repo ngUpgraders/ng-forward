@@ -21,7 +21,6 @@ module.exports = function(config){
 		},
 
 		browserify: {
-			debug: true,
 			watch: true,
 			noParse: [
 				// require.resolve('sinon-chai')
