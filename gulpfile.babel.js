@@ -75,7 +75,7 @@ function testES6(done){
 
 async function rollupES6(){
 	let bundle = await rollup({
-		entry: './dist/lib/index.js',
+		entry: './dist/lib/browsers.js',
 		external: ['reflect-metadata']
 	});
 
@@ -107,7 +107,11 @@ async function cleanupDistFolder(){
 	await del([
 		'./dist/lib', 
 		'./dist/ng-forward.es6.js', 
-		'./dist/ng-forward.es5.js'
+		'./dist/ng-forward.es5.js',
+		'./dist/es6/browsers.js',
+		'./dist/es6/browsers.d.ts',
+		'./dist/cjs/browsers.js',
+		'./dist/cjs/browsers.d.ts'
 	]);
 }
 
