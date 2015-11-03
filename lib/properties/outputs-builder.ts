@@ -37,6 +37,6 @@ export default function(instance: any, element: INgForwardJQuery, $scope: ng.ISc
 
   // Once the component's scope has been destroyed, tear down the subscriptions.
   $scope.$on('$destroy', (event: ng.IAngularEvent) => {
-    subscriptions.forEach(subscription => subscription.dispose());
+    subscriptions.forEach(subscription => subscription.unsubscribe());
   });
 }
