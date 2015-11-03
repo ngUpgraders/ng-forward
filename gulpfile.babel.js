@@ -16,10 +16,10 @@ import filter from 'gulp-filter';
 import concat from 'gulp-concat';
 
 const tsconfig = require('./tsconfig.json');
-const tsProject = ts.createProject('tsconfig.json', { 
+const tsProject = ts.createProject('tsconfig.json', {
 	declaration: true,
 	noLib: true,
-	outDir: 'es6' 
+	outDir: 'es6'
 });
 
 async function deleteDistFolder(){
@@ -30,7 +30,7 @@ function typescriptToES6(){
 	let result = tsProject.src()
 		// .pipe(sourcemaps.init())
 		.pipe(ts(tsProject));
-		
+
 	return merge([
 		result.js./*pipe(sourcemaps.write()).*/pipe(gulp.dest('dist')),
 		result.dts.pipe(gulp.dest('dist'))
@@ -42,11 +42,11 @@ function buildES6Dist(){
 		.pipe(filter(['**/*', '!**/*.spec.js']))
 		.pipe(replace('@reactivex/rxjs/dist/es6', '@reactivex/rxjs/dist/cjs'))
 		.pipe(gulp.dest('./dist/es6'));
-		
+
 	let move = gulp.src('./dist/lib/**/*.d.ts')
 		.pipe(filter(['**/*', '!**/*.spec.d.ts']))
 		.pipe(gulp.dest('./dist/es6'));
-		
+
 	return merge([ transpile, move ]);
 }
 
@@ -56,10 +56,10 @@ function buildCJSDist(){
 		.pipe(babel({ modules: 'common', stage: 0 }))
 		// .pipe(sourcemaps.write())
 		.pipe(gulp.dest('./dist/cjs'));
-		
+
 	let move = gulp.src('./dist/es6/**/*.d.ts')
 		.pipe(gulp.dest('./dist/cjs'));
-		
+
 	return merge([ transpile, move ]);
 }
 
@@ -94,8 +94,8 @@ function bundleToES5(){
 
 function createSFXBundle(){
 	return gulp.src([
-			require.resolve('babel') + '/polyfill.js',
-			require.resolve('reflect-metadata') + '/Reflect.js',
+			require.resolve('babel-core/browser-polyfill'),
+			require.resolve('reflect-metadata'),
 			'./dist/ng-forward.es5.js'
 		])
 		.pipe(concat('ng-forward.dist.js'))
@@ -108,8 +108,8 @@ function createSFXBundle(){
 
 async function cleanupDistFolder(){
 	await del([
-		'./dist/lib', 
-		'./dist/ng-forward.es6.js', 
+		'./dist/lib',
+		'./dist/ng-forward.es6.js',
 		'./dist/ng-forward.es5.js'
 	]);
 }

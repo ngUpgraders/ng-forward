@@ -11,7 +11,7 @@ module.exports = function(config){
 		angular: ['mocks'],
 
 		files: [
-			'../node_modules/babel/node_modules/babel-core/browser-polyfill.js',
+			require.resolve('babel-core/browser-polyfill'),
 			'../node_modules/reflect-metadata/Reflect.js',
 			'lib/**/*.spec.js'
 		],
