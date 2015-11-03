@@ -55,8 +55,17 @@ function resolve(): any[]{
         $scope.$on('$destroy', () => this.onDestroy());
       }
 
-      eventHandler($event: JQueryEventObject){
-        this.expression(this.$scope, { $event });
+      eventHandler($event: any = {}){
+        let detail = $event.detail;
+        
+        if(!detail && $event.originalEvent && $event.originalEvent.detail){
+          detail = $event.originalEvent.detail;
+        }
+        else if(!detail){
+          detail = {};
+        }
+        
+        this.expression(this.$scope, Object.assign(detail, { $event }));
         this.$scope.$applyAsync();
       }
 
