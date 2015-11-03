@@ -94,12 +94,15 @@ function bundleToES5(){
 
 function createSFXBundle(){
 	return gulp.src([
-			'./node_modules/babel-core/browser-polyfill.js',
-			'./node_modules/reflect-metadata/Reflect.js',
+			require.resolve('babel') + '/polyfill.js',
+			require.resolve('reflect-metadata') + '/Reflect.js',
 			'./dist/ng-forward.es5.js'
 		])
 		.pipe(concat('ng-forward.dist.js'))
+		.pipe(gulp.dest('./dist'))
+
 		.pipe(uglify())
+		.pipe(rename('ng-forward.dist.min.js'))
 		.pipe(gulp.dest('./dist'))
 }
 
