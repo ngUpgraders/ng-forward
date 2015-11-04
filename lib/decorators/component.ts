@@ -55,7 +55,7 @@ import {inputsMap} from '../properties/inputs-builder';
 const TYPE = 'component';
 
 // ## Decorator Definition
-export const Component = (
+export function Component(
 		{
 			selector,
 			controllerAs,
@@ -78,95 +78,97 @@ export const Component = (
 			pipes?: any[],
 			directives?: any[]
 		}
-	) => (t: any) => {
-	// The only required config is a selector. If one wasn't passed, throw immediately
-	if( !selector ) {
-		throw new Error(`Component Decorator Error in "${t.name}": Component selector must be provided`);
-	}
-
-	// Grab the provider name and selector type by parsing the selector
-	let {name, type: restrict} = parseSelector(selector);
-
-	// Setup provider information using the parsed selector
-	providerStore.set('name', name, t);
-	providerStore.set('type', TYPE, t);
-
-	// The appWriter needs the raw selector. This lets it bootstrap the root component
-	bundleStore.set('selector', selector, t);
-
-	// Grab the providers from the config object, parse them, and write the metadata
-	// to the target.
-	Providers(...providers)(t);
-
-	// Restrict type must be 'element'
-	componentStore.set('restrict', restrict, t);
-
-	// Components should always create an isolate scope
-	componentStore.set('scope', {}, t);
+	){
+	return function(t: any){
+		// The only required config is a selector. If one wasn't passed, throw immediately
+		if( !selector ) {
+			throw new Error(`Component Decorator Error in "${t.name}": Component selector must be provided`);
+		}
 	
-	// Since components must have a template, set transclude to true
-	componentStore.set('transclude', true, t);
-
-	// Inputs should always be bound to the controller instance, not
-	// to the scope
-	componentStore.set('bindToController', true, t);
-
-	// Must perform some basic shape checking on the config object
-	[
-		['inputs', inputs],
-		['providers', providers],
-		['directives', directives],
-		['outputs', outputs]
-	].forEach(([propName, propVal]) => {
-		if(propVal !== undefined && !Array.isArray(propVal)){
-			throw new TypeError(`Component Decorator Error in "${t.name}": Component ${propName} must be an array`);
+		// Grab the provider name and selector type by parsing the selector
+		let {name, type: restrict} = parseSelector(selector);
+	
+		// Setup provider information using the parsed selector
+		providerStore.set('name', name, t);
+		providerStore.set('type', TYPE, t);
+	
+		// The appWriter needs the raw selector. This lets it bootstrap the root component
+		bundleStore.set('selector', selector, t);
+	
+		// Grab the providers from the config object, parse them, and write the metadata
+		// to the target.
+		Providers(...providers)(t);
+	
+		// Restrict type must be 'element'
+		componentStore.set('restrict', restrict, t);
+	
+		// Components should always create an isolate scope
+		componentStore.set('scope', {}, t);
+		
+		// Since components must have a template, set transclude to true
+		componentStore.set('transclude', true, t);
+	
+		// Inputs should always be bound to the controller instance, not
+		// to the scope
+		componentStore.set('bindToController', true, t);
+	
+		// Must perform some basic shape checking on the config object
+		[
+			['inputs', inputs],
+			['providers', providers],
+			['directives', directives],
+			['outputs', outputs]
+		].forEach(([propName, propVal]) => {
+			if(propVal !== undefined && !Array.isArray(propVal)){
+				throw new TypeError(`Component Decorator Error in "${t.name}": Component ${propName} must be an array`);
+			}
+		});
+	
+		// Check for Angular 2 style inputs
+		let inputMap = parsePropertyMap(inputs);
+		let previousInputMap = componentStore.get('inputMap', t) || {};
+		componentStore.set('inputMap', Object.assign({}, previousInputMap, inputMap), t);
+	
+		// outputs
+		if(outputs.length > 0){
+			let outputMap = parsePropertyMap(outputs) || {};
+			componentStore.set('outputMap', outputMap, t);
+			for(let key in outputMap){
+				events.add(outputMap[key]);
+			}
 		}
-	});
 
-	// Check for Angular 2 style inputs
-	let inputMap = parsePropertyMap(inputs);
-	let previousInputMap = componentStore.get('inputMap', t) || {};
-	componentStore.set('inputMap', Object.assign({}, previousInputMap, inputMap), t);
-
-	// outputs
-	if(outputs.length > 0){
-		let outputMap = parsePropertyMap(outputs) || {};
-		componentStore.set('outputMap', outputMap, t);
-		for(let key in outputMap){
-			events.add(outputMap[key]);
+		// Allow for renaming the controllerAs
+		if(controllerAs) {
+			componentStore.set('controllerAs', controllerAs, t);
 		}
+		else {
+			// ControllerAs is the parsed selector. For example, `app` becomes `app` and
+			// `send-message` becomes `sendMessage`
+			componentStore.set('controllerAs', name, t);
+		}
+	
+		// Set a link function
+		if(t.link) {
+			componentStore.set('link', t.link, t);
+		}
+	
+		// Set a compile function
+		if(t.compile){
+			componentStore.set('compile', t.compile, t);
+		}
+	
+		View({
+			selector,
+			template,
+			templateUrl,
+			pipes,
+			directives
+		})(t);
 	}
+}
 
-	// Allow for renaming the controllerAs
-	if(controllerAs) {
-		componentStore.set('controllerAs', controllerAs, t);
-	}
-	else {
-		// ControllerAs is the parsed selector. For example, `app` becomes `app` and
-		// `send-message` becomes `sendMessage`
-		componentStore.set('controllerAs', name, t);
-	}
-
-	// Set a link function
-	if(t.link) {
-		componentStore.set('link', t.link, t);
-	}
-
-	// Set a compile function
-	if(t.compile){
-		componentStore.set('compile', t.compile, t);
-	}
-
-	View({
-		selector,
-		template,
-		templateUrl,
-		pipes,
-		directives
-	})(t);
-};
-
-export const View = (
+export function View(
 		{
 			selector,
 			template,
@@ -181,20 +183,22 @@ export const View = (
 			pipes?: any[],
 			directives?: any[]
 		}
-) => (t: any) => {
-	if(templateUrl)	{
-		componentStore.set('templateUrl', templateUrl, t);
+){
+	return function(t: any){
+		if(templateUrl)	{
+			componentStore.set('templateUrl', templateUrl, t);
+		}
+		else if(template) {
+			componentStore.set('template', template, t);
+		}
+		else {
+			throw new Error(`@Component config must include either a template or a template url for component with selector ${selector} on ${t.name}`);
+		}
+	
+		Providers(...directives)(t);
+		Providers(...pipes)(t);
 	}
-	else if(template) {
-		componentStore.set('template', template, t);
-	}
-	else {
-		throw new Error(`@Component config must include either a template or a template url for component with selector ${selector} on ${t.name}`);
-	}
-
-	Providers(...directives)(t);
-	Providers(...pipes)(t);
-};
+}
 
 // ## Component Provider Parser
 Module.addProvider(TYPE, (target: any, name: string, injects: string[], ngModule: ng.IModule) => {

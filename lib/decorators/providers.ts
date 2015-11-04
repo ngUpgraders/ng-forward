@@ -13,12 +13,14 @@
 import {bundleStore} from '../writers';
 import groupIntoModulesAndProviders from '../util/group-modules-providers';
 
-export const Providers = (...modulesAndProviders: any[]) => (t: any) => {
-  let { modules, providers } = groupIntoModulesAndProviders(modulesAndProviders);
-
-  let parentModules = bundleStore.get('modules', t) || [];
-  bundleStore.set('modules', [...modules, ...parentModules], t);
-
-  let parentProviders = bundleStore.get('providers', t) || [];
-  bundleStore.set('providers', [...providers, ...parentProviders], t);
-};
+export function Providers(...modulesAndProviders: any[]){
+  return function(t: any){
+    let { modules, providers } = groupIntoModulesAndProviders(modulesAndProviders);
+  
+    let parentModules = bundleStore.get('modules', t) || [];
+    bundleStore.set('modules', [...modules, ...parentModules], t);
+  
+    let parentProviders = bundleStore.get('providers', t) || [];
+    bundleStore.set('providers', [...providers, ...parentProviders], t);
+  }
+}

@@ -24,7 +24,7 @@ import {inputsMap} from '../properties/inputs-builder';
 const TYPE = 'directive';
 
 // ## Decorator Definition
-export const Directive = (
+export function Directive(
 		{
 			selector,
 			providers = []
@@ -33,36 +33,38 @@ export const Directive = (
 			selector: string,
 			providers?: any[]
 		}
-	) => (t: any) => {
-	// The only required config is a selector. If one wasn't passed, throw immediately
-	if( !selector ) {
-		throw new Error('Directive selector must be provided');
+	){
+	return function(t: any){
+		// The only required config is a selector. If one wasn't passed, throw immediately
+		if( !selector ) {
+			throw new Error('Directive selector must be provided');
+		}
+	
+		// Grab the provider name and selector type by parsing the selector
+		let {name, type: restrict} = parseSelector(selector);
+	
+		// If the selector type was not an element, throw an error. Components can only
+		// be elements in Angular 2, so we want to enforce that strictly here.
+		if(restrict !== 'A') {
+			throw new Error('@Directive selectors can only be attributes');
+		}
+	
+		if(providers !== undefined && !Array.isArray(providers)){
+			throw new TypeError(`Directive providers must be an array`);
+		}
+	
+		// Setup provider information using the parsed selector
+		providerStore.set('name', name, t);
+		providerStore.set('type', TYPE, t);
+	
+		// Grab the providers from the config object, parse them, and write the metadata
+		// to the target.
+		Providers(...providers)(t);
+	
+		// Restrict type must be 'element'
+		componentStore.set('restrict', restrict, t);
 	}
-
-	// Grab the provider name and selector type by parsing the selector
-	let {name, type: restrict} = parseSelector(selector);
-
-	// If the selector type was not an element, throw an error. Components can only
-	// be elements in Angular 2, so we want to enforce that strictly here.
-	if(restrict !== 'A') {
-		throw new Error('@Directive selectors can only be attributes');
-	}
-
-	if(providers !== undefined && !Array.isArray(providers)){
-		throw new TypeError(`Directive providers must be an array`);
-	}
-
-	// Setup provider information using the parsed selector
-	providerStore.set('name', name, t);
-	providerStore.set('type', TYPE, t);
-
-	// Grab the providers from the config object, parse them, and write the metadata
-	// to the target.
-	Providers(...providers)(t);
-
-	// Restrict type must be 'element'
-	componentStore.set('restrict', restrict, t);
-};
+}
 
 // ## Component Provider Parser
 Module.addProvider(TYPE, (target: any, name: string, injects: string[], ngModule: ng.IModule) => {
