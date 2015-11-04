@@ -44,17 +44,5 @@ export default function bootstrap(component: any, otherProviders: any[] = []): a
   // module is also going to be the selector of the root component
   bundle(selector, component, otherProviders);
 
-  let injector = angular.bootstrap(rootElement, [selector]);
-
-  // return the injector but with get overridden to provide some sugar for 'getting'
-  // component class controller instances
-  return Object.assign({}, injector, {
-    get: (service: any) => {
-      if (angular.isFunction(service)) {
-        let selector = bundleStore.get('selector', service);
-        service = `${selector}Directive`;
-      }
-      return injector.get(service);
-    }
-  });
+  return angular.bootstrap(rootElement, [selector]);
 }
