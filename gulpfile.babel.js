@@ -115,7 +115,11 @@ async function cleanupDistFolder(){
 }
 
 function createPackage(){
-	return gulp.src(['./package.json', './build/**.js'])
+	return gulp.src([
+			'./package.json', 
+			'./build/**.js',
+			'./README.md'
+		])
 		.pipe(gulp.dest('./dist'));
 }
 
