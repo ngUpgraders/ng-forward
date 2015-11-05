@@ -456,7 +456,7 @@ describe('@Component', function(){
 				let parentH1El = parentEl.find('h1');
 				let childEl = parentEl.find('child');
 
-        parentH1El.text().should.eql('Hello World!');
+        		parentH1El.text().should.eql('Hello World!');
 				childEl.text().should.eql('Hello');
 
 				childEl.componentInstance.foo = 'Hola';
@@ -598,7 +598,7 @@ describe('@Component', function(){
 				let parentH1El = parentEl.find('h1');
 				let childEl = parentEl.find('child');
 
-        parentH1El.text().should.eql('Hello World!');
+        		parentH1El.text().should.eql('Hello World!');
 				childEl.text().should.eql('Hello Hello');
 
 				childEl.componentInstance.foo = 'Hola';
@@ -943,7 +943,7 @@ describe('@Component', function(){
 				});
 
 				let rootEl = root.debugElement;
-        let rootComponent = rootEl.componentInstance;
+        		let rootComponent = rootEl.componentInstance;
 				let fooEl = rootEl.componentViewChildren[0];
 				let fooComponent = fooEl.componentInstance;
 				let barEl = fooEl.componentViewChildren[0];
