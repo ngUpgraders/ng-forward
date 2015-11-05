@@ -19,6 +19,7 @@ import EventEmitter from './events/event-emitter';
 // Functions
 import bootstrap from './bootstrap';
 import bundle from './bundle';
+import {getInjectableName} from './util/get-injectable-name';
 
 // Writers
 import { bundleStore, providerStore, componentStore } from './writers';
@@ -50,6 +51,7 @@ export {
 	// Functions
 	bootstrap,
 	bundle,
+	getInjectableName,
 	
 	// Writers
 	bundleStore,
