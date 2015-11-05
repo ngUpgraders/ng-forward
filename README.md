@@ -18,9 +18,35 @@ We are targeting four types of developers:
 
 *Review the design doc to see our collective ideas: [Google Drive Design Doc](https://docs.google.com/document/d/1oq0T0-jicGzc5uYJc0LE1ZBHm0w1lhVB4IVqUPXWSCg/edit)*
 
+## Install
+
+**NPM**: 
+```sh
+npm i --save ng-forward@latest reflect-metadata
+```
+
+**CDN**: 
+```html
+<script src="https://npmcdn.com/ng-forward/ng-forward.dist.min.js"></script>
+```
+
+## Dependencies
+
+Depends on Angular 1.3+ and reflect-metadata. Ng-forward comes bundled with a bare minimum set of rxjs classes (for EventEmitter) and the babel/polyfill.
+
+```js
+import 'angular';
+import 'reflect-metadata';
+import {bootstrap} from 'ng-forward';
+```
+
 ## Getting Started
 
 An ng-forward app is in many ways built like an Angular 2 app. Your app is made up of a tree of components, starting with a single top level component your entire app runs inside. Components can depend on services, which like Angular 2 are plain old ES6 classes. The [official Angular 2 docs](https://angular.io/) are actually a good place to start to familiarize yourself with Angular 2 coding style.
+
+**Use a ES6/TS transpiler, here's some suggestions:**
+- Babel: [browserify/babelify](https://github.com/babel/babelify) or [webpack/babel-loader](https://github.com/babel/babel-loader)
+- Typescript: [browserify/tsify](https://github.com/TypeStrong/tsify) or [webpack/typescript](https://github.com/s-panferov/awesome-typescript-loader)
 
 ### Components
 
