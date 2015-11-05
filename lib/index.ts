@@ -23,6 +23,8 @@ import bundle from './bundle';
 // Writers
 import { bundleStore, providerStore, componentStore } from './writers';
 
+// JQLite extensions
+import './util/jqlite-extensions';
 
 
 export {

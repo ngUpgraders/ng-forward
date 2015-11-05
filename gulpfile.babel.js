@@ -16,7 +16,7 @@ import filter from 'gulp-filter';
 import concat from 'gulp-concat';
 
 const tsconfig = require('./tsconfig.json');
-const tsProject = ts.createProject('tsconfig.json', {
+const tsBuildProject = ts.createProject('tsconfig.json', {
 	declaration: true,
 	noLib: true,
 	outDir: 'es6'
@@ -27,9 +27,9 @@ async function deleteDistFolder(){
 }
 
 function typescriptToES6(){
-	let result = tsProject.src()
+	let result = tsBuildProject.src()
 		.pipe(sourcemaps.init())
-		.pipe(ts(tsProject));
+		.pipe(ts(tsBuildProject));
 
 	return merge([
 		result.js.pipe(sourcemaps.write()).pipe(gulp.dest('dist')),
@@ -63,14 +63,18 @@ function buildCJSDist(){
 	return merge([ transpile, move ]);
 }
 
-function testES6(done){
-	let server = new KarmaServer({
-		configFile: join(__dirname, 'karma.conf.js'),
-		singleRun: true,
-		reporters: ['dots']
-	}, done);
+function testES6(watch){
+	return done => {
+		let config = {configFile: join(__dirname, 'karma.conf.js')};
 
-	server.start();
+		if (!watch) {
+			config.singleRun = true;
+			config.reporters = ['dots'];
+		}
+
+		let server = new KarmaServer(config, done);
+		server.start();
+	}
 }
 
 async function rollupES6(){
@@ -114,9 +118,9 @@ async function cleanupDistFolder(){
 	]);
 }
 
-function createPackage(){
+function moveMiscFiles(){
 	return gulp.src([
-			'./package.json', 
+			'./package.json',
 			'./build/**.js',
 			'./README.md'
 		])
@@ -124,34 +128,43 @@ function createPackage(){
 }
 
 gulp.task('clean-dist', deleteDistFolder);
-gulp.task('build/ts-to-es6', ['clean-dist'], typescriptToES6);
-gulp.task('build/test', ['build/ts-to-es6'], testES6);
-gulp.task('build/lib-to-es6', ['build/test'], buildES6Dist);
-gulp.task('build/es6-to-cjs', ['build/lib-to-es6'], buildCJSDist);
-gulp.task('build/rollup', ['build/es6-to-cjs'], rollupES6);
-gulp.task('build/bundle-to-es5', ['build/rollup'], bundleToES5);
-gulp.task('build/create-sfx-bundle', ['build/bundle-to-es5'], createSFXBundle);
-gulp.task('build/cleanup', ['build/create-sfx-bundle'], cleanupDistFolder);
-gulp.task('build', ['build/cleanup'], createPackage);
+gulp.task('build/ts-to-es6', typescriptToES6);
+gulp.task('build/test', testES6(false));
+gulp.task('build/lib-to-es6', buildES6Dist);
+gulp.task('build/es6-to-cjs', buildCJSDist);
+gulp.task('build/rollup', rollupES6);
+gulp.task('build/bundle-to-es5', bundleToES5);
+gulp.task('build/create-sfx-bundle', createSFXBundle);
+gulp.task('build/cleanup', cleanupDistFolder);
+gulp.task('build/move-misc-files', moveMiscFiles);
+
+gulp.task('watch/test', testES6(true));
+gulp.task('watch/ts-to-es6', () => {
+	gulp.watch('lib/**/*.ts', ['build/ts-to-es6']);
+});
+
+gulp.task('build', done => {
+	runSequence(
+			'clean-dist',
+			'build/ts-to-es6',
+			'build/test',
+			'build/lib-to-es6',
+			'build/es6-to-cjs',
+			'build/rollup',
+			'build/bundle-to-es5',
+			'build/create-sfx-bundle',
+			'build/cleanup',
+			'build/move-misc-files',
+			done
+	)
+});
 
 gulp.task('dev', done => {
 	runSequence(
-			'build',
-			['test/karma-watch', 'test/files-watch'],
+			'build/ts-to-es6',
+			['watch/ts-to-es6', 'watch/test'],
 			done
 	);
-});
-
-gulp.task('test/karma-watch', (done) => {
-	let server = new KarmaServer({
-		configFile: join(__dirname, 'karma.conf.js'),
-	}, done);
-
-	server.start();
-});
-
-gulp.task('test/files-watch', () => {
-	gulp.watch('lib/**/*.ts', ['build/ts-to-es6']);
 });
 
 gulp.task('default', ['build']);
