@@ -4,7 +4,7 @@ import {Inject} from '../decorators/inject';
 import {Injectable} from '../decorators/injectable';
 import {ng} from '../tests/angular';
 import {providers, TestComponentBuilder} from './index';
-import {RootTestComponent} from './test-component-builder';
+import {ComponentFixture} from './test-component-builder';
 
 describe('Test Utils', () => {
 
@@ -65,8 +65,8 @@ describe('Test Utils', () => {
     let mockSomeOtherService;
     let $http;
     let $timeout;
-    let rootTC;
-    let rootTestEl;
+    let fixture;
+    let fixtureEl;
     let someComponentEl;
 
     // test the bindings call composed with the beforeEach fn
@@ -100,9 +100,9 @@ describe('Test Utils', () => {
     });
 
     beforeEach(() => {
-      rootTC = tcb.create(TestComponent);
-      rootTestEl = rootTC.debugElement;
-      someComponentEl = rootTC.debugElement.componentViewChildren[0];
+      fixture = tcb.create(TestComponent);
+      fixtureEl = fixture.debugElement;
+      someComponentEl = fixture.debugElement.componentViewChildren[0];
     });
 
     // todo: write a custom inject function for ng-forward
@@ -116,26 +116,26 @@ describe('Test Utils', () => {
     });
 
     it('should return a root test component and decorated jqlite', () => {
-      expect(rootTC).to.be.an.instanceOf(RootTestComponent);
+      expect(fixture).to.be.an.instanceOf(ComponentFixture);
 
       // debugElement is an angular.element decorated with extra properties, see next lines
-      expect(rootTC.debugElement)
+      expect(fixture.debugElement)
           .to.be.an.instanceOf(angular.element);
 
       // nativeElement is an alias to the [0] index raw dom element
-      expect(rootTC.debugElement.nativeElement)
+      expect(fixture.debugElement.nativeElement)
           .to.be.an.instanceOf(HTMLElement);
 
       // The actual class instance hosted by the element
-      expect(rootTC.debugElement.componentInstance)
+      expect(fixture.debugElement.componentInstance)
           .to.be.an.instanceOf(TestComponent);
 
       // componentViewChildren is an alias to .children()
-      expect(rootTC.debugElement.componentViewChildren[0])
+      expect(fixture.debugElement.componentViewChildren[0])
           .to.be.an.instanceOf(angular.element);
 
       // getLocal is an alias to $injector
-      expect(rootTC.debugElement.getLocal('$q'))
+      expect(fixture.debugElement.getLocal('$q'))
           .to.contain.all.keys(['resolve', 'reject', 'defer']);
 
       // Checking to be sure even nested jqlite elements are decorated
@@ -169,8 +169,8 @@ describe('Test Utils', () => {
     it('should detect changes on root test component instance ', () => {
       expect(someComponentEl.text()).to.equal("Hello World mock success mock other a");
 
-      rootTestEl.componentInstance.bar = "Angular 2";
-      rootTC.detectChanges();
+      fixtureEl.componentInstance.bar = "Angular 2";
+      fixture.detectChanges();
 
       expect(someComponentEl.text()).to.equal("Hello Angular 2 mock success mock other a");
     });
@@ -179,7 +179,7 @@ describe('Test Utils', () => {
       expect(someComponentEl.text()).to.equal("Hello World mock success mock other a");
 
       someComponentEl.componentInstance.local = "b";
-      rootTC.detectChanges();
+      fixture.detectChanges();
 
       expect(someComponentEl.text()).to.equal("Hello World mock success mock other b");
     });

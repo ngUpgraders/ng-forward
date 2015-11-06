@@ -4,6 +4,13 @@ import { providers, allProviders, clearProviders } from './providers';
 import { bundleStore, componentStore } from '../writers';
 import { View } from '../decorators/component'
 import {INgForwardJQuery} from "../util/jqlite-extensions";
+import IInjectorService = angular.auto.IInjectorService;
+import {DecoratedModule} from "../classes/module";
+
+export interface ngClass {
+  new (...any): any;
+  name?:string;
+}
 
 /**
  * TestComponentBuilder
@@ -13,36 +20,41 @@ import {INgForwardJQuery} from "../util/jqlite-extensions";
 export class TestComponentBuilder {
   /**
    * Takes a root component, typically a test component whose template houses another component
-   * under test. Returns a RootTestComponent that contains a debugElement reference
+   * under test. Returns a ComponentFixture that contains a debugElement reference
    * to the test component (which you can use to drill down to the component under test) as well
    * as a detectChanges method which aliases to a scope digest call.
    *
    * @param rootComponent
-   * @returns {RootTestComponent}
+   * @returns {ComponentFixture}
    */
-  create(rootComponent) {
-    let decoratedModule = bundle('test.module', rootComponent);
+  create(rootComponent: ngClass): ComponentFixture {
+    let decoratedModule: DecoratedModule = bundle('test.module', rootComponent);
     angular.mock.module(decoratedModule.name);
     angular.mock.module($provide =>
         allProviders().forEach(({token, useValue}) =>
             $provide.value(token, useValue)));
 
-    let rootTC = compileComponent(rootComponent);
+    let fixture: ComponentFixture = compileComponent(rootComponent);
     clearProviders();
-    return rootTC;
+    return fixture;
   }
 
-  overrideTemplate(component, template) {
+  overrideTemplate(component: ngClass, template: string) {
     componentStore.set('template', template, component);
     return this;
   }
 
-  overrideProviders(component, providers) {
+  overrideProviders(component: ngClass, providers: (ngClass|string)[]) {
     bundleStore.set('providers', providers, component);
     return this;
   }
 
-  overrideView(component, config) {
+  overrideView(component: ngClass, config: {
+    template?: string,
+    templateUrl?: string,
+    pipes?: any[],
+    directives?: ngClass[]
+  }) {
     View(config)(component);
     return this;
   }
@@ -53,40 +65,52 @@ export class TestComponentBuilder {
 
 
 /**
- * RootTestComponent is what is returned from a TestComponentBuilder.create call.
+ * ComponentFixture is what is returned from a TestComponentBuilder.create call.
  * It gives access to the root test debug element, which in turn gives access to
  * component instance, children and angular element methods. Also has a detectChanges
  * method that triggers a digest.
  */
-export class RootTestComponent {
-  public debugElement : INgForwardJQuery;
-  private _rootTestScope : ng.IScope;
+export class ComponentFixture {
+  public debugElement: INgForwardJQuery;
+  private rootTestScope: ng.IScope;
 
-  constructor({debugElement, rootTestScope, $injector}) {
+  constructor({
+        debugElement,
+        rootTestScope,
+        $injector
+      } :
+      {
+        debugElement:INgForwardJQuery,
+        rootTestScope: ng.IScope,
+        $injector: IInjectorService
+      }) {
     this.debugElement = debugElement;
     this.debugElement.data('$injector', $injector);
-    this._rootTestScope = rootTestScope;
+    this.rootTestScope = rootTestScope;
   }
 
   /**
    * Triggers a root test scope digest.
    */
   detectChanges(): void {
-    this._rootTestScope.$digest();
+    this.rootTestScope.$digest();
   }
 }
 
 
 /**
- * A function for compiling a decorated component into a RootTestComponent
+ * A function for compiling a decorated component into a ComponentFixture
  *
  * @param ComponentClass
- * @returns {RootTestComponent}
+ * @returns {ComponentFixture}
  */
-export function compileComponent(ComponentClass:any){
+export function compileComponent(ComponentClass:ngClass): ComponentFixture {
 
-  let selector = bundleStore.get('selector', ComponentClass);
-  let rootTestScope, debugElement, componentInstance, $injector;
+  let selector: string = bundleStore.get('selector', ComponentClass),
+      rootTestScope: ng.IScope,
+      debugElement: INgForwardJQuery,
+      componentInstance: any,
+      $injector: IInjectorService;
 
   inject(($compile, $rootScope, _$injector_) => {
     let controllerAs = componentStore.get('controllerAs', ComponentClass);
@@ -98,8 +122,8 @@ export function compileComponent(ComponentClass:any){
     $injector = _$injector_;
   });
 
-  return new RootTestComponent({debugElement, rootTestScope, $injector});
-};
+  return new ComponentFixture({debugElement, rootTestScope, $injector});
+}
 
 
 /**
@@ -129,4 +153,4 @@ export function compileHtmlAndScope({html, initialScope, selector}){
   });
 
   return {parentScope, element, controller, isolateScope};
-};
+}

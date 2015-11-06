@@ -7,9 +7,9 @@ import bootstrap from '../bootstrap';
 import { Inject } from '../decorators/inject';
 import { Injectable } from '../decorators/injectable';
 import { Component } from '../decorators/component';
-import { TestComponentBuilder, providers } from '../testing';
+import { TestComponentBuilder, providers } from '../testing/index';
 import { OpaqueToken } from '../classes/opaque-token';
-import { quickRootTestComponent } from '../tests/utils';
+import { quickFixture } from '../tests/utils';
 
 
 class SomeToken {}
@@ -65,20 +65,20 @@ describe('Provider Class', () => {
   });
 
   describe('Angular Integration', () => {
-    let root;
+    let fixture;
 
     describe('Provider\'s "use" Methods', () => {
 
       it('creates an angular value with useVal', () => {
-        root = quickRootTestComponent({ providers: [new Provider('foo', { useValue: 'bar' })] });
+        fixture = quickFixture({ providers: [new Provider('foo', { useValue: 'bar' })] });
 
-        root.debugElement.getLocal('foo').should.eql('bar');
+        fixture.debugElement.getLocal('foo').should.eql('bar');
       });
 
       it('creates an angular constant with useConstant', () => {
-        root = quickRootTestComponent({ providers: [new Provider('foo', { useConstant: 'bar' })] });
+        fixture = quickFixture({ providers: [new Provider('foo', { useConstant: 'bar' })] });
 
-        root.debugElement.getLocal('foo').should.be.eql('bar');
+        fixture.debugElement.getLocal('foo').should.be.eql('bar');
       });
 
       it('creates an angular service with useClass', () => {
@@ -88,9 +88,9 @@ describe('Provider Class', () => {
             return 'baz';
           }
         }
-        root = quickRootTestComponent({ providers: [new Provider('foo', { useClass: Bar })] });
+        fixture = quickFixture({ providers: [new Provider('foo', { useClass: Bar })] });
 
-        let foo = root.debugElement.getLocal('foo');
+        let foo = fixture.debugElement.getLocal('foo');
         foo.should.be.an.instanceOf(Bar);
         foo.property.should.be.eql('bar');
         foo.method().should.be.eql('baz');
@@ -102,11 +102,11 @@ describe('Provider Class', () => {
           constructor(private $q) { }
         }
 
-        root = quickRootTestComponent({ providers: [new Provider('foo', { useClass: Bar })] });
+        fixture = quickFixture({ providers: [new Provider('foo', { useClass: Bar })] });
 
-        let foo = root.debugElement.getLocal('foo');
+        let foo = fixture.debugElement.getLocal('foo');
         foo.should.be.an.instanceOf(Bar);
-        foo.$q.should.be.eql(root.debugElement.getLocal('$q'));
+        foo.$q.should.be.eql(fixture.debugElement.getLocal('$q'));
         foo.$q.should.have.property('resolve');
       });
 
@@ -115,9 +115,9 @@ describe('Provider Class', () => {
           return 'bar';
         }
 
-        root = quickRootTestComponent({ providers: [new Provider('foo', { useFactory: getBar })] });
+        fixture = quickFixture({ providers: [new Provider('foo', { useFactory: getBar })] });
 
-        root.debugElement.getLocal('foo').should.eql('bar');
+        fixture.debugElement.getLocal('foo').should.eql('bar');
       });
 
       it('creates an angular factory with ng1 dependencies from a function with useFactory', () => {
@@ -125,12 +125,12 @@ describe('Provider Class', () => {
           return $q;
         }
 
-        root = quickRootTestComponent({ providers: [new Provider('foo', {
+        fixture = quickFixture({ providers: [new Provider('foo', {
           useFactory: getQ,
           deps: ['$q']
         })] });
 
-        root.debugElement.getLocal('foo').should.eql(root.debugElement.getLocal('$q'));
+        fixture.debugElement.getLocal('foo').should.eql(fixture.debugElement.getLocal('$q'));
       });
 
       it('creates an angular factory with class dependencies from a function with useFactory', () => {
@@ -143,12 +143,12 @@ describe('Provider Class', () => {
           return foo.bar;
         }
 
-        root = quickRootTestComponent({ providers: [new Provider('foo', {
+        fixture = quickFixture({ providers: [new Provider('foo', {
           useFactory: getBar,
           deps: [Foo]
         })] });
 
-        root.debugElement.getLocal('foo').should.eql('bar');
+        fixture.debugElement.getLocal('foo').should.eql('bar');
       });
 
       it('creates an angular factory with deep class dependencies from a function with useFactory', () => {
@@ -173,35 +173,35 @@ describe('Provider Class', () => {
           return foo.bar.baz.quux;
         }
 
-        root = quickRootTestComponent({ providers: [new Provider('getQuux', {
+        fixture = quickFixture({ providers: [new Provider('getQuux', {
           useFactory: getQuux,
           deps: [Foo]
         })] });
 
-        root.debugElement.getLocal('getQuux').should.eql('quux');
+        fixture.debugElement.getLocal('getQuux').should.eql('quux');
       });
     });
 
     describe('Provider Tokens', () => {
 
       it('supports string tokens', () => {
-        root = quickRootTestComponent({ providers: [new Provider('foo', { useValue: 'bar' })] });
+        fixture = quickFixture({ providers: [new Provider('foo', { useValue: 'bar' })] });
 
-        root.debugElement.getLocal('foo').should.eql('bar');
+        fixture.debugElement.getLocal('foo').should.eql('bar');
       });
 
       it('supports OpaqueToken tokens', () => {
         let t = new OpaqueToken('foo');
-        root = quickRootTestComponent({ providers: [new Provider(t, { useValue: 'bar' })] });
+        fixture = quickFixture({ providers: [new Provider(t, { useValue: 'bar' })] });
 
-        root.debugElement.getLocal(t).should.eql('bar');
+        fixture.debugElement.getLocal(t).should.eql('bar');
       });
 
       it('supports class tokens', () => {
         class Foo {}
-        root = quickRootTestComponent({ providers: [new Provider(Foo, { useValue: 'bar' })] });
+        fixture = quickFixture({ providers: [new Provider(Foo, { useValue: 'bar' })] });
         let name = providerStore.get('name', Foo);
-        root.debugElement.getLocal(name).should.be.eql('bar');
+        fixture.debugElement.getLocal(name).should.be.eql('bar');
       });
     });
   });

@@ -2,7 +2,7 @@ import Module from '../classes/module';
 import {Injectable, INJECTABLE} from './injectable';
 import {sinon} from '../tests/frameworks';
 import {providerStore} from '../writers';
-import {quickRootTestComponent} from '../tests/utils';
+import {quickFixture} from '../tests/utils';
 
 describe('@Injectable Decorator', function(){
 	it('should decorate a class with a provider name and type', function(){
@@ -57,15 +57,15 @@ describe('@Injectable Decorator', function(){
 
 	describe('Angular Integration', () => {
 
-		let root;
+		let fixture;
 
 		it('registers the injectable as an angular service', () => {
 			@Injectable()
 			class Foo {}
 
-			root = quickRootTestComponent({ providers: [Foo] });
+			fixture = quickFixture({ providers: [Foo] });
 
-			root.debugElement.getLocal(Foo).should.be.an.instanceOf(Foo);
+			fixture.debugElement.getLocal(Foo).should.be.an.instanceOf(Foo);
 		});
 	});
 });

@@ -5,7 +5,7 @@
 // All information about traversing a provider is written by the appWriter
 import {bundleStore} from './writers';
 // The bundle is going to be generating a Module, so we'll need this
-import Module from './classes/module';
+import Module, {DecoratedModule} from './classes/module';
 // Events is a utility for generating semi-dynamic events. It will be generating
 // a lot of attribute directives for event handling.
 import events from './events/events';
@@ -18,7 +18,7 @@ import groupModulesAndProviders from './util/group-modules-providers';
 // provider, and an option list of additional bindings the provider may need to
 // successfully bootstrap. The idea is that you only need to provide bindings if you
 // are testing a component or service in isolation
-export default function bundle(moduleName: string, provider: any, otherProviders: any[] = []){
+export default function bundle(moduleName: string, provider: any, otherProviders: any[] = []):DecoratedModule {
   // Get a list of decorated classes that some decorated class `t` depends on
   const getProvidersFrom = (t: any) => bundleStore.get('providers', t) || [];
   // Get a list of `angular.module` names some decorated class `t` depends on

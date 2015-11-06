@@ -1,6 +1,6 @@
 import { sinon } from '../tests/frameworks';
 import events from '../events/events';
-import { quickRootTestComponent } from '../tests/utils';
+import { quickFixture } from '../tests/utils';
 
 describe('Auto-generated Event Directives', function(){
 
@@ -15,7 +15,7 @@ describe('Auto-generated Event Directives', function(){
     });
 
     it('creates a directive per item in the set', () => {
-      let root = quickRootTestComponent({});
+      let fixture = quickFixture({});
 
       let allEvents = [
         'click','dblclick','mousedown','mouseup','mouseover','mouseout','mousemove',
@@ -28,14 +28,14 @@ describe('Auto-generated Event Directives', function(){
 
       allEvents.forEach(name => {
         asserts++;
-        root.debugElement.getLocal(`(${name})Directive`)[0].name.should.eql(`(${name})`);
+        fixture.debugElement.getLocal(`(${name})Directive`)[0].name.should.eql(`(${name})`);
       });
 
       asserts.should.eql(allEvents.length);
     });
 
     xit('bubbles the events', () => {
-      let root = quickRootTestComponent({
+      let fixture = quickFixture({
         template: `
         <div ng-init="test.clicked=false" (click)="test.clicked=true">
           <button>Click Me</button>
@@ -43,9 +43,9 @@ describe('Auto-generated Event Directives', function(){
         `
       });
 
-      root.debugElement.componentInstance.clicked.should.be.false;
-      root.debugElement.find('button').nativeElement.click();
-      root.debugElement.componentInstance.clicked.should.be.true;
+      fixture.debugElement.componentInstance.clicked.should.be.false;
+      fixture.debugElement.find('button').nativeElement.click();
+      fixture.debugElement.componentInstance.clicked.should.be.true;
     });
   });
 });

@@ -3,7 +3,7 @@ import '../util/jqlite-extensions';
 import * as tcb from '../testing/test-component-builder';
 import {Component} from '../decorators/component';
 
-export function quickRootTestComponent({
+export function quickFixture({
       providers=[],
       directives=[],
       template='<div></div>'

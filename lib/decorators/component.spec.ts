@@ -6,7 +6,7 @@ import { Provider } from '../classes/provider';
 import { providers } from '../testing/providers';
 import Module from '../classes/module';
 import events from '../events/events';
-import { quickRootTestComponent } from '../tests/utils';
+import { quickFixture } from '../tests/utils';
 import EventEmitter from '../events/event-emitter';
 import CustomEvent from '../util/custom-event';
 
@@ -186,20 +186,20 @@ describe('@Component', function(){
 			expect(() => {
 				@Component({ selector: 'my-element', template: 'x' })
 				class MyClass{ }
-				quickRootTestComponent({directives: [MyClass]});
+				quickFixture({directives: [MyClass]});
 			}).not.to.throw(Error);
 
 			expect(() => {
 				@Component({ selector: '[my-attr]', template: 'x' })
 				class MyClass{ }
-				quickRootTestComponent({directives: [MyClass]});
+				quickFixture({directives: [MyClass]});
 			}).to.throw('Processing "MyClass" in "test.module": ' +
 					'@Component selectors can only be elements. Perhaps you meant to use @Directive?');
 
 			expect(() => {
 				@Component({ selector: '.my-class', template: 'x' })
 				class MyClass{ }
-				quickRootTestComponent({directives: [MyClass]});
+				quickFixture({directives: [MyClass]});
 			}).to.throw('Processing "MyClass" in "test.module": ' +
 					'@Component selectors can only be elements. Perhaps you meant to use @Directive?');
 		});
@@ -208,33 +208,33 @@ describe('@Component', function(){
 			expect(() => {
 				@Component({ selector: 'my-component', template: true })
 				class MyClass{ }
-				quickRootTestComponent({directives: [MyClass]});
+				quickFixture({directives: [MyClass]});
 			}).not.to.throw;
 
 			expect(() => {
 				@Component({ selector: 'my-component', templateUrl: true })
 				class MyClass{ }
-				quickRootTestComponent({directives: [MyClass]});
+				quickFixture({directives: [MyClass]});
 			}).not.to.throw;
 
 			expect(() => {
 				@Component({ selector: 'my-component' })
 				@View({ template: true })
 				class MyClass{ }
-				quickRootTestComponent({directives: [MyClass]});
+				quickFixture({directives: [MyClass]});
 			}).not.to.throw;
 
 			expect(() => {
 				@Component({ selector: 'my-component' })
 				@View({ templateUrl: true })
 				class MyClass{ }
-				quickRootTestComponent({directives: [MyClass]});
+				quickFixture({directives: [MyClass]});
 			}).not.to.throw;
 
 			expect(() => {
 				@Component({ selector: 'my-component' })
 				class MyClass{ }
-				quickRootTestComponent({directives: [MyClass]});
+				quickFixture({directives: [MyClass]});
 			}).to.throw('@Component config must include either a template or a template url for component with selector my-component on MyClass');
 		});
 
@@ -242,12 +242,12 @@ describe('@Component', function(){
 			@Component({ selector: 'foo', template: 'x' })
 			class MyClass{ }
 
-			let root = quickRootTestComponent({
+			let fixture = quickFixture({
 				directives: [MyClass],
 				template: `<foo></foo>`
 			});
 
-			var directive = root.debugElement.getLocal('fooDirective')[0];
+			var directive = fixture.debugElement.getLocal('fooDirective')[0];
 			directive.restrict.should.eql('E');
 			directive.scope.should.eql({});
 		});
@@ -256,12 +256,12 @@ describe('@Component', function(){
 			@Component({ selector: 'foo', template: 'x' })
 			class MyClass{ }
 
-			let root = quickRootTestComponent({
+			let fixture = quickFixture({
 				directives: [MyClass],
 				template: `<foo></foo>`
 			});
 
-			var directive = root.debugElement.getLocal('fooDirective')[0];
+			var directive = fixture.debugElement.getLocal('fooDirective')[0];
 			directive.name.should.eql('foo');
 		});
 
@@ -269,12 +269,12 @@ describe('@Component', function(){
 			@Component({ selector: 'foo', template: 'x' })
 			class MyClass{ }
 
-			let root = quickRootTestComponent({
+			let fixture = quickFixture({
 				directives: [MyClass],
 				template: `<foo></foo>`
 			});
 
-			var directive = root.debugElement.getLocal('fooDirective')[0];
+			var directive = fixture.debugElement.getLocal('fooDirective')[0];
 			directive.controllerAs.should.eql('foo');
 		});
 
@@ -282,12 +282,12 @@ describe('@Component', function(){
 			@Component({ selector: 'foo', controllerAs: 'vm', template: 'x' })
 			class MyClass{ }
 
-			let root = quickRootTestComponent({
+			let fixture = quickFixture({
 				directives: [MyClass],
 				template: `<foo></foo>`
 			});
 
-			var directive = root.debugElement.getLocal('fooDirective')[0];
+			var directive = fixture.debugElement.getLocal('fooDirective')[0];
 			directive.controllerAs.should.eql('vm');
 		});
 
@@ -295,12 +295,12 @@ describe('@Component', function(){
 			@Component({ selector: 'foo-bar', template: 'x' })
 			class MyClass{ }
 
-			let root = quickRootTestComponent({
+			let fixture = quickFixture({
 				directives: [MyClass],
 				template: `<foo></foo>`
 			});
 
-			var directive = root.debugElement.getLocal('fooBarDirective')[0];
+			var directive = fixture.debugElement.getLocal('fooBarDirective')[0];
 			directive.controllerAs.should.eql('fooBar');
 		});
 
@@ -308,12 +308,12 @@ describe('@Component', function(){
 			@Component({ selector: 'foo', template: true })
 			class MyClass{ }
 
-			let root = quickRootTestComponent({
+			let fixture = quickFixture({
 				directives: [MyClass],
 				template: `<foo></foo>`
 			});
 
-			let component = root.debugElement.componentViewChildren[0].componentInstance;
+			let component = fixture.debugElement.componentViewChildren[0].componentInstance;
 			component.should.be.instanceOf(MyClass);
 		});
 
@@ -321,12 +321,12 @@ describe('@Component', function(){
 			@Component({ selector: 'foo', template: "foo" })
 			class MyClass{ }
 
-			let root = quickRootTestComponent({
+			let fixture = quickFixture({
 				directives: [MyClass],
 				template: `<foo></foo>`
 			});
 
-			let componentEl = root.debugElement.componentViewChildren[0];
+			let componentEl = fixture.debugElement.componentViewChildren[0];
 			componentEl.html().should.be.eql('foo');
 		});
 
@@ -334,12 +334,12 @@ describe('@Component', function(){
 			@Component({ selector: 'foo', templateUrl: "foo.html" })
 			class MyClass{ }
 
-			let root = quickRootTestComponent({
+			let fixture = quickFixture({
 				directives: [MyClass],
 				template: `<foo></foo>`
 			});
 
-			let componentEl = root.debugElement.componentViewChildren[0];
+			let componentEl = fixture.debugElement.componentViewChildren[0];
 			componentEl.html().should.be.eql('template content');
 		});
 
@@ -357,12 +357,12 @@ describe('@Component', function(){
 				@Component({ selector: 'foo', template: '{{foo.bar}} {{foo.baz}}', inputs: ['bar', 'baz'] })
 				class MyClass{ }
 
-				let root = quickRootTestComponent({
+				let fixture = quickFixture({
 					directives: [MyClass],
 					template: `<foo bar="1" baz="2"></foo>`
 				});
 
-				root.debugElement.text().should.eql('1 2');
+				fixture.debugElement.text().should.eql('1 2');
 			});
 
 			it('disallows setting instance properties not marked as an input', () => {
@@ -372,12 +372,12 @@ describe('@Component', function(){
 					private baz = 'false';
 				}
 
-				let root = quickRootTestComponent({
+				let fixture = quickFixture({
 					directives: [MyClass],
 					template: `<foo bar="true" baz="true"></foo>`
 				});
 
-				root.debugElement.text().should.eql('false true');
+				fixture.debugElement.text().should.eql('false true');
 			});
 
 			it('allows setting inputs to default values', () => {
@@ -386,12 +386,12 @@ describe('@Component', function(){
 					private foo = 'bar';
 				}
 
-				let root = quickRootTestComponent({
+				let fixture = quickFixture({
 					directives: [MyClass],
 					template: `<foo></foo>`
 				});
 
-				root.debugElement.text().should.eql('bar');
+				fixture.debugElement.text().should.eql('bar');
 			});
 
 			it('one way binds a string to inputs with the regular syntax', () => {
@@ -411,19 +411,19 @@ describe('@Component', function(){
 				})
 				class Parent {}
 
-				let root = quickRootTestComponent({
+				let fixture = quickFixture({
 					directives: [Parent],
 					template: `<parent></parent>`
 				});
 
-				let rootEl = root.debugElement;
-				let parentEl = rootEl.find('parent');
+				let fixtureEl = fixture.debugElement;
+				let parentEl = fixtureEl.find('parent');
 				let childEl = parentEl.find('child');
 
 				childEl.text().should.eql('Hello');
 
 				childEl.componentInstance.foo = 'Hola';
-				root.detectChanges();
+				fixture.detectChanges();
 
 				childEl.text().should.eql('Hola');
 			});
@@ -446,13 +446,13 @@ describe('@Component', function(){
 				})
 				class Parent { foo = "Hello"; }
 
-				let root = quickRootTestComponent({
+				let fixture = quickFixture({
 					directives: [Parent],
 					template: `<parent></parent>`
 				});
 
-				let rootEl = root.debugElement;
-				let parentEl = rootEl.find('parent');
+				let fixtureEl = fixture.debugElement;
+				let parentEl = fixtureEl.find('parent');
 				let parentH1El = parentEl.find('h1');
 				let childEl = parentEl.find('child');
 
@@ -460,13 +460,13 @@ describe('@Component', function(){
 				childEl.text().should.eql('Hello');
 
 				childEl.componentInstance.foo = 'Hola';
-				root.detectChanges();
+				fixture.detectChanges();
 
 				parentH1El.text().should.eql('Hello World!');
 				childEl.text().should.eql('Hola');
 
 				parentEl.componentInstance.foo = 'Howdy';
-				root.detectChanges();
+				fixture.detectChanges();
 
 				parentH1El.text().should.eql('Howdy World!');
 				childEl.text().should.eql('Howdy');
@@ -492,13 +492,13 @@ describe('@Component', function(){
 					foo = "Hello";
 				}
 
-				let root = quickRootTestComponent({
+				let fixture = quickFixture({
 					directives: [Parent],
 					template: `<parent></parent>`
 				});
 
-				let rootEl = root.debugElement;
-				let parentEl = rootEl.find('parent');
+				let fixtureEl = fixture.debugElement;
+				let parentEl = fixtureEl.find('parent');
 				let parentH1El = parentEl.find('h1');
 				let childEl = parentEl.find('child');
 
@@ -506,13 +506,13 @@ describe('@Component', function(){
 				childEl.text().should.eql('Hello');
 
 				childEl.componentInstance.foo = 'Hola';
-				root.detectChanges();
+				fixture.detectChanges();
 
 				parentH1El.text().should.eql('Hola World!');
 				childEl.text().should.eql('Hola');
 
 				parentEl.componentInstance.foo = 'Howdy';
-				root.detectChanges();
+				fixture.detectChanges();
 
 				parentH1El.text().should.eql('Howdy World!');
 				childEl.text().should.eql('Howdy');
@@ -544,19 +544,19 @@ describe('@Component', function(){
 				})
 				class Parent {}
 
-				let root = quickRootTestComponent({
+				let fixture = quickFixture({
 					directives: [Parent],
 					template: `<parent></parent>`
 				});
 
-				let rootEl = root.debugElement;
-				let parentEl = rootEl.find('parent');
+				let fixtureEl = fixture.debugElement;
+				let parentEl = fixtureEl.find('parent');
 				let childEl = parentEl.find('child');
 
 				childEl.text().should.eql('Hello Hello');
 
 				childEl.componentInstance.foo = 'Hola';
-				root.detectChanges();
+				fixture.detectChanges();
 
 				childEl.text().should.eql('Hola Hola');
 			});
@@ -588,13 +588,13 @@ describe('@Component', function(){
 				})
 				class Parent { foo = "Hello"; }
 
-				let root = quickRootTestComponent({
+				let fixture = quickFixture({
 					directives: [Parent],
 					template: `<parent></parent>`
 				});
 
-				let rootEl = root.debugElement;
-				let parentEl = rootEl.find('parent');
+				let fixtureEl = fixture.debugElement;
+				let parentEl = fixtureEl.find('parent');
 				let parentH1El = parentEl.find('h1');
 				let childEl = parentEl.find('child');
 
@@ -602,13 +602,13 @@ describe('@Component', function(){
 				childEl.text().should.eql('Hello Hello');
 
 				childEl.componentInstance.foo = 'Hola';
-				root.detectChanges();
+				fixture.detectChanges();
 
 				parentH1El.text().should.eql('Hello World!');
 				childEl.text().should.eql('Hola Hola');
 
 				parentEl.componentInstance.foo = 'Howdy';
-				root.detectChanges();
+				fixture.detectChanges();
 
 				parentH1El.text().should.eql('Howdy World!');
 				childEl.text().should.eql('Howdy Howdy');
@@ -643,13 +643,13 @@ describe('@Component', function(){
 					foo = "Hello";
 				}
 
-				let root = quickRootTestComponent({
+				let fixture = quickFixture({
 					directives: [Parent],
 					template: `<parent></parent>`
 				});
 
-				let rootEl = root.debugElement;
-				let parentEl = rootEl.find('parent');
+				let fixtureEl = fixture.debugElement;
+				let parentEl = fixtureEl.find('parent');
 				let parentH1El = parentEl.find('h1');
 				let childEl = parentEl.find('child');
 
@@ -657,13 +657,13 @@ describe('@Component', function(){
 				childEl.text().should.eql('Hello Hello');
 
 				childEl.componentInstance.foo = 'Hola';
-				root.detectChanges();
+				fixture.detectChanges();
 
 				parentH1El.text().should.eql('Hola World!');
 				childEl.text().should.eql('Hola Hola');
 
 				parentEl.componentInstance.foo = 'Howdy';
-				root.detectChanges();
+				fixture.detectChanges();
 
 				parentH1El.text().should.eql('Howdy World!');
 				childEl.text().should.eql('Howdy Howdy');
@@ -698,13 +698,13 @@ describe('@Component', function(){
 					fooChanged($event) { this.foo = $event.detail; }
 				}
 
-				let root = quickRootTestComponent({
+				let fixture = quickFixture({
 					directives: [Parent],
 					template: `<parent></parent>`
 				});
 
-				let rootEl = root.debugElement;
-				let parentEl = rootEl.find('parent');
+				let fixtureEl = fixture.debugElement;
+				let parentEl = fixtureEl.find('parent');
 				let parentH1El = parentEl.find('h1');
 				let childEl = parentEl.find('child');
 
@@ -712,19 +712,19 @@ describe('@Component', function(){
 				childEl.text().should.eql('Hello');
 
 				childEl.componentInstance.setAndTriggerFoo('Hola');
-				root.detectChanges();
+				fixture.detectChanges();
 
 				parentH1El.text().should.eql('Hello World!');
 				childEl.text().should.eql('Hola');
 
 				this.clock.tick();
-				root.detectChanges();
+				fixture.detectChanges();
 
 				parentH1El.text().should.eql('Hola World!');
 				childEl.text().should.eql('Hola');
 
 				parentEl.componentInstance.foo = 'Howdy';
-				root.detectChanges();
+				fixture.detectChanges();
 
 				parentH1El.text().should.eql('Howdy World!');
 				childEl.text().should.eql('Howdy');
@@ -735,13 +735,13 @@ describe('@Component', function(){
 					@Component({ selector: 'foo', template: '{{foo.bar}}', inputs: ['bar'] })
 					class MyClass{ }
 
-					let root = quickRootTestComponent({
+					let fixture = quickFixture({
 						directives: [MyClass],
 						template: `<foo bar="baz"></foo>`
 					});
 
-					root.debugElement.text().should.eql('baz');
-					return root.debugElement.getLocal('fooDirective')[0];
+					fixture.debugElement.text().should.eql('baz');
+					return fixture.debugElement.getLocal('fooDirective')[0];
 				};
 
 				it('creates a directive putting bindings on scope object in angular 1.3', () => {
@@ -784,68 +784,68 @@ describe('@Component', function(){
 				@Component({ selector: 'foo', template: 'x', outputs: ['change', 'otherChange'] })
 				class Foo {}
 
-				let root = quickRootTestComponent({
+				let fixture = quickFixture({
 					directives: [Foo]
 				});
 
-				root.debugElement.getLocal('(change)Directive')[0].restrict.should.eql('A');
-				root.debugElement.getLocal('(otherChange)Directive')[0].restrict.should.eql('A');
+				fixture.debugElement.getLocal('(change)Directive')[0].restrict.should.eql('A');
+				fixture.debugElement.getLocal('(otherChange)Directive')[0].restrict.should.eql('A');
 
-				root.debugElement.getLocal('(change)Directive')[0].name.should.eql('(change)');
-				root.debugElement.getLocal('(otherChange)Directive')[0].name.should.eql('(otherChange)');
+				fixture.debugElement.getLocal('(change)Directive')[0].name.should.eql('(change)');
+				fixture.debugElement.getLocal('(otherChange)Directive')[0].name.should.eql('(otherChange)');
 			});
 
 			it('creates a directive triggered by dom event', () => {
 				@Component({ selector: 'foo', template: 'x', outputs: ['output'] })
 				class Foo { }
 
-				let root = quickRootTestComponent({
+				let fixture = quickFixture({
 					directives: [Foo],
 					template: `<foo ng-init="test.bar=false" (output)="test.bar=true"></foo>`
 				});
 
-				root.debugElement.componentInstance.bar.should.be.false;
+				fixture.debugElement.componentInstance.bar.should.be.false;
 
-				root.debugElement.componentViewChildren[0].nativeElement.dispatchEvent(new CustomEvent('output'));
+				fixture.debugElement.componentViewChildren[0].nativeElement.dispatchEvent(new CustomEvent('output'));
 				this.clock.tick();
 
-				root.debugElement.componentInstance.bar.should.be.true;
+				fixture.debugElement.componentInstance.bar.should.be.true;
 			});
 
 			it('creates a dasherized directive triggered by dom event', () => {
 				@Component({ selector: 'foo', template: 'x', outputs: ['outputChange'] })
 				class Foo { }
 
-				let root = quickRootTestComponent({
+				let fixture = quickFixture({
 					directives: [Foo],
 					template: `<foo ng-init="test.bar=false" (output-change)="test.bar=true"></foo>`
 				});
 
-				root.debugElement.componentInstance.bar.should.be.false;
+				fixture.debugElement.componentInstance.bar.should.be.false;
 
-				root.debugElement.componentViewChildren[0].nativeElement.dispatchEvent(new CustomEvent('outputChange'));
+				fixture.debugElement.componentViewChildren[0].nativeElement.dispatchEvent(new CustomEvent('outputChange'));
 				this.clock.tick();
 
-				root.debugElement.componentInstance.bar.should.be.true;
+				fixture.debugElement.componentInstance.bar.should.be.true;
 			});
 
 			it('passes along event detail via dom event', () => {
 				@Component({ selector: 'foo', template: 'x', outputs: ['output'] })
 				class Foo { }
 
-				let root = quickRootTestComponent({
+				let fixture = quickFixture({
 					directives: [Foo],
 					template: `<foo ng-init="test.bar=false" (output)="test.bar=$event.detail"></foo>`
 				});
 
-				root.debugElement.componentInstance.bar.should.be.false;
+				fixture.debugElement.componentInstance.bar.should.be.false;
 
 				let detail = 'hello';
 
-				root.debugElement.componentViewChildren[0].nativeElement.dispatchEvent(new CustomEvent('output', {detail}));
+				fixture.debugElement.componentViewChildren[0].nativeElement.dispatchEvent(new CustomEvent('output', {detail}));
 				this.clock.tick();
 
-				root.debugElement.componentInstance.bar.should.eql('hello');
+				fixture.debugElement.componentInstance.bar.should.eql('hello');
 			});
 
 			it('creates a directive triggered by event emitter', () => {
@@ -854,17 +854,17 @@ describe('@Component', function(){
 					output = new EventEmitter();
 				}
 
-				let root = quickRootTestComponent({
+				let fixture = quickFixture({
 					directives: [Foo],
 					template: `<foo ng-init="test.bar=false" (output)="test.bar=true"></foo>`
 				});
 
-				root.debugElement.componentInstance.bar.should.be.false;
+				fixture.debugElement.componentInstance.bar.should.be.false;
 
-				root.debugElement.componentViewChildren[0].componentInstance.output.next();
+				fixture.debugElement.componentViewChildren[0].componentInstance.output.next();
 				this.clock.tick();
 
-				root.debugElement.componentInstance.bar.should.be.true;
+				fixture.debugElement.componentInstance.bar.should.be.true;
 			});
 
 			it('creates a dasherized directive triggered by event emitter', () => {
@@ -873,17 +873,17 @@ describe('@Component', function(){
 					outputChange = new EventEmitter();
 				}
 
-				let root = quickRootTestComponent({
+				let fixture = quickFixture({
 					directives: [Foo],
 					template: `<foo ng-init="test.bar=false" (output-change)="test.bar=true"></foo>`
 				});
 
-				root.debugElement.componentInstance.bar.should.be.false;
+				fixture.debugElement.componentInstance.bar.should.be.false;
 
-				root.debugElement.componentViewChildren[0].componentInstance.outputChange.next();
+				fixture.debugElement.componentViewChildren[0].componentInstance.outputChange.next();
 				this.clock.tick();
 
-				root.debugElement.componentInstance.bar.should.be.true;
+				fixture.debugElement.componentInstance.bar.should.be.true;
 			});
 
 			it('passes along event detail via event emitter', () => {
@@ -892,19 +892,19 @@ describe('@Component', function(){
 					output = new EventEmitter();
 				}
 
-				let root = quickRootTestComponent({
+				let fixture = quickFixture({
 					directives: [Foo],
 					template: `<foo ng-init="test.bar=false" (output)="test.bar=$event.detail"></foo>`
 				});
 
-				root.debugElement.componentInstance.bar.should.be.false;
+				fixture.debugElement.componentInstance.bar.should.be.false;
 
 				let detail = 'hello';
 
-				root.debugElement.componentViewChildren[0].componentInstance.output.next(detail);
+				fixture.debugElement.componentViewChildren[0].componentInstance.output.next(detail);
 				this.clock.tick();
 
-				root.debugElement.componentInstance.bar.should.eql('hello');
+				fixture.debugElement.componentInstance.bar.should.eql('hello');
 			});
 
 			it('creates a directive triggered by local named event emitter', () => {
@@ -913,17 +913,17 @@ describe('@Component', function(){
 					o = new EventEmitter();
 				}
 
-				let root = quickRootTestComponent({
+				let fixture = quickFixture({
 					directives: [Foo],
 					template: `<foo ng-init="test.bar=false" (output)="test.bar=true"></foo>`
 				});
 
-				root.debugElement.componentInstance.bar.should.be.false;
+				fixture.debugElement.componentInstance.bar.should.be.false;
 
-				root.debugElement.componentViewChildren[0].componentInstance.o.next();
+				fixture.debugElement.componentViewChildren[0].componentInstance.o.next();
 				this.clock.tick();
 
-				root.debugElement.componentInstance.bar.should.be.true;
+				fixture.debugElement.componentInstance.bar.should.be.true;
 			});
 
 			xit('bubbles events if they are dispatched  with bubbles set to true', () => {
@@ -937,24 +937,24 @@ describe('@Component', function(){
 				})
 				class Foo { }
 
-				let root = quickRootTestComponent({
+				let fixture = quickFixture({
 					directives: [Foo],
 					template: `<foo ng-init="test.bar=false" (bar-change)="test.bar=true"></foo>`
 				});
 
-				let rootEl = root.debugElement;
-        		let rootComponent = rootEl.componentInstance;
-				let fooEl = rootEl.componentViewChildren[0];
+				let fixtureEl = fixture.debugElement;
+        		let fixtureComponent = fixtureEl.componentInstance;
+				let fooEl = fixtureEl.componentViewChildren[0];
 				let fooComponent = fooEl.componentInstance;
 				let barEl = fooEl.componentViewChildren[0];
 				let barComponent = barEl.componentInstance;
 
-				rootComponent.bar.should.be.false;
+				fixtureComponent.bar.should.be.false;
 				fooComponent.bar.should.be.false;
 
 				barEl.nativeElement.dispatchEvent(new CustomEvent('barChange', { bubbles: true }));
 
-				rootComponent.bar.should.be.true;
+				fixtureComponent.bar.should.be.true;
 				fooComponent.bar.should.be.true;
 			});
 
@@ -971,25 +971,25 @@ describe('@Component', function(){
 				})
 				class Foo { }
 
-				let root = quickRootTestComponent({
+				let fixture = quickFixture({
 					directives: [Foo],
 					template: `<foo ng-init="test.bar=false" (bar-change)="test.bar=true"></foo>`
 				});
 
-				let rootEl = root.debugElement;
-				let rootComponent = rootEl.componentInstance;
-				let fooEl = rootEl.componentViewChildren[0];
+				let fixtureEl = fixture.debugElement;
+				let fixtureComponent = fixtureEl.componentInstance;
+				let fooEl = fixtureEl.componentViewChildren[0];
 				let fooComponent = fooEl.componentInstance;
 				let barEl = fooEl.componentViewChildren[0];
 				let barComponent = barEl.componentInstance;
 
-				rootComponent.bar.should.be.false;
+				fixtureComponent.bar.should.be.false;
 				fooComponent.bar.should.be.false;
 
 				barComponent.barChange.next();
 				this.clock.tick();
 
-				rootComponent.bar.should.be.false;
+				fixtureComponent.bar.should.be.false;
 				fooComponent.bar.should.be.true;
 			});
 		});
