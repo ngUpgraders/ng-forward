@@ -47,10 +47,10 @@ import {providerStore, componentStore, bundleStore} from '../writers';
 import {Providers} from './providers';
 // Provider parser will need to be registered with Module
 import Module from '../classes/module';
-import parsePropertyMap from '../properties/parse-property-map';
-import events from '../events/events';
 import directiveControllerFactory from '../util/directive-controller';
+import {writeMapMulti} from './input-output';
 import {inputsMap} from '../properties/inputs-builder';
+import events from '../events/events';
 
 const TYPE = 'component';
 
@@ -123,20 +123,12 @@ export function Component(
 				throw new TypeError(`Component Decorator Error in "${t.name}": Component ${propName} must be an array`);
 			}
 		});
-	
-		// Check for Angular 2 style inputs
-		let inputMap = parsePropertyMap(inputs);
-		let previousInputMap = componentStore.get('inputMap', t) || {};
-		componentStore.set('inputMap', Object.assign({}, previousInputMap, inputMap), t);
-	
-		// outputs
-		if(outputs.length > 0){
-			let outputMap = parsePropertyMap(outputs) || {};
-			componentStore.set('outputMap', outputMap, t);
-			for(let key in outputMap){
-				events.add(outputMap[key]);
-			}
-		}
+
+		writeMapMulti(t, inputs, 'inputMap');
+
+		let outputMap = writeMapMulti(t, outputs, 'outputMap');
+		Object.keys(outputMap).forEach(key => events.add(key));
+
 
 		// Allow for renaming the controllerAs
 		if(controllerAs) {
