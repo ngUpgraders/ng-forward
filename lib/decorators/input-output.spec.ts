@@ -524,8 +524,6 @@ describe('@Output Decorator', function(){
 			@Output() baz;
 		}
 
-		console.log('input-output.spec.ts, it::527', `componentStore.get('outputMap', Foo):`, componentStore.get('outputMap', Foo));
-
 		componentStore.get('outputMap', Foo).should.eql({
 			bar: 'barPublic1',
 			baz: 'baz',

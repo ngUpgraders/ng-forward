@@ -31,7 +31,7 @@
   ],
   "license": "ISC",
   "dependencies": {
-    "@reactivex/rxjs": "^5.0.0-alpha.4",
+    "@reactivex/rxjs": "5.0.0-alpha.7",
     "reflect-metadata": "^0.1.2"
   },
   "devDependencies": {

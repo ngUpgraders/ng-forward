@@ -19,11 +19,9 @@ export default function(instance: any, element: INgForwardJQuery, $scope: ng.ISc
   // Create a subscription to the event emitter. When we observe a new value,
   // dispatch a bubbling event onto the element
   const create = (eventKey: string, emitter: EventEmitter) => {
-    return emitter.observer({
-      next: (data: any) => {
-        let event = new CustomEvent(eventKey, { detail: data, bubbles: false });
-        element[0].dispatchEvent(event);
-      }
+    return emitter.subscribe((data: any) => {
+      let event = new CustomEvent(eventKey, { detail: data, bubbles: false });
+      element[0].dispatchEvent(event);
     });
   };
 
