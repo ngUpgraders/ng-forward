@@ -28,39 +28,40 @@ export default function inputsBuilder(controller, localKey, publicKey){
   // we don't leak our abstraction
 
   let stringKey = `@${localKey}`;
-  let __stringKey = `__@${localKey}`;
   let oneWayKey = `[${publicKey}]`;
-  let __oneWayKey = `__[${publicKey}]`;
   let twoWayKey = `[(${publicKey})]`;
-  let __twoWayKey = `__[(${publicKey})]`;
+  let __stringKey = Symbol();
+  let __oneWayKey = Symbol();
+  let __twoWayKey = Symbol();
+  let __using_binding = Symbol();
 
   Object.defineProperties(controller, {
 
     [stringKey]: {
       enumerable: false, configurable: false,
-      set: createHiddenPropSetting(BIND_STRING, __stringKey),
+      set: createHiddenPropSetter(BIND_STRING, __stringKey),
       get() { return this[__stringKey]; }
     },
 
     [oneWayKey]: {
       enumerable: false, configurable: false,
-      set: createHiddenPropSetting(BIND_ONEWAY, __oneWayKey),
+      set: createHiddenPropSetter(BIND_ONEWAY, __oneWayKey),
       get() { return this[__oneWayKey]; }
     },
 
     [twoWayKey]: {
       enumerable: false, configurable: false,
-      set: createHiddenPropSetting(BIND_TWOWAY, __twoWayKey),
+      set: createHiddenPropSetter(BIND_TWOWAY, __twoWayKey),
       get() { return this[localKey]; }
     },
 
-    __using_binding: {
+    [__using_binding]: {
       enumerable: false, configurable: false, writable: true,
       value: controller.__using_binding || {}
     }
   });
 
-  function createHiddenPropSetting(BIND_TYPE, __privateKey) {
+  function createHiddenPropSetter(BIND_TYPE, __privateKey) {
     return function(val) {
       this[__privateKey] = val;
 
@@ -68,16 +69,16 @@ export default function inputsBuilder(controller, localKey, publicKey){
         setBindingUsed(BIND_TYPE, localKey);
       }
 
-      if (controller.__using_binding[localKey] === BIND_TYPE) {
+      if (controller[__using_binding][localKey] === BIND_TYPE) {
         this[localKey] = val;
       }
     }
   }
 
   function setBindingUsed(using, key) {
-    if (controller.__using_binding[key] && controller.__using_binding[key] !== using) {
+    if (controller[__using_binding][key] && controller[__using_binding][key] !== using) {
       throw new Error(`Can not use more than one type of attribute binding simultaneously: ${key}, [${key}], [(${key})]. Choose one.`);
     }
-    controller.__using_binding[key] = using;
+    controller[__using_binding][key] = using;
   }
 }
