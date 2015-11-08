@@ -127,6 +127,12 @@ function moveMiscFiles(){
 		.pipe(gulp.dest('./dist'));
 }
 
+function createEntryTypingsFile(){
+	return gulp.src('./dist/cjs/index.d.ts')
+		.pipe(replace(`from './`, `from './cjs/`))
+		.pipe(gulp.dest('./dist'));
+}
+
 gulp.task('clean-dist', deleteDistFolder);
 gulp.task('build/ts-to-es6', typescriptToES6);
 gulp.task('build/test', testES6(false));
@@ -137,6 +143,7 @@ gulp.task('build/bundle-to-es5', bundleToES5);
 gulp.task('build/create-sfx-bundle', createSFXBundle);
 gulp.task('build/cleanup', cleanupDistFolder);
 gulp.task('build/move-misc-files', moveMiscFiles);
+gulp.task('build/entry-typings', createEntryTypingsFile);
 
 gulp.task('watch/test', testES6(true));
 gulp.task('watch/ts-to-es6', () => {
@@ -155,6 +162,7 @@ gulp.task('build', done => {
 			'build/create-sfx-bundle',
 			'build/cleanup',
 			'build/move-misc-files',
+			'build/entry-typings',
 			done
 	)
 });
