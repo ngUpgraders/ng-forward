@@ -2,7 +2,7 @@
 
 ![ng-forward logo](https://raw.githubusercontent.com/ngUpgraders/ng-forward/master/ng-forward-logo.png)
 
-[![Build Status](https://travis-ci.org/ngUpgraders/ng-forward.svg?branch=master)](https://travis-ci.org/ngUpgraders/ng-forward)   [![npm version](https://badge.fury.io/js/ng-forward.svg)](https://badge.fury.io/js/ng-forward)  [![Join the chat at https://gitter.im/ngUpgraders/ng-forward](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ngUpgraders/ng-forward?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://travis-ci.org/ngUpgraders/ng-forward.svg?branch=master)](https://travis-ci.org/ngUpgraders/ng-forward)   [![npm version](https://badge.fury.io/js/ng-forward.svg)](https://badge.fury.io/js/ng-forward)  [![dependencies](https://david-dm.org/ngUpgraders/ng-forward.svg)](https://david-dm.org/ngUpgraders/ng-forward)  [![Join the chat at https://gitter.im/ngUpgraders/ng-forward](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ngUpgraders/ng-forward?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ***ng-forward*** is the default solution for people who want to start writing code using Angular 2 conventions and styles that runs today on Angular 1.3+.
 
