@@ -491,7 +491,7 @@ NgDecorate - @Mitranim
 
 The Angular 2.x API has changed a lot and is hopefully starting to stabilize. However, obviously there will be more changes before final release.
 
-Our goal in ng-forward will be to adjust to changes but support the old syntax with deprecation warnings.
+Our goal in ng-forward will be to adjust to changes and provide the same level of deprecation support and breaking changes as Angular 2.
 
 #### Does ng-forward support all Angular 2.x features?
 
@@ -505,9 +505,12 @@ Here's an example of the steps you might take:
 - [Part 2 A](https://gist.github.com/timkindberg/78226481690a20f9f2a0) / [Part 2 B](https://gist.github.com/timkindberg/78226481690a20f9f2a0)
 - [After Migration](https://gist.github.com/timkindberg/73280001a84a15370ade)
 
+#### How do I use ui-router with ng-forward?
+We are going to write a @StateConfig decorator soon (track it here: https://github.com/ngUpgraders/ng-forward/issues/42). Until then you'll have to use the approach from this example app: https://github.com/ngUpgraders/ng-forward/issues/42
+
 #### Do you support writing in plain ES5?
 
-Our goal is to support the ES5 syntax used by Angular 2.x. Currently, this part of ng-forward is not well developed but we intend to support it in the future.
+Our goal is to support the ES5 syntax used by Angular 2.x. Currently, this part of ng-forward is not well developed but we intend to support it in the future. Follow this issue: https://github.com/ngUpgraders/ng-forward/pull/60
 
 #### Who made this library?
 
