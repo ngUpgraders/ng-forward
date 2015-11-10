@@ -97,7 +97,7 @@ export function Component(
 	
 		// Grab the providers from the config object, parse them, and write the metadata
 		// to the target.
-		Providers(...providers)(t);
+		Providers(...providers)(t, `while analyzing Component '${t.name}' providers`);
 	
 		// Restrict type must be 'element'
 		componentStore.set('restrict', restrict, t);
@@ -187,8 +187,8 @@ export function View(
 			throw new Error(`@Component config must include either a template or a template url for component with selector ${selector} on ${t.name}`);
 		}
 	
-		Providers(...directives)(t);
-		Providers(...pipes)(t);
+		Providers(...directives)(t, `while analyzing Component '${t.name}' directives`);
+		Providers(...pipes)(t, `while analyzing Component '${t.name}' pipes`);
 	}
 }
 

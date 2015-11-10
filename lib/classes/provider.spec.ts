@@ -1,4 +1,4 @@
-import '../tests/frameworks';
+import {expect} from '../tests/frameworks';
 import { providerStore } from '../writers';
 import { Provider, provide } from './provider';
 import { ng } from '../tests/angular';
@@ -10,7 +10,6 @@ import { Component } from '../decorators/component';
 import { TestComponentBuilder, providers } from '../testing/index';
 import { OpaqueToken } from '../classes/opaque-token';
 import { quickFixture } from '../tests/utils';
-
 
 class SomeToken {}
 
@@ -42,6 +41,17 @@ describe('Provider Class', () => {
   it('throws No usage provided if no use method is provided', () => {
     //noinspection TypeScriptValidateTypes
     () => new Provider('foo').should.throw;
+  });
+
+  it('throws invalid deps if providing an uninjectable type', () => {
+    class InvalidDueToNoAnnotations {}
+
+    expect(() => {
+      new Provider('foo', {
+        useFactory: invalid => invalid,
+        deps: [InvalidDueToNoAnnotations]
+      });
+    }).to.throw(/Processing "useFactory" @Inject parameter: "InvalidDueToNoAnnotations" is not a valid injectable/);
   });
 
   it('binds to a value', () => {

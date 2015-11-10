@@ -41,7 +41,7 @@ export function Inject( ...injects: any[] ){
 				.filter(notStringBased)
 				.map(ensureInjectable);
 	
-		Providers(...providers)(t);
+		Providers(...providers)(t, `while analyzing '${t.name}' injected providers`);
 	
 		let dependencies = injects.map(getInjectableName).filter(n => n !== undefined);
 	

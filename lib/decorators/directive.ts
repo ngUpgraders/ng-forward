@@ -59,7 +59,7 @@ export function Directive(
 	
 		// Grab the providers from the config object, parse them, and write the metadata
 		// to the target.
-		Providers(...providers)(t);
+		Providers(...providers)(t, `while analyzing Directive '${t.name}' providers`);
 	
 		// Restrict type must be 'element'
 		componentStore.set('restrict', restrict, t);

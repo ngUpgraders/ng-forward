@@ -14,8 +14,8 @@ import {bundleStore} from '../writers';
 import groupIntoModulesAndProviders from '../util/group-modules-providers';
 
 export function Providers(...modulesAndProviders: any[]){
-  return function(t: any){
-    let { modules, providers } = groupIntoModulesAndProviders(modulesAndProviders);
+  return function(t: any, errorContext: string = `while parsing ${t.name}'s providers`){
+    let { modules, providers } = groupIntoModulesAndProviders(modulesAndProviders, errorContext);
   
     let parentModules = bundleStore.get('modules', t) || [];
     bundleStore.set('modules', [...modules, ...parentModules], t);

@@ -1,4 +1,4 @@
-import {sinon} from './tests/frameworks';
+import {sinon, expect} from './tests/frameworks';
 import bundle from './bundle';
 import {Component} from './decorators/component';
 import {Inject} from './decorators/inject';
@@ -58,10 +58,12 @@ describe('bundle a module', () => {
 
   it('with required modules defined in providers from provider tree', () => {
     let module = bundle('foo', MyApp);
+    //noinspection TypeScriptUnresolvedVariable
     module._dependencies.should.be.eql(['module-a', 'module-b', 'module-c']);
   });
 
   it('with added annotated classes defined in providers from provider tree', () => {
+    //noinspection TypeScriptUnresolvedVariable
     let module = bundle('foo', MyApp)._module;
     let groupedByClass = moduleAddStub.args[0].reduce((memo, p) => {
       var key = p.name || 'other';
@@ -75,5 +77,13 @@ describe('bundle a module', () => {
     groupedByClass._Nested2.length.should.be.eql(1);
     groupedByClass.other.length.should.be.eql(1);
     groupedByClass.other[0].should.be.eql(fooProvider);
+  });
+
+  it('throws an error if attempting to bundle an invalid Component', () => {
+    class InvalidDueToNoAnnotations {}
+
+    expect(() => {
+      bundle('foo', InvalidDueToNoAnnotations);
+    }).to.throw(/TypeError during bundle entry point for 'foo' module/);
   });
 });

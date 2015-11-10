@@ -1,4 +1,4 @@
-import '../tests/frameworks';
+import {expect} from '../tests/frameworks';
 import {providerStore, componentStore} from '../writers';
 import {Directive} from './directive';
 
@@ -25,5 +25,16 @@ describe('@Directive Decorator', function(){
     };
 
     decorate.should.throw(Error);
+  });
+
+  it('throws an error for invalid provider', () => {
+    class InvalidDueToNoAnnotations {}
+
+    expect(() => {
+      @Directive({ selector: '[foo]',
+        providers: [InvalidDueToNoAnnotations]
+      })
+      class Foo {}
+    }).to.throw(/while analyzing Directive 'Foo' providers/);
   });
 });

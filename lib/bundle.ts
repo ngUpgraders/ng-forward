@@ -28,7 +28,8 @@ export default function bundle(moduleName: string, provider: any, otherProviders
 
   // Kick the process off by getting the list of `angular.module`s and decorated
   // classes the root provider requires
-  let {modules: startingModules, providers: startingProviders} = groupModulesAndProviders([provider, ...otherProviders]);
+  let {modules: startingModules, providers: startingProviders} = groupModulesAndProviders([provider, ...otherProviders],
+  `during bundle entry point for '${moduleName}' module`);
 
   // This set will be used to hold providers as they are traversed.
   // Since sets can only contain unique values, we'll use this set to see if the provider

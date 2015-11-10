@@ -48,7 +48,7 @@ export class Provider {
     if (deps) {
       // Simulate having both an @Inject and provide: [] on the factory function
       Inject(...deps)(this.useFactory);
-      Providers(...deps.filter(d => typeof d !== 'string'))(this.useFactory);
+      Providers(...deps.filter(d => typeof d !== 'string'))(this.useFactory, `while analyzing Provider '${this.token}' useFactory deps`);
       this._dependencies = bundleStore.get('$inject', this.useFactory);
     }
 

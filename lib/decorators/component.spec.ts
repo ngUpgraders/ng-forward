@@ -9,6 +9,7 @@ import events from '../events/events';
 import { quickFixture } from '../tests/utils';
 import EventEmitter from '../events/event-emitter';
 import CustomEvent from '../util/custom-event';
+import InvalidDueToNoAnnotations from "../classes/provider.spec";
 
 describe('@Component', function(){
 
@@ -43,6 +44,39 @@ describe('@Component', function(){
 				@Component({ selector: 'my-component', outputs: {} })
 				class MyClass{ }
 			}).to.throw('Component Decorator Error in "MyClass": Component outputs must be an array');
+		});
+
+		it('throws an error for invalid provider', () => {
+			class InvalidDueToNoAnnotations {}
+
+			expect(() => {
+				@Component({ selector: 'foo', template: 'x',
+					providers: [InvalidDueToNoAnnotations]
+				})
+				class Foo {}
+			}).to.throw(/TypeError while analyzing Component 'Foo' providers/);
+		});
+
+		it('throws an error for invalid directives', () => {
+			class InvalidDueToNoAnnotations {}
+
+			expect(() => {
+				@Component({ selector: 'foo', template: 'x',
+					directives: [InvalidDueToNoAnnotations]
+				})
+				class Foo {}
+			}).to.throw(/TypeError while analyzing Component 'Foo' directives/);
+		});
+
+		it('throws an error for invalid pipes', () => {
+			class InvalidDueToNoAnnotations {}
+
+			expect(() => {
+				@Component({ selector: 'foo', template: 'x',
+					pipes: [InvalidDueToNoAnnotations]
+				})
+				class Foo {}
+			}).to.throw(/TypeError while analyzing Component 'Foo' pipes/);
 		});
 
 		it('should decorate a class with correct provider metadata', function(){
