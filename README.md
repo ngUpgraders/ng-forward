@@ -247,7 +247,7 @@ and here's where we call them in the component
 	}
 ```
 
-Note there's two ways trigger an event. We can simply trigger a DOM event as seen in `triggerEventNormally`. In this cause the event won't bubble up unless you tell it to.
+Note there's two ways to trigger an event. We can simply trigger a DOM event as seen in `triggerEventNormally`. In this cause the event won't bubble up unless you tell it to.
 
 We can also use the new ng2 Event Emitter syntax, as seen in `triggerEventViaEventEmitter`. This uses the Rxjs Event Emitter to trigger the event.
 
