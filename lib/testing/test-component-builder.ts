@@ -6,6 +6,7 @@ import { View } from '../decorators/component'
 import {INgForwardJQuery} from "../util/jqlite-extensions";
 import IInjectorService = angular.auto.IInjectorService;
 import {DecoratedModule} from "../classes/module";
+import CompilerHost = ts.CompilerHost;
 
 export interface ngClass {
   new (...any): any;
@@ -31,12 +32,20 @@ export class TestComponentBuilder {
     let decoratedModule: DecoratedModule = bundle('test.module', rootComponent);
     angular.mock.module(decoratedModule.name);
     angular.mock.module($provide =>
+    // todo: support all providers, not just useValue ones
         allProviders().forEach(({token, useValue}) =>
             $provide.value(token, useValue)));
 
     let fixture: ComponentFixture = compileComponent(rootComponent);
     clearProviders();
     return fixture;
+  }
+
+  createAsync(rootComponent: ngClass): Promise<ComponentFixture> {
+    let fixture: ComponentFixture = this.create(rootComponent);
+    let fixturePromise: Promise<ComponentFixture>
+        = new Promise(resolve => resolve(fixture));
+    return fixturePromise;
   }
 
   overrideTemplate(component: ngClass, template: string) {
