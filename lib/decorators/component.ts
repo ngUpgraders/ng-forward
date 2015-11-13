@@ -48,9 +48,16 @@ import {Providers} from './providers';
 // Provider parser will need to be registered with Module
 import Module from '../classes/module';
 import directiveControllerFactory from '../util/directive-controller';
+import {getInjectableName} from '../util/get-injectable-name';
 import {writeMapMulti} from './input-output';
 import {inputsMap} from '../properties/inputs-builder';
 import events from '../events/events';
+import {flatten, createConfigErrorMessage} from '../util/helpers';
+import {uiRouterChildConfigsStoreKey, uiRouterConfigsStoreKey, uiRouterResolvedMapStoreKey, IComponentState} from './state-config';
+
+import {IComponentState} from "./state-config";
+import IStateProvider = ng.ui.IStateProvider;
+import IInjectorService = angular.auto.IInjectorService;
 
 const TYPE = 'component';
 
@@ -192,7 +199,6 @@ export function View(
 	}
 }
 
-// ## Component Provider Parser
 Module.addProvider(TYPE, (target: any, name: string, injects: string[], ngModule: ng.IModule) => {
 	// First create an empty object to contain the directive definition object
 	let ddo: any = {};
@@ -206,36 +212,71 @@ Module.addProvider(TYPE, (target: any, name: string, injects: string[], ngModule
 	let bindProp = angular.version.minor >= 4 ? 'bindToController' : 'scope';
 	ddo[bindProp] = inputsMap(ddo.inputMap);
 
-	checkComponentConfig();
+	// If the selector type was not an element, throw an error. Components can only
+	// be elements in Angular 2, so we want to enforce that strictly here.
+	if(ddo.restrict !== 'E') {
+		throw new Error(createConfigErrorMessage(target, ngModule,
+				`@Component selectors can only be elements. ` +
+				`Perhaps you meant to use @Directive?`));
+	}
 
 	// Component controllers must be created from a factory. Checkout out
 	// util/directive-controller.js for more information about what's going on here
-	ddo.controller = [
-		'$scope', '$element', '$attrs', '$transclude', '$injector',
-		function($scope: any, $element: any, $attrs: any, $transclude: any, $injector: any): any{
-			return directiveControllerFactory(this, injects, target, ddo, $injector, {
-				$scope,
-				$element,
-				$attrs,
-				$transclude
-			});
-		}
-	];
+	controller.$inject = ['$scope', '$element', '$attrs', '$transclude', '$injector'];
+	function controller($scope: any, $element: any, $attrs: any, $transclude: any, $injector: any): any{
+		let resolvesMap = componentStore.get(uiRouterResolvedMapStoreKey, target);
+		//console.log('component.ts, controller::235', `resolvesMap:`, resolvesMap);
+		let locals = Object.assign({ $scope, $element, $attrs, $transclude }, resolvesMap);
+        return directiveControllerFactory(this, injects, target, ddo, $injector, locals);
+	}
+
+	ddo.controller = controller;
+
+	if (ddo.template && ddo.template.replace) {
+		// Template Aliases
+		ddo.template = ddo.template
+				.replace(/ng-content/g, 'ng-transclude')
+				.replace(/ng-outlet/g, 'ui-view');
+	}
 
 	// Finally add the component to the raw module
 	ngModule.directive(name, () => ddo);
 
-	function createConfigErrorMessage(message: string): string {
-		return `Processing "${target.name}" in "${ngModule.name}": ${message}`;
-	}
 
-	function checkComponentConfig() {
-		// If the selector type was not an element, throw an error. Components can only
-		// be elements in Angular 2, so we want to enforce that strictly here.
-		if(ddo.restrict !== 'E') {
-			throw new Error(createConfigErrorMessage(
-				`@Component selectors can only be elements. ` +
-				`Perhaps you meant to use @Directive?`));
+    /////////////////
+	/* StateConfig */
+    /////////////////
+
+	let childStateConfigs: IComponentState[] = componentStore.get(uiRouterChildConfigsStoreKey, target);
+
+	if (childStateConfigs) {
+		if (!Array.isArray(childStateConfigs)) {
+			throw new TypeError(createConfigErrorMessage(target, ngModule, '@StateConfig param must be an array of state objects.'));
 		}
+
+		ngModule.config(['$stateProvider', function($stateProvider: IStateProvider) {
+			if (!$stateProvider) return;
+
+			childStateConfigs.forEach((config: IComponentState) => {
+				let tagName = providerStore.get('name', config.component);
+				let childInjects = bundleStore.get('$inject', config.component);
+				let injectedResolves = childInjects ? childInjects.map(getInjectableName) : [];
+
+				//console.log('component.ts, parser::274', `injectedResolves:`, injectedResolves);
+
+				function stateController(...resolves): any {
+					let resolvedMap = resolves.reduce((obj, val, i) => {
+						obj[injectedResolves[i]] = val;
+						return obj;
+					}, {});
+					//console.log('component.ts, stateController::282', `resolvedMap:`, resolvedMap);
+					componentStore.set(uiRouterResolvedMapStoreKey, resolvedMap, config.component);
+				}
+
+				config.controller = [...injectedResolves, stateController];
+				config.template = config.template || `<${tagName}></${tagName}>`;
+				$stateProvider.state(config.name, config);
+			});
+		}]);
 	}
 });

@@ -107,7 +107,7 @@ describe('Integration: Module', () => {
 		angular = ng.useReal();
 	});
 
-	it('should let you create an Angular module', function(){
+	it('should let you create an Angular module', () => {
 		let module = Module('test', []);
 		angular.module('test').should.be.equal(module.publish());
 	});

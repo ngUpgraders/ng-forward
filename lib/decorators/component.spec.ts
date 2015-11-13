@@ -9,7 +9,6 @@ import events from '../events/events';
 import { quickFixture } from '../tests/utils';
 import EventEmitter from '../events/event-emitter';
 import CustomEvent from '../util/custom-event';
-import InvalidDueToNoAnnotations from "../classes/provider.spec";
 
 describe('@Component', function(){
 
@@ -375,6 +374,30 @@ describe('@Component', function(){
 
 			let componentEl = fixture.debugElement.componentViewChildren[0];
 			componentEl.html().should.be.eql('template content');
+		});
+
+		it('creates a directive with transclusion', () => {
+			@Component({ selector: 'foo', template: "** <ng-transclude></ng-transclude> **" })
+			class MyClass{ }
+
+			let fixture = quickFixture({
+				directives: [MyClass],
+				template: `<foo>hello</foo>`
+			});
+
+			fixture.debugElement.text().should.be.equal('** hello **');
+		});
+
+		it('creates a directive with transclusion using ng-content alias', () => {
+			@Component({ selector: 'foo', template: "** <ng-content></ng-content> **" })
+			class MyClass{ }
+
+			let fixture = quickFixture({
+				directives: [MyClass],
+				template: `<foo>hello</foo>`
+			});
+
+			fixture.debugElement.text().should.be.equal('** hello **');
 		});
 
 		describe('inputs', () => {
