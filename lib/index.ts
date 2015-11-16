@@ -11,6 +11,7 @@ import { Inject } from './decorators/inject';
 import { Injectable } from './decorators/injectable';
 import { Pipe } from './decorators/pipe';
 import { Providers } from './decorators/providers';
+import { Input, Output } from './decorators/input-output';
 
 // Events
 import events from './events/events';
@@ -43,6 +44,8 @@ export {
 	Injectable,
 	Pipe,
 	Providers,
+	Input,
+	Output,
 	
 	// Events
 	events,
