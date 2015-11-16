@@ -258,7 +258,7 @@ Let's look at the final building block of the ng-forward app, the top level comp
 ```js
 @Component({
 	selector: 'app',
-	bindings: [TestService, "ui.router"]
+	providers: [TestService, "ui.router"]
 	directives: [InnerApp, Nested],
 	template: `
 		<h1>App</h1>
@@ -421,7 +421,7 @@ class InnerApp{
 
 @Component({
 	selector: 'app',
-	bindings: [TestService, "ui.router"]
+	providers: [TestService, "ui.router"]
 })
 @View({
 	directives: [InnerApp, Nested],
