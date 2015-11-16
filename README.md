@@ -93,7 +93,7 @@ Again, it's a regular ES6 class. Just tell the injector that it's injectable wit
 Now lets look at a more complicated component:
 
 ```js
-import { Component, Inject } from 'ng-forward';
+import { Component, Inject, Input } from 'ng-forward';
 
 @Component({
 	selector: 'inner-app'
