@@ -53,7 +53,10 @@ function buildES6Dist(){
 function buildCJSDist(){
 	let transpile = gulp.src('./dist/es6/**/*.js')
 		.pipe(sourcemaps.init({ loadMaps: true }))
-		.pipe(babel({ modules: 'common', stage: 0 }))
+		.pipe(babel({
+			plugins: ['transform-es2015-modules-commonjs'],
+			presets: ['es2015', 'stage-0']
+		}))
 		.pipe(sourcemaps.write())
 		.pipe(gulp.dest('./dist/cjs'));
 
@@ -91,14 +94,17 @@ async function rollupES6(){
 function bundleToES5(){
 	return gulp.src('./dist/ng-forward.es6.js')
 		.pipe(rename('ng-forward.js'))
-		.pipe(babel({ modules: 'umd', stage: 0 }))
+		.pipe(babel({
+			plugins: ['transform-es2015-modules-umd'],
+			presets: ['es2015', 'stage-0']
+		}))
 		.pipe(rename('ng-forward.es5.js'))
 		.pipe(gulp.dest('./dist'));
 }
 
 function createSFXBundle(){
 	return gulp.src([
-			require.resolve('babel-core/browser-polyfill'),
+			require.resolve('babel-polyfill/dist/polyfill'),
 			require.resolve('reflect-metadata'),
 			'./dist/ng-forward.es5.js'
 		])

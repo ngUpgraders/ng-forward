@@ -11,7 +11,7 @@ module.exports = function(config){
 		angular: ['mocks'],
 
 		files: [
-			require.resolve('babel-core/browser-polyfill'),
+			require.resolve('babel-polyfill'),
 			'../node_modules/reflect-metadata/Reflect.js',
 			'lib/**/*.spec.js'
 		],
@@ -21,12 +21,13 @@ module.exports = function(config){
 		},
 
 		browserify: {
+			debug: true,
 			watch: true,
-			noParse: [
-				// require.resolve('sinon-chai')
-			],
 			transform: [
-				['babelify', { stage: 0 }],
+				['babelify', {
+					presets: ['es2015', 'stage-0'],
+					plugins: ['transform-es2015-modules-commonjs']
+				}],
 				['aliasify', { aliases: {
 					'@reactivex/rxjs/dist/es6/Subject': '@reactivex/rxjs/dist/cjs/Subject'
 				}}]

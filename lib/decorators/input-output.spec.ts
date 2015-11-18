@@ -62,6 +62,25 @@ describe('@Input Decorator', function(){
 			this.clock.restore();
 		});
 
+		it.only('allows inputs to be access in constructor', () => {
+			@Component({ selector: 'foo', template: '{{foo.myBar}}' })
+			class MyClass{
+				@Input('fooBar') bar;
+				private myBar;
+
+				constructor() {
+					this.myBar = this.bar;
+				}
+			}
+
+			fixture = quickFixture({
+				directives: [MyClass],
+				template: `<foo boo-bar="1"></foo>`
+			});
+
+			fixture.debugElement.text().should.eql('1');
+		});
+
 		it('adds each input as an allowed attribute on the element', () => {
 			@Component({ selector: 'foo', template: '{{foo.bar}} {{foo.baz}}' })
 			class MyClass{

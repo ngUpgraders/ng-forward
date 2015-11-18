@@ -18,7 +18,12 @@ export const writeMapMulti = (t, names, storeKey) => {
 };
 
 export function Input(publicName: string){
-	return function(proto: any, localName: string){
+	return function(proto: any, localName: string, descriptor){
+		//console.log(descriptor);
+		//descriptor.initializer = function() {
+		//	return this[localName];
+		//};
+
 		writeMapSingle(proto.constructor, localName, publicName, 'inputMap');
 	}
 }

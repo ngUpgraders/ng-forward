@@ -4,9 +4,14 @@
   "description": "The default solution for those that want to write Angular 2.x style code in Angular 1.x",
   "main": "./index.js",
   "jsnext:main": "./es6/index.js",
+  "babel": {
+    "presets": [
+      "stage-0",
+      "es2015"
+    ]
+  },
   "repository": {
-    "type": "git",
-    "url": "https://github.com/ngUpgraders/ng-forward"
+    "type": "git"
   },
   "scripts": {
     "test": "tsd install && gulp build"
@@ -38,13 +43,18 @@
     "aliasify": "^1.8.0",
     "angular": "^1.4.7",
     "angular-mocks": "^1.4.7",
-    "babel": "^5.8.29",
-    "babel-core": "^5.3.0",
-    "babelify": "^6.4.0",
+    "babel": "^6.1.18",
+    "babel-core": "^6.1.21",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.1.20",
+    "babel-plugin-transform-es2015-modules-umd": "^6.1.18",
+    "babel-polyfill": "^6.1.19",
+    "babel-preset-es2015": "^6.1.18",
+    "babel-preset-stage-0": "^6.1.18",
+    "babelify": "^7.2.0",
     "chai": "^3.4.0",
     "del": "^2.0.2",
     "gulp": "^3.9.0",
-    "gulp-babel": "^5.3.0",
+    "gulp-babel": "^6.1.0",
     "gulp-concat": "^2.6.0",
     "gulp-filter": "^3.0.1",
     "gulp-rename": "^1.2.2",
@@ -63,6 +73,7 @@
     "karma-sourcemap-loader": "^0.3.6",
     "merge2": "^0.3.6",
     "mocha": "^2.3.3",
+    "regenerator": "^0.8.42",
     "rimraf": "^2.4.3",
     "rollup": "^0.20.2",
     "rollup-babel": "^0.6.1",
