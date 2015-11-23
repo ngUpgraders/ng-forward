@@ -93,7 +93,7 @@ Again, it's a regular ES6 class. Just tell the injector that it's injectable wit
 Now lets look at a more complicated component:
 
 ```js
-import { Component, Inject, Input } from 'ng-forward';
+import { Component, Inject, Input, Output } from 'ng-forward';
 
 @Component({
 	selector: 'inner-app'
@@ -353,7 +353,7 @@ import 'babel/polyfill';
 import 'angular';
 import 'zone.js';
 import uiRouter from 'angular-ui-router';
-import {Component, View, Inject, EventEmitter, bootstrap} from 'ng-forward';
+import {Component, Input, Output, Inject, EventEmitter, bootstrap} from 'ng-forward';
 
 class TestService{
 	getValue(){
@@ -369,10 +369,6 @@ class Nested{ }
 
 @Component({
 	selector: 'inner-app',
-	properties: ['message1', 'message2', 'msg3: message3'],
-	events: ['event1', 'evt2: event2']
-})
-@View({
 	directives: [Nested],
 	template: `
 		<h2>Inner app</h2>
@@ -399,6 +395,13 @@ class Nested{ }
 })
 @Inject(TestService, '$element')
 class InnerApp{
+	@Input() message1;
+	@Input() message2;
+	@Input('message3') msg3;
+
+	@Output() event1 = new EventEmitter();
+	@Output('event2') evt2 = new EventEmitter();
+	
 	constructor(TestService, $element){
 		this.$element = $element;
 		this.TestService = TestService;
@@ -421,9 +424,7 @@ class InnerApp{
 
 @Component({
 	selector: 'app',
-	providers: [TestService, "ui.router"]
-})
-@View({
+	providers: [TestService, "ui.router"],
 	directives: [InnerApp, Nested],
 	template: `
 		<h1>App</h1>
