@@ -1,4 +1,4 @@
-import {expect} from '../tests/frameworks';
+import {expect, sinon} from '../tests/frameworks';
 import {Component} from '../decorators/component';
 import {Inject} from '../decorators/inject';
 import {Injectable} from '../decorators/injectable';

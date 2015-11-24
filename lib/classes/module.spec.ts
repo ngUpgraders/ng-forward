@@ -1,4 +1,4 @@
-import {sinon} from '../tests/frameworks';
+import {sinon, expect} from '../tests/frameworks';
 import {ng, ngMocks} from '../tests/angular';
 import {providerStore} from '../writers';
 import Module from './module';
