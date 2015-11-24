@@ -20,6 +20,15 @@ describe('@Inject annotation', function(){
 		bundleStore.get('$inject', MyClass).should.eql(['a', 'b', 'c']);
 	});
 
+	it('should add injected dependencies to static methods', function(){
+		class MyClass{
+			@Inject('a', 'b', 'c')
+			static foo(){}
+		}
+
+		bundleStore.get('$inject', MyClass.foo).should.eql(['a', 'b', 'c']);
+	});
+
 	it('should throw an error if injecting an invalid provider', function(){
 		@Injectable class ValidClass {}
 		let validNg1Service = '$q';

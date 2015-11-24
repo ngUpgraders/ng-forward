@@ -56,10 +56,23 @@ import {createConfigErrorMessage} from '../util/helpers';
 const TYPE = 'component';
 
 export const componentHooks = {
-	after: [],
-	extendDDO: [],
-	beforeCtrlInvoke: [],
-	afterCtrlInvoke: []
+	_after: [],
+	_extendDDO: [],
+	_beforeCtrlInvoke: [],
+	_afterCtrlInvoke: [],
+
+	after(fn: (target: any, name: string, injects: string[], ngModule: ng.IModule) => any){
+		this._after.push(fn)
+	},
+	extendDDO(fn: (ddo: any, target: any, name: string, injects: string[], ngModule: ng.IModule) => any){
+		this._extendDDO.push(fn)
+	},
+	beforeCtrlInvoke(fn: (caller: any, injects: string[], controller: any, ddo: any, $injector: any, locals: any) => any){
+		this._beforeCtrlInvoke.push(fn)
+	},
+	afterCtrlInvoke(fn: (caller: any, injects: string[], controller: any, ddo: any, $injector: any, locals: any) => any){
+		this._afterCtrlInvoke.push(fn)
+	}
 };
 
 // ## Decorator Definition
@@ -232,10 +245,10 @@ Module.addProvider(TYPE, (target: any, name: string, injects: string[], ngModule
 		ddo.template = ddo.template.replace(/ng-content/g, 'ng-transclude')
 	}
 
-	componentHooks.extendDDO.forEach(hook => hook(ddo));
+	componentHooks._extendDDO.forEach(hook => hook(ddo, target, name, injects, ngModule));
 
 	// Finally add the component to the raw module
 	ngModule.directive(name, () => ddo);
 
-	componentHooks.after.forEach(hook => hook(target, name, injects, ngModule));
+	componentHooks._after.forEach(hook => hook(target, name, injects, ngModule));
 });

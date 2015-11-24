@@ -28,13 +28,13 @@ export default function(caller: any, injects: string[], controller: any, ddo: an
   // to extend after defining the properties. That way we fire the setters.
   Object.assign(instance, caller);
 
-  componentHooks.beforeCtrlInvoke.forEach(hook => hook(caller, injects, controller, ddo, $injector, locals));
+  componentHooks._beforeCtrlInvoke.forEach(hook => hook(caller, injects, controller, ddo, $injector, locals));
 
   // Finally, invoke the constructor using the injection array and the captured
   // locals
   $injector.invoke([...injects, controller], instance, locals);
 
-  componentHooks.afterCtrlInvoke.forEach(hook => hook(caller, injects, controller, ddo, $injector, locals));
+  componentHooks._afterCtrlInvoke.forEach(hook => hook(caller, injects, controller, ddo, $injector, locals));
 
   // Outputs work similarly, but they need the raw $element and the $scope for
   // destroying output observables.
