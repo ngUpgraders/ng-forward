@@ -54,7 +54,7 @@ function buildCJSDist(){
 	let transpile = gulp.src('./dist/es6/**/*.js')
 		.pipe(sourcemaps.init({ loadMaps: true }))
 		.pipe(babel({ modules: 'common', stage: 0 }))
-		.pipe(sourcemaps.write())
+		.pipe(sourcemaps.write('.'))
 		.pipe(gulp.dest('./dist/cjs'));
 
 	let move = gulp.src('./dist/es6/**/*.d.ts')
