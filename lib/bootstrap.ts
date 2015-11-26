@@ -1,4 +1,4 @@
-/*global angular,document,global,zone */
+/*global angular,document,global*/
 // # Bootstrap function
 // Provides sugar over the bundle function and actually bootstrapping the application.
 //
@@ -34,7 +34,7 @@ import bundle from './bundle';
 // We'll need the appWriter to get the selector metadata off of the root component
 import {bundleStore} from './writers';
 
-// ## Bootstrap 
+// ## Bootstrap
 export default function bootstrap(component: any, otherProviders: any[] = []): any{
   // Selector of the root component. In the above example, this would be `app`
   let selector = bundleStore.get('selector', component);
