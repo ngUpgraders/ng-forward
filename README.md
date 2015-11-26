@@ -77,19 +77,25 @@ If you've used previous decorator libraries, you'll notice ng-forward doesn't re
 Let's take a look at a simple service:
 
 ```js
-import { Injectable } from 'ng-forward';
+import { Injectable, Inject } from 'ng-forward';
 
 @Injectable()
+@Inject('$q', '$timeout')
 class TestService{
+	constructor($q, $timeout) {
+		this.$q = $q;
+		this.$timeout = $timeout;
+	}
+	
 	getValue(){
-		return new Promise(resolve => {
-			setTimeout(() => resolve('Async FTW!'), 3000);
+		return this.$q(resolve => {
+			this.$timeout(() => resolve('Async FTW!'), 3000);
 		});
 	}
 }
 ```
 
-Again, it's a regular ES6 class. Just tell the injector that it's injectable with the `@Injectable()` annotation and you can start to inject it into other components and services. Ng-forward will handle the work of wrapping this in an angular service when we bootstrap. If you need to inject dependencies, you can use an Inject decorator, which will cover in a bit.
+Again, it's a regular ES6 class. Just tell the injector that it's injectable with the `@Injectable()` annotation and you can start to inject it into other components and services. Ng-forward will handle the work of wrapping this in an angular service when we bootstrap. If you need to inject dependencies, you can use an Inject decorator. Here we are injecting some 'legacy' services—$q and $timeout—so we request them as strings. If we want to inject other es6-class-based servies we can reference those as objects, which will cover in a bit.
 
 > **Behind the Scenes**: We make a call to angular.service on your behalf. The class becomes the service singleton instance.
 
@@ -357,12 +363,19 @@ import 'babel/polyfill';
 import 'angular';
 import 'zone.js';
 import uiRouter from 'angular-ui-router';
-import {Component, Input, Output, Inject, EventEmitter, bootstrap} from 'ng-forward';
+import {Component, Injectable, Input, Output, Inject, EventEmitter, bootstrap} from 'ng-forward';
 
+@Injectable()
+@Inject('$q', '$timeout')
 class TestService{
+	constructor($q, $timeout) {
+		this.$q = $q;
+		this.$timeout = $timeout;
+	}
+	
 	getValue(){
-		return new Promise(resolve => {
-			setTimeout(() => resolve('Async FTW!'), 3000);
+		return this.$q(resolve => {
+			this.$timeout(() => resolve('Async FTW!'), 3000);
 		});
 	}
 }
@@ -412,7 +425,8 @@ class InnerApp{
 		this.resolveValue();
 		this.evt2 = new EventEmitter();
 	}
-
+ 	
+ 	// this will only work in babel, not typescript
 	async resolveValue(){
 		this.num = await this.TestService.getValue();
 	}
