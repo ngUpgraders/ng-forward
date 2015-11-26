@@ -2,7 +2,10 @@
 
 ![ng-forward logo](https://raw.githubusercontent.com/ngUpgraders/ng-forward/master/ng-forward-logo.png)
 
-[![Build Status](https://travis-ci.org/ngUpgraders/ng-forward.svg?branch=master)](https://travis-ci.org/ngUpgraders/ng-forward)   [![npm version](https://badge.fury.io/js/ng-forward.svg)](https://badge.fury.io/js/ng-forward)  [![dependencies](https://david-dm.org/ngUpgraders/ng-forward.svg)](https://david-dm.org/ngUpgraders/ng-forward)  [![Join the chat at https://gitter.im/ngUpgraders/ng-forward](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ngUpgraders/ng-forward?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://travis-ci.org/ngUpgraders/ng-forward.svg?branch=master)](https://travis-ci.org/ngUpgraders/ng-forward)
+[![npm version](https://badge.fury.io/js/ng-forward.svg)](https://badge.fury.io/js/ng-forward)  [![dependencies](https://david-dm.org/ngUpgraders/ng-forward.svg)](https://david-dm.org/ngUpgraders/ng-forward)
+[![Join the chat at https://gitter.im/ngUpgraders/ng-forward](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ngUpgraders/ng-forward?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Plunkr Playground](https://img.shields.io/badge/plunkr-playground-blue.svg)](http://plnkr.co/edit/ktxXKHyHQ5DLcixe6kpO?p=preview)
 
 ***ng-forward*** is the default solution for people who want to start writing code using Angular 2 conventions and styles that runs today on Angular 1.3+.
 
@@ -14,9 +17,10 @@ We are targeting four types of developers:
 - Those who want a production safe way to prepare their Angular 1 projects **now** for the easiest possible upgrade path **later**.
 - Those who are actively migrating to Angular 2, who'd like to use ng-forward as the first step in their migration strategy. Once you've used ng-forward to update all the syntax in your project, you can then optionally use [ng-upgrade](http://angularjs.blogspot.com/2015/08/angular-1-and-angular-2-coexistence.html) or go straight to Angular 2.
 
-*Currently in the Alpha phase, please contribute: [ng-forward issues](https://github.com/ngUpgraders/ng-forward/issues)*
+*Currently in the Alpha phase, please contribute: [ng-forward issues](https://github.com/ngUpgraders/ng-forward/issues)* 
 
-*Review the design doc to see our collective ideas: [Google Drive Design Doc](https://docs.google.com/document/d/1oq0T0-jicGzc5uYJc0LE1ZBHm0w1lhVB4IVqUPXWSCg/edit)*
+### Found a bug? 
+Please [submit an issue](https://github.com/ngUpgraders/ng-forward/issues) with a plunkr that reproduces the bug. Here's a [ng-forward starter plunkr](http://plnkr.co/edit/ktxXKHyHQ5DLcixe6kpO?p=preview) that you can fork.
 
 ## Install
 
