@@ -10,7 +10,6 @@ export function dashToCamel(dash: string): string{
 }
 
 export function dasherize(name: string, separator: string = '-'): string {
-
   return name.replace(SNAKE_CASE_REGEXP, (letter: string, pos: number) => {
     return `${(pos ? separator : '')}${letter.toLowerCase()}`;
   });
@@ -34,4 +33,12 @@ export function flatten(items: any[]): any[]{
   }
   
   return resolved;
+}
+
+export interface INamed {
+  name: string;
+}
+
+export function createConfigErrorMessage(target: INamed, ngModule: ng.IModule, message: string): string {
+  return `Processing "${target.name}" in "${ngModule.name}": ${message}`;
 }

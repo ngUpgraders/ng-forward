@@ -6,7 +6,6 @@ import { View } from '../decorators/component'
 import {INgForwardJQuery} from "../util/jqlite-extensions";
 import IInjectorService = angular.auto.IInjectorService;
 import {DecoratedModule} from "../classes/module";
-import CompilerHost = ts.CompilerHost;
 
 export interface ngClass {
   new (...any): any;
@@ -43,9 +42,7 @@ export class TestComponentBuilder {
 
   createAsync(rootComponent: ngClass): Promise<ComponentFixture> {
     let fixture: ComponentFixture = this.create(rootComponent);
-    let fixturePromise: Promise<ComponentFixture>
-        = new Promise(resolve => resolve(fixture));
-    return fixturePromise;
+    return Promise.resolve(fixture);
   }
 
   overrideTemplate(component: ngClass, template: string) {

@@ -36,6 +36,12 @@ export default class Metastore{
 		
 		store.push(value);
 	}
+
+	merge(key: any, value: any, obj: any, prop?: string) {
+		let previous = this.get(key, obj, prop) || {};
+		let mergedObj = Object.assign({}, previous, value);
+        this.set(key, mergedObj, obj, prop);
+	}
 	
 	forEach(callbackFn: (value: any, index: any, map: Map<any, any>) => void, obj: any, prop?: string){
 		this._map(obj, prop).forEach(callbackFn);
