@@ -350,7 +350,7 @@ This is the final step to setting up an ng-forward app.
 
 > **Behind the Scenes:** ng-forward will handle all the work of bundling up your module, translate components to ng 1.x syntax, etc. Then it will look for the selector in your html and call ng1's bootstrap method on it.
 
-Let's look at the completed code:
+Let's look at the completed code ([Here's a plunkr of this code](http://plnkr.co/edit/ktxXKHyHQ5DLcixe6kpO?p=preview)):
 
 ```js
 import 'babel/polyfill';
