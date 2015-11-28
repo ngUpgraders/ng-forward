@@ -37,7 +37,9 @@ npm i --save ng-forward@latest reflect-metadata
 ## Learn
 
 - Read the [Walk-Through](https://github.com/ngUpgraders/ng-forward/blob/master/Walkthrough.md)
-- Open [API Reference](https://github.com/ngUpgraders/ng-forward/blob/master/API.md)
+- Open the [API Reference](https://github.com/ngUpgraders/ng-forward/blob/master/API.md)
+- Play around in [Plunkr](http://plnkr.co/edit/ktxXKHyHQ5DLcixe6kpO?p=preview)
+- Explore the [TodoMVC app](https://github.com/ngUpgraders/ng-forward-playground)
 
 ## FAQ
 
