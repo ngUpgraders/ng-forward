@@ -1,6 +1,6 @@
 # Ng-Forward Walk-through
 
-Here you'll find an informal walkthrough of ng-forward meant to help you introduce you to various concepts and the overall usage.
+Here you'll find an informal walkthrough of ng-forward meant to help you introduce you to various concepts and the overall usage. For an official API reference, [go here](https://github.com/ngUpgraders/ng-forward/blob/master/API.md).
 
 ## Install
 
@@ -50,8 +50,6 @@ So far this syntax here is identical to Angular 2. We have a component annotatio
 
 If you've used previous decorator libraries, you'll notice ng-forward doesn't require you to use any calls to @Module, new Module or .Module. ng-forward auto-creates a module for you during bootstrap. If you need create a module to co-exist with other non-ng-forward ng1 modules, you can use (`bundle`)[https://gist.github.com/timkindberg/95166e525685db1f6394] to bundle up your app or portions of your app.
 
-> **Behind the Scenes**: We make a call to angular.directive on your behalf. We always set restrict to 'E' (element). The class becomes the directives controller. And we set controllerAs to a camelCased copy of your selector value, e.g. `my-component` becomes `myComponent`.
-
 ### Services
 
 Let's take a look at a simple service:
@@ -76,8 +74,6 @@ class TestService{
 ```
 
 Again, it's a regular ES6 class. Just tell the injector that it's injectable with the `@Injectable()` annotation and you can start to inject it into other components and services. Ng-forward will handle the work of wrapping this in an angular service when we bootstrap. If you need to inject dependencies, you can use an Inject decorator. Here we are injecting some 'legacy' services—$q and $timeout—so we request them as strings. If we want to inject other es6-class-based servies we can reference those as objects, which will cover in a bit.
-
-> **Behind the Scenes**: We make a call to angular.service on your behalf. The class becomes the service singleton instance.
 
 ## Digging Deeper
 Now lets look at a more complicated component:
@@ -185,8 +181,6 @@ Now let's look at passing inputs to components. In the component class you'll se
 ```
 
 These lines specify what attributes can be passed as properties when we call our InnerApp component. If you don't pass a parameter to Input, the name of the property on the class is the same name you'll use when you call the component. If you pass a parameter, that becomes the name you use when you call this property from a parent component.
-
-> **Behind the Scenes:** The inputs essentially become isolate scope properties. Remember all the '@', '=', and '&'? Kiss those good bye. Each property gets registered several times so it can be used in various ways. Read on...
 
 Here's a part of the template that makes a simple reference to properties passed from a parent:
 
@@ -297,9 +291,6 @@ Providers are used to specify what services are injectable in our app. They're t
 
 *Tip: Use strings in the `@Inject` decorator to specify legacy services, e.g. '$q'. Use strings in `providers` or `directives` to specify legacy modules, e.g. 'ui.router'*
 
-> **Behind the Scenes**: the `providers` and `directives` component properties do exactly the same thing in ng-forward. They just tell ng-forward what dependencies to bundle up into your module during the bootstrap (or bundle) call. However, we recommend using directives for directives and providers for services and ng1 modules, as it will make upgrading easier.
-
-
 ### Calling Child Components
 
 Once again we'll setup directives we need for our template. Remember this serves two purposes, it matches the Angular 2 syntax, and it tells ng-forward to bundle these items into our module.
@@ -333,8 +324,6 @@ bootstrap(AppCtrl);
 ```
 
 This is the final step to setting up an ng-forward app.
-
-> **Behind the Scenes:** ng-forward will handle all the work of bundling up your module, translate components to ng 1.x syntax, etc. Then it will look for the selector in your html and call ng1's bootstrap method on it.
 
 Let's look at the completed code ([Here's a plunkr of this code](http://plnkr.co/edit/ktxXKHyHQ5DLcixe6kpO?p=preview)):
 
