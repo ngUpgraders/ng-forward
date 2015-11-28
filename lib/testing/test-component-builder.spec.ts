@@ -35,7 +35,7 @@ describe('Test Utils', () => {
       selector: 'some-component',
       inputs: ['foo', 'baz:bar'],
       bindings: [SomeService],
-      template: `{{someComponent.foo}} {{someComponent.baz}} {{someComponent.quux()}} {{someComponent.local}}`
+      template: `{{ctrl.foo}} {{ctrl.baz}} {{ctrl.quux()}} {{ctrl.local}}`
     })
     @Inject(SomeService, SomeOtherService, '$http', '$timeout')
     class _SomeComponent {
@@ -50,7 +50,7 @@ describe('Test Utils', () => {
 
     @Component({
       selector: 'test',
-      template: `<some-component foo="Hello" [bar]="test.bar"></some-component>`,
+      template: `<some-component foo="Hello" [bar]="ctrl.bar"></some-component>`,
       directives: [SomeComponent]
     })
     class _TestComponent {

@@ -9,7 +9,7 @@
 
  @Component({
    selector: 'player',
-   template: `Lives Left: {{player.lives}}`
+   template: `Lives Left: {{ctrl.lives}}`
  })
  @Inject(LIVES)
  class Player {

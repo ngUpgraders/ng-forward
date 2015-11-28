@@ -63,7 +63,7 @@ describe('@Input Decorator', function(){
 		});
 
 		it('adds each input as an allowed attribute on the element', () => {
-			@Component({ selector: 'foo', template: '{{foo.bar}} {{foo.baz}}' })
+			@Component({ selector: 'foo', template: '{{ctrl.bar}} {{ctrl.baz}}' })
 			class MyClass{
 				@Input() bar;
 				@Input() baz;
@@ -78,7 +78,7 @@ describe('@Input Decorator', function(){
 		});
 
 		it('disallows setting instance properties not marked as an input', () => {
-			@Component({ selector: 'foo', template: '{{foo.bar}} {{foo.baz}}' })
+			@Component({ selector: 'foo', template: '{{ctrl.bar}} {{ctrl.baz}}' })
 			class MyClass{
 				bar = 'false';
 				@Input() baz = 'false';
@@ -93,7 +93,7 @@ describe('@Input Decorator', function(){
 		});
 
 		it('allows setting inputs to default values', () => {
-			@Component({ selector: 'foo', template: '{{foo.foo}}' })
+			@Component({ selector: 'foo', template: '{{ctrl.foo}}' })
 			class MyClass{
 				@Input() foo = 'bar';
 			}
@@ -109,7 +109,7 @@ describe('@Input Decorator', function(){
 		it('one way binds a string to inputs with the regular syntax', () => {
 			@Component({
 				selector: 'child',
-				template: '{{child.foo}}'
+				template: '{{ctrl.foo}}'
 			})
 			class Child {
 				@Input() foo;
@@ -144,7 +144,7 @@ describe('@Input Decorator', function(){
 		it('one way binds to an expression to inputs with the [input] syntax', () => {
 			@Component({
 				selector: 'child',
-				template: '{{child.foo}}'
+				template: '{{ctrl.foo}}'
 			})
 			class Child {
 				@Input() foo;
@@ -154,8 +154,8 @@ describe('@Input Decorator', function(){
 				selector: 'parent',
 				directives: [Child],
 				template: `
-					<h1 class="greeting">{{parent.foo}} World!</h1>
-					<child [foo]="parent.foo"></child>
+					<h1 class="greeting">{{ctrl.foo}} World!</h1>
+					<child [foo]="ctrl.foo"></child>
 				`
 			})
 			class Parent { foo = "Hello"; }
@@ -189,7 +189,7 @@ describe('@Input Decorator', function(){
 		it('two way binds an expression to inputs with the [(input)] syntax', () => {
 			@Component({
 				selector: 'child',
-				template: '{{child.foo}}'
+				template: '{{ctrl.foo}}'
 			})
 			class Child {
 				@Input() foo;
@@ -199,8 +199,8 @@ describe('@Input Decorator', function(){
 				selector: 'parent',
 				directives: [Child],
 				template: `
-					<h1 class="greeting">{{parent.foo}} World!</h1>
-					<child [(foo)]="parent.foo"></child>
+					<h1 class="greeting">{{ctrl.foo}} World!</h1>
+					<child [(foo)]="ctrl.foo"></child>
 				`
 			})
 			class Parent {
@@ -236,7 +236,7 @@ describe('@Input Decorator', function(){
 		it('one way binds a string to inputs with getter/setter with the regular syntax', () => {
 			@Component({
 				selector: 'child',
-				template: '{{child.foo}} {{child.baz}}'
+				template: '{{ctrl.foo}} {{ctrl.baz}}'
 			})
 			class Child {
 				@Input() foo;
@@ -279,7 +279,7 @@ describe('@Input Decorator', function(){
 		it('one way binds to an expression to inputs with getter/setter with the [input] syntax', () => {
 			@Component({
 				selector: 'child',
-				template: '{{child.foo}} {{child.baz}}'
+				template: '{{ctrl.foo}} {{ctrl.baz}}'
 			})
 			class Child {
 				@Input() foo;
@@ -297,8 +297,8 @@ describe('@Input Decorator', function(){
 				selector: 'parent',
 				directives: [Child],
 				template: `
-					<h1 class="greeting">{{parent.foo}} World!</h1>
-					<child [foo]="parent.foo"></child>
+					<h1 class="greeting">{{ctrl.foo}} World!</h1>
+					<child [foo]="ctrl.foo"></child>
 				`
 			})
 			class Parent { foo = "Hello"; }
@@ -332,7 +332,7 @@ describe('@Input Decorator', function(){
 		it('two way binds an expression to inputs with getter/setter with the [(input)] syntax', () => {
 			@Component({
 				selector: 'child',
-				template: '{{child.foo}} {{child.baz}}'
+				template: '{{ctrl.foo}} {{ctrl.baz}}'
 			})
 			class Child {
 				@Input() foo;
@@ -350,8 +350,8 @@ describe('@Input Decorator', function(){
 				selector: 'parent',
 				directives: [Child],
 				template: `
-					<h1 class="greeting">{{parent.foo}} World!</h1>
-					<child [(foo)]="parent.foo"></child>
+					<h1 class="greeting">{{ctrl.foo}} World!</h1>
+					<child [(foo)]="ctrl.foo"></child>
 				`
 			})
 			class Parent {
@@ -388,7 +388,7 @@ describe('@Input Decorator', function(){
 			@Component({
 				selector: 'child',
 				outputs: ['fooChanged'],
-				template: '{{child.foo}}'
+				template: '{{ctrl.foo}}'
 			})
 			class Child {
 				@Input() foo;
@@ -403,8 +403,8 @@ describe('@Input Decorator', function(){
 				selector: 'parent',
 				directives: [Child],
 				template: `
-					<h1 class="greeting">{{parent.foo}} World!</h1>
-					<child [foo]="parent.foo" (foo-changed)="parent.fooChanged($event)"></child>
+					<h1 class="greeting">{{ctrl.foo}} World!</h1>
+					<child [foo]="ctrl.foo" (foo-changed)="ctrl.fooChanged($event)"></child>
 				`
 			})
 			class Parent {
@@ -446,7 +446,7 @@ describe('@Input Decorator', function(){
 
 		describe('binding to scope or bindToController based on angular version', () => {
 			const quickBuildBindingTest = () => {
-				@Component({ selector: 'foo', template: '{{foo.bar}}' })
+				@Component({ selector: 'foo', template: '{{ctrl.bar}}' })
 				class MyClass{
 					@Input() bar;
 				}
@@ -570,7 +570,7 @@ describe('@Output Decorator', function(){
 
 			let fixture = quickFixture({
 				directives: [Foo],
-				template: `<foo ng-init="test.bar=false" (output)="test.bar=true"></foo>`
+				template: `<foo ng-init="ctrl.bar=false" (output)="ctrl.bar=true"></foo>`
 			});
 
 			fixture.debugElement.componentInstance.bar.should.be.false;
@@ -589,7 +589,7 @@ describe('@Output Decorator', function(){
 
 			let fixture = quickFixture({
 				directives: [Foo],
-				template: `<foo ng-init="test.bar=false" (output-change)="test.bar=true"></foo>`
+				template: `<foo ng-init="ctrl.bar=false" (output-change)="ctrl.bar=true"></foo>`
 			});
 
 			fixture.debugElement.componentInstance.bar.should.be.false;
@@ -608,7 +608,7 @@ describe('@Output Decorator', function(){
 
 			let fixture = quickFixture({
 				directives: [Foo],
-				template: `<foo ng-init="test.bar=false" (output)="test.bar=$event.detail"></foo>`
+				template: `<foo ng-init="ctrl.bar=false" (output)="ctrl.bar=$event.detail"></foo>`
 			});
 
 			fixture.debugElement.componentInstance.bar.should.be.false;
@@ -629,7 +629,7 @@ describe('@Output Decorator', function(){
 
 			let fixture = quickFixture({
 				directives: [Foo],
-				template: `<foo ng-init="test.bar=false" (output)="test.bar=true"></foo>`
+				template: `<foo ng-init="ctrl.bar=false" (output)="ctrl.bar=true"></foo>`
 			});
 
 			fixture.debugElement.componentInstance.bar.should.be.false;
@@ -648,7 +648,7 @@ describe('@Output Decorator', function(){
 
 			let fixture = quickFixture({
 				directives: [Foo],
-				template: `<foo ng-init="test.bar=false" (output-change)="test.bar=true"></foo>`
+				template: `<foo ng-init="ctrl.bar=false" (output-change)="ctrl.bar=true"></foo>`
 			});
 
 			fixture.debugElement.componentInstance.bar.should.be.false;
@@ -667,7 +667,7 @@ describe('@Output Decorator', function(){
 
 			let fixture = quickFixture({
 				directives: [Foo],
-				template: `<foo ng-init="test.bar=false" (output)="test.bar=$event.detail"></foo>`
+				template: `<foo ng-init="ctrl.bar=false" (output)="ctrl.bar=$event.detail"></foo>`
 			});
 
 			fixture.debugElement.componentInstance.bar.should.be.false;
@@ -688,7 +688,7 @@ describe('@Output Decorator', function(){
 
 			let fixture = quickFixture({
 				directives: [Foo],
-				template: `<foo ng-init="test.bar=false" (output)="test.bar=true"></foo>`
+				template: `<foo ng-init="ctrl.bar=false" (output)="ctrl.bar=true"></foo>`
 			});
 
 			fixture.debugElement.componentInstance.bar.should.be.false;
@@ -708,13 +708,13 @@ describe('@Output Decorator', function(){
 			@Component({
 				selector: 'foo',
 				directives: [Bar],
-				template: `<bar ng-init="foo.bar=false" (bar-change)="foo.bar=true"></bar>`
+				template: `<bar ng-init="ctrl.bar=false" (bar-change)="ctrl.bar=true"></bar>`
 			})
 			class Foo { }
 
 			let fixture = quickFixture({
 				directives: [Foo],
-				template: `<foo ng-init="test.bar=false" (bar-change)="test.bar=true"></foo>`
+				template: `<foo ng-init="ctrl.bar=false" (bar-change)="ctrl.bar=true"></foo>`
 			});
 
 			let fixtureEl = fixture.debugElement;
@@ -742,13 +742,13 @@ describe('@Output Decorator', function(){
 			@Component({
 				selector: 'foo',
 				directives: [Bar],
-				template: `<bar ng-init="foo.bar=false" (bar-change)="foo.bar=true"></bar>`
+				template: `<bar ng-init="ctrl.bar=false" (bar-change)="ctrl.bar=true"></bar>`
 			})
 			class Foo { }
 
 			let fixture = quickFixture({
 				directives: [Foo],
-				template: `<foo ng-init="test.bar=false" (bar-change)="test.bar=true"></foo>`
+				template: `<foo ng-init="ctrl.bar=false" (bar-change)="ctrl.bar=true"></foo>`
 			});
 
 			let fixtureEl = fixture.debugElement;

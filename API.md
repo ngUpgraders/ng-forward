@@ -170,7 +170,7 @@ import { Component } from 'ng-forward';
 
 @Component({ 
     selector: 'app', 
-    template: `Hello {{app.place}}!`,
+    template: `Hello {{ctrl.place}}!`,
     providers: [...providers],
     directives: [...directives]
     pipes: [...pipes]
@@ -192,7 +192,7 @@ class App {
 - **`pipes`**  **[Array&lt;[IProvidable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#iprovidable)&gt;]**  Any [pipes](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#pipe) that this component or any of it's children depends on.
 - **`inputs`**  **[Array&lt;string&gt;]**  An array of strings naming what class properties you want to expose in `bindToController` (or `scope` if angular 1.3). For example, `inputs: ['foo']` will connect the class property `foo` to the input `foo`. You can also rename the input, for example `inputs: ['foo:theFoo']` will connect the class property `foo` to the input `the-foo`.
 - **`outputs`**  **[Array&lt;string&gt;]**  An array of strings naming what class properties you want to expose as outputs. For example, `outputs: ['fooChange']` will notify the app that this component can fire a `'fooChange'` event. If there is a class property `fooChange` that is an `EventEmitter` it can trigger this event via `this.fooChange.next()`. Otherwise the event can also be triggered with a regular DOM event of name `'fooChange'`. You can also rename the output, for example `inputs: ['fooChange:theFooChange']` will notify of a 'theFooChange' event, but will still look for a `fooChange` property on the class.
-- **`controllerAs`**  **[string=selector camel-cased]**  The controller name used in the template.
+- **`controllerAs`**  **[string='ctrl']**  The controller name used in the template. By default uses 'ctrl'. We wanted to use something consistent across all components to make migration to Angular 2 easier later. When migrating you'll only need to do a simple find and replace of all 'ctrl.' and remove them. If you want the controllerAs name to match the selector (camel-cased) then set controllerAs to '$auto'.
 
 ###### Inputs and Outputs
 
@@ -206,8 +206,8 @@ If you had a component `MenuDropdown` like so:
 @Component({ 
     selector: 'menu-dropdown', 
     template: `
-    <label>{{menuDropdown.name}}</label>
-    <a ng-repeat="option in menDropdown.options" ng-href="{{option.action}}">{{option.name}}</a>
+    <label>{{ctrl.name}}</label>
+    <a ng-repeat="option in ctrl.options" ng-href="{{option.action}}">{{option.name}}</a>
     `,
     inputs: ['options'],
     outputs: ['optionSelect']
@@ -225,7 +225,7 @@ Then I could use that component in another component's template like so, passing
 @Component({
     selector: 'main-menu',
     template: `
-    <div ng-repeat="menu in mainMenu.menus">
+    <div ng-repeat="menu in ctrl.menus">
         <menu [options]="menu.options" (option-select)="menu.optionSelected($event)"></menu>
     </div>
     `
@@ -290,7 +290,7 @@ At [bootstrap](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#boot
 - `template` is set via the @Component config template property (`templateUrl` can also be used)
 - `controller` is set to the class instance, but it not instantiated until after the link phase so that child directives are available in the DOM. `$scope`, `$element`, `$attrs`, and `$transclude` are injectable as locals.
 - `restrict` is set to 'E' since components must use tag-based selectors.
-- `controllerAs` is set to a camel-cased version of the selector but can be overridden if you prefer 'vm' or something else.
+- `controllerAs` is set to 'ctrl' but can be overridden if you prefer 'vm' or something else. Or you can set it to '$auto' which will set it to a camel-cased version of the selector.
 - `scope` and `bindToController`:
     - If angular 1.3, inputs are set on an isolated `scope` and `bindToController` to `true`.
     - If angular 1.4+, `scope` is set to an isolate scope with `{}` and inputs are set on `bindToController` object.
@@ -332,7 +332,6 @@ At [bootstrap](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#boot
 - `template` is not set.
 - `controller` is set to the class instance, but it not instantiated until after the link phase so that child directives are available in the DOM. `$scope`, `$element`, `$attrs`, and `$transclude` are injectable as locals.
 - `restrict` is set to 'A' since directives must use attribute-based selectors.
-- `controllerAs` is set to a camel-cased version of the selector but can be overridden if you prefer 'vm' or something else.
 - `scope` is not set and so is not isolated.
 - `link` and `compile` are not set and are not able to be set.
 
@@ -405,7 +404,7 @@ Ng-Forward adds the following extensions to the JQLite / JQuery object returned 
 
 #### nativeElement
 
-**read-only** The native DOM element inside the jq wrapper. 
+**read-only** The native DOM element inside the jq wrapper.
 
 #### componentInstance
 
@@ -610,7 +609,7 @@ import uiRouter from 'ui-router';
 
 @Component({
     selector: 'childA',
-    template: '{{ childA.text }}' // will be 'A resolved!'
+    template: '{{ ctrl.text }}' // will be 'A resolved!'
 })
 @Inject('resolveA')
 class ChildA {
@@ -652,7 +651,7 @@ import uiRouter from 'ui-router';
 
 @Component({
     selector: 'childA',
-    template: '{{ childA.text }}' // will be 'A resolved!'
+    template: '{{ ctrl.text }}' // will be 'A resolved!'
 })
 @Inject('resolveA')
 class ChildA {

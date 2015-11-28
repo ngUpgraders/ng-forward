@@ -37,7 +37,7 @@ describe('Auto-generated Event Directives', function(){
     xit('bubbles the events', () => {
       let fixture = quickFixture({
         template: `
-        <div ng-init="test.clicked=false" (click)="test.clicked=true">
+        <div ng-init="ctrl.clicked=false" (click)="ctrl.clicked=true">
           <button>Click Me</button>
         </div>
         `

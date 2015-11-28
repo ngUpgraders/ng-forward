@@ -86,25 +86,25 @@ import { Component, Inject, Input, Output } from 'ng-forward';
 	directives: [Nested],
 	template: `
 		<h2>Inner app</h2>
-		<p>ES7 async resolved value: {{ innerApp.num || 'resolving...' }}</p>
+		<p>ES7 async resolved value: {{ ctrl.num || 'resolving...' }}</p>
 		<nested></nested>
 
 		<h4>Event</h4>
-		<button (click)="innerApp.triggerEventNormally()">
+		<button (click)="ctrl.triggerEventNormally()">
 			Trigger DOM Event
 		</button>
-		<button (click)="innerApp.triggerEventViaEventEmitter()">
+		<button (click)="ctrl.triggerEventViaEventEmitter()">
 			Trigger Emitted Event
 		</button>
 
 		<h4>One Way String from Parent (read-only)</h4>
-		<p>{{innerApp.msg3}}</p>
+		<p>{{ctrl.msg3}}</p>
 
 		<h4>One Way Binding from Parent (read-only)</h4>
-		<input ng-model="innerApp.message1"/>
+		<input ng-model="ctrl.message1"/>
 
 		<h4>Two Way Binding to/from Parent (read/write)</h4>
-		<input ng-model="innerApp.message2"/>
+		<input ng-model="ctrl.message2"/>
 	`
 })
 @Inject(TestService, '$element')
@@ -160,10 +160,10 @@ Let's take a look at the template for this component:
 
 ```js
 		<h4>Event</h4>
-		<button (click)="innerApp.triggerEventNormally()">
+		<button (click)="ctrl.triggerEventNormally()">
 			Trigger DOM Event
 		</button>
-		<button (click)="innerApp.triggerEventViaEventEmitter()">
+		<button (click)="ctrl.triggerEventViaEventEmitter()">
 			Trigger Emitted Event
 		</button>
 ```
@@ -186,13 +186,13 @@ Here's a part of the template that makes a simple reference to properties passed
 
 ```
 <h4>One Way String from Parent (read-only)</h4>
-<p>{{innerApp.msg3}}</p>
+<p>{{ctrl.msg3}}</p>
 
 <h4>One Way Binding from Parent (read-only)</h4>
-<input ng-model="innerApp.message1"/>
+<input ng-model="ctrl.message1"/>
 
 <h4>Two Way Binding to/from Parent (read/write)</h4>
-<input ng-model="innerApp.message2"/>
+<input ng-model="ctrl.message2"/>
 ```
 
 Note the references to one or two way binding. In Angular 2, properties by default are one way bound. We use some trickery under the hood in ng-forward to simulate one way binding in Angular 1.x. When we look at the parent component we'll show you how you can override one way binding and make a two way bound data property.
@@ -247,18 +247,18 @@ Let's look at the final building block of the ng-forward app, the top level comp
 	template: `
 		<h1>App</h1>
 		<nested></nested>
-		<p>Trigger count: {{ app.triggers }}</p>
+		<p>Trigger count: {{ ctrl.triggers }}</p>
 
 		<h4>One Way Binding to Child:</h4>
-		<input ng-model="app.message1"/>
+		<input ng-model="ctrl.message1"/>
 
 		<h4>Two Way Binding to/from Child:</h4>
-		<input ng-model="app.message2"/>
+		<input ng-model="ctrl.message2"/>
 
 		<hr/>
 
-		<inner-app (event1)="app.onIncrement()" (event2)="app.onIncrement()"
-		           [message1]="app.message1" [(message2)]="app.message2" message3="Hey, inner app... nothin'">
+		<inner-app (event1)="ctrl.onIncrement()" (event2)="ctrl.onIncrement()"
+		           [message1]="ctrl.message1" [(message2)]="ctrl.message2" message3="Hey, inner app... nothin'">
 		</inner-app>
 	`
 })
@@ -287,7 +287,7 @@ There are a few extra elements we need to look at here that ng-forward uses to b
 
 Providers are used to specify what services are injectable in our app. They're the closest thing ng-forward has to angular.module from 1.x. If you need to use a legacy module, you'll pass it here as a string. Otherwise, just pass the services your component will need.
 
-*Angular 2 difference: You might be wondering why you'd pass TestService as a provider here, and then still have to inject it in the innerApp component. In Angular 2, providers is actually a way to specify what services are available inside the component in a hierarchical fashion. In ng-forward, any services you pass to providers on any component will be available to inject on any other component, because the Angular 1.x injector doesn't support this hierarchy. You should still try to limit cross usage to prevent pain during upgrade.*
+*Angular 2 difference: You might be wondering why you'd pass TestService as a provider here, and then still have to inject it in the ctrl component. In Angular 2, providers is actually a way to specify what services are available inside the component in a hierarchical fashion. In ng-forward, any services you pass to providers on any component will be available to inject on any other component, because the Angular 1.x injector doesn't support this hierarchy. You should still try to limit cross usage to prevent pain during upgrade.*
 
 *Tip: Use strings in the `@Inject` decorator to specify legacy services, e.g. '$q'. Use strings in `providers` or `directives` to specify legacy modules, e.g. 'ui.router'*
 
@@ -303,15 +303,15 @@ Let's look at how we call the InnerApp component
 
 ```js
 		<h4>One Way Binding to Child:</h4>
-		<input ng-model="app.message1"/>
+		<input ng-model="ctrl.message1"/>
 
 		<h4>Two Way Binding to/from Child:</h4>
-		<input ng-model="app.message2"/>
+		<input ng-model="ctrl.message2"/>
 
 		<hr/>
 
-		<inner-app (event1)="app.onIncrement()" (event2)="app.onIncrement()"
-		           [message1]="app.message1" [(message2)]="app.message2" message3="Hey, inner app... nothin'">
+		<inner-app (event1)="ctrl.onIncrement()" (event2)="ctrl.onIncrement()"
+		           [message1]="ctrl.message1" [(message2)]="ctrl.message2" message3="Hey, inner app... nothin'">
 		</inner-app>
 ```
 
@@ -357,25 +357,25 @@ class Nested{ }
 	directives: [Nested],
 	template: `
 		<h2>Inner app</h2>
-		<p>ES7 async resolved value: {{ innerApp.num || 'resolving...' }}</p>
+		<p>ES7 async resolved value: {{ ctrl.num || 'resolving...' }}</p>
 		<nested></nested>
 
 		<h4>Event</h4>
-		<button (click)="innerApp.triggerEventNormally()">
+		<button (click)="ctrl.triggerEventNormally()">
 			Trigger DOM Event
 		</button>
-		<button (click)="innerApp.triggerEventViaEventEmitter()">
+		<button (click)="ctrl.triggerEventViaEventEmitter()">
 			Trigger Emitted Event
 		</button>
 
 		<h4>One Way String from Parent (read-only)</h4>
-		<p>{{innerApp.msg3}}</p>
+		<p>{{ctrl.msg3}}</p>
 
 		<h4>One Way Binding from Parent (read-only)</h4>
-		<input ng-model="innerApp.message1"/>
+		<input ng-model="ctrl.message1"/>
 
 		<h4>Two Way Binding to/from Parent (read/write)</h4>
-		<input ng-model="innerApp.message2"/>
+		<input ng-model="ctrl.message2"/>
 	`
 })
 @Inject(TestService, '$element')
@@ -415,17 +415,17 @@ class InnerApp{
 	template: `
 		<h1>App</h1>
 		<nested></nested>
-		<p>Trigger count: {{ app.triggers }}</p>
+		<p>Trigger count: {{ ctrl.triggers }}</p>
 
 		<h4>One Way Binding to Child:</h4>
-		<input ng-model="app.message1"/>
+		<input ng-model="ctrl.message1"/>
 
 		<h4>Two Way Binding to/from Child:</h4>
-		<input ng-model="app.message2"/>
+		<input ng-model="ctrl.message2"/>
 
 		<hr/>
-		<inner-app (event1)="app.onIncrement()" (event2)="app.onIncrement()"
-		           [message1]="app.message1" [(message2)]="app.message2" message3="Hey, inner app... nothin'">
+		<inner-app (event1)="ctrl.onIncrement()" (event2)="ctrl.onIncrement()"
+		           [message1]="ctrl.message1" [(message2)]="ctrl.message2" message3="Hey, inner app... nothin'">
 		</inner-app>
 	`
 })
