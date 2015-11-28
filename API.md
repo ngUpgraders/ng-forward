@@ -3,10 +3,11 @@
 WIP, Help Wanted!! Just fill something in! Be consistent with other sections.
 
 #### Table of Contents
-[bootstrap](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#bootstrap)
-[bundle](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#bundle)
-[@Component](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#component)
-[JQLite Extensions](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#jqlite-extensions)
+
+- [bootstrap](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#bootstrap)
+- [bundle](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#bundle)
+- [@Component](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#component)
+- [JQLite Extensions](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#jqlite-extensions)
 
 ## bootstrap
 
