@@ -81,7 +81,7 @@ Here's an example of the steps you might take:
 - [After Migration](https://gist.github.com/timkindberg/73280001a84a15370ade)
 
 #### How do I use ui-router with ng-forward?
-We are going to write a @StateConfig decorator soon (track it here: https://github.com/ngUpgraders/ng-forward/issues/42). Until then you'll have to use the approach from this example app: https://github.com/ngUpgraders/ng-forward/issues/42
+Use the [@StateConfig](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#stateconfig) and [@Resolve](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#resolve) decorators.
 
 #### Do you support writing in plain ES5?
 
