@@ -8,10 +8,16 @@ WIP, Help Wanted!! Just fill something in! Be consistent with other sections.
 - [bundle](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#bundle)
 - [@Component](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#component)
 - [@Directive](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#directive)
+- [@Input](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#input)
+- [@Output](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#output)
+- [EventEmitter](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#eventemitter)
 - [JQLite Extensions](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#jqlite-extensions)
 - [@Injectable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#injectable)
 - [@Inject](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#inject)
 - [provide](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#provide)
+- [@Pipe](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#pipe)
+- [@StateConfig](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#stateconfig)
+- [@Resolve](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#resolve)
 
 ## bootstrap
 
