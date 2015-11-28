@@ -12,7 +12,6 @@ Decorators:
 - [@Directive](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#directive)
 - [@Input](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#input)
 - [@Output](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#output)
-- [EventEmitter](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#eventemitter)
 - [@Injectable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#injectable)
 - [@Inject](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#inject)
 - [@Pipe](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#pipe)
@@ -24,6 +23,7 @@ Testing:
 - [ComponentFixture](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#componentfixture)
 
 Other:
+- [EventEmitter](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#eventemitter)
 - [JQLite Extensions](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#jqlite-extensions)
 
 ## bootstrap
