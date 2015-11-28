@@ -1,23 +1,30 @@
 # API Reference
 
-WIP, Help Wanted!! Just fill something in! Be consistent with other sections.
-
 #### Table of Contents
 
+Methods:
 - [bootstrap](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#bootstrap)
 - [bundle](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#bundle)
+- [provide](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#provide)
+
+Decorators:
 - [@Component](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#component)
 - [@Directive](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#directive)
 - [@Input](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#input)
 - [@Output](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#output)
 - [EventEmitter](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#eventemitter)
-- [JQLite Extensions](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#jqlite-extensions)
 - [@Injectable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#injectable)
 - [@Inject](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#inject)
-- [provide](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#provide)
 - [@Pipe](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#pipe)
 - [@StateConfig](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#stateconfig)
 - [@Resolve](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#resolve)
+
+Testing:
+- [TestComponentBuilder](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#testcomponentbuilder)
+- [ComponentFixture](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#componentfixture)
+
+Other:
+- [JQLite Extensions](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#jqlite-extensions)
 
 ## bootstrap
 
@@ -639,8 +646,10 @@ console.log(getInjectableName(MyService)); // 'MyService48'
 
 ```
 
-# Testing
-
 ## TestComponentBuilder
 
+WIP
+
 ## ComponentFixture
+
+WIP
