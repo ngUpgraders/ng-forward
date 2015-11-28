@@ -507,7 +507,87 @@ class Thing {}
 
 ## @StateConfig
 
+A decorator for adding ui-router state configurations.
+
+Example:
+```js
+import { Component, StateConfig } from 'ng-forward';
+import uiRouter from 'ui-router';
+
+@Component({
+    selector: 'childA',
+    template: '{{ childA.text }}' // will be 'A resolved!'
+})
+@Inject('resolveA')
+class ChildA {
+    constructor(resolveA) {
+        this.text = resolveA;
+    }
+}
+
+@Component({
+    selector: 'parent',
+    providers: [uiRouter],
+    template: `<ng-outlet></ng-outlet>` // or <ui-view>
+})
+@StateConfig([
+    { name: 'childA', url: '/childA', component: ChildA, resolve: { resolveA: () => 'A resolved!' } },
+    { name: 'childZ', url: '/childZ', component: ChildZ }
+])
+class Parent {}
+```
+
+###### Parameters
+
+- `stateConfigs`  **Array&lt;Object&gt;**  An array of state configurations, [see ui-router docs](http://angular-ui.github.io/ui-router/site/#/api/ui.router.state.$stateProvider#methods_state).
+- `stateConfigs[].component`  **class**  In addition to all the normal config properties, you can route to a @Component class. The component will populate the `ui-view` when the state becomes active.
+
+###### Behind the Scenes
+
+Calls to `$stateProvider.state` are made. All `resolve`'s are added as locals for injection on the @Component's constructor.
+
 ## @Resolve
+
+A decorator to be used in place of the `resolve` ui-router state property. You place this decorator on a static function and it will add that function to the state's resolve map. It is convenient because you can store the Resolve information alongside the component that needs it, instead of the parent.
+
+Example:
+
+```js
+import { Component, StateConfig } from 'ng-forward';
+import uiRouter from 'ui-router';
+
+@Component({
+    selector: 'childA',
+    template: '{{ childA.text }}' // will be 'A resolved!'
+})
+@Inject('resolveA')
+class ChildA {
+
+    @Resolve()
+    static resolveA() {
+        return 'A resolved!';
+    }
+
+    constructor(resolveA) {
+        this.text = resolveA;
+    }
+}
+
+@Component({
+    selector: 'parent',
+    providers: [uiRouter],
+    template: `<ng-outlet></ng-outlet>` // or <ui-view>
+})
+@StateConfig([
+    { name: 'childA', url: '/childA', component: ChildA },
+    { name: 'childZ', url: '/childZ', component: ChildZ }
+])
+class Parent {}
+```
+
+###### Parameters
+
+- `resolveName`  **[string]**  If provided, you will use this name when requesting the resolve from the injector.
 
 ## DecoratedModule 
 
