@@ -76,11 +76,6 @@ Module.addProvider(TYPE, (target: any, name: string, injects: string[], ngModule
 		ddo[key] = val;
 	}, target);
 
-	// Get the input bindings ahead of time
-	if(ddo.controllerAs){
-		ddo.bindToController = inputsMap(ddo.inputs);
-	}
-
 	// Finally add the directive to the raw module
 	ngModule.directive(name, ['$injector', ($injector: ng.auto.IInjectorService) => {
 		// Component controllers must be created from a factory. Checkout out

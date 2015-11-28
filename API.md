@@ -66,7 +66,7 @@ Returns a [`DecoratedModule`](https://github.com/ngUpgraders/ng-forward/blob/mas
 
 ## @Component
 
-A decorator for adding component metadata to a class.
+A decorator for adding component metadata to a class. Components are essentially angular 1 directives with both a template and controller. If you are looking to only modify the host element in some way, you should use [@Directive](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#directive).
 
 Example:
 
@@ -196,7 +196,6 @@ At [bootstrap](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#boot
 - For each output we create a directive of `'(outputName)'` that is listening for a DOM event or rx event of the same name.
 - Ng-forward does not differentiate between the `providers`, `directives` or `pipes` config properties; they're all used to define dependencies for the bundle. However in Angular 2 their unique usage matters, so you should use the properties properly to ease migration to Angular 2.
 
-
 ## JQLite Extensions
 
 Ng-Forward adds the following extensions to the JQLite / JQuery object returned by angular.element. These extensions mimic features found in Angular 2.
@@ -223,9 +222,93 @@ An easy way to ask the injector for a dependency. You can pass either string or 
 
 ## @Directive
 
+A decorator for adding directive metadata to a class. Directives differ from Components in that they don't have templates; they only modify the host element.
+
+Example:
+
+```js
+import { Directive } from 'ng-forward';
+
+@Directive({ 
+    selector: '[foo-class]', 
+    providers: [...providers],
+})
+@Inject('$element')
+class FooClass { 
+    constructor($element) {
+        $element.addClass('foo');
+    }
+}
+```
+
+###### Parameters
+
+- `selector`  **string**  The component's selector. It must be a css attribute selector, for example `'[my-thing]'` is **valid**, but `'my-component'` or `'.my-class'` are **invalid**.
+- `providers`  **[Array&lt;IProvidable&gt;]**  Any providers that this component or any of it's children depends on.
+
+###### Behind the Scenes 
+
+At [bootstrap](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#bootstrap) time, a call to angular.directive is made. Angular 1 directive properties are set as follows:
+
+- `template` is not set.
+- `controller` is set to the class instance, but it not instantiated until after the link phase so that child directives are available in the DOM. `$scope`, `$element`, `$attrs`, and `$transclude` are injectable as locals.
+- `restrict` is set to 'A' since directives must use attribute-based selectors.
+- `controllerAs` is set to a camel-cased version of the selector but can be overridden if you prefer 'vm' or something else.
+- `scope` is not set and so is not isolated.
+- `link` and `compile` are not set and are not able to be set.
+
 ## @Injectable
 
+A decorator that marks a class as injectable. It can then be injected into other annotated classes via the [@Inject](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#inject) decorator.
+
+Example:
+
+```js
+import { Injectable, Inject } from 'ng-forward';
+
+@Injectable()
+class MyService {
+    getData() {}
+}
+
+@Injectable()
+@Inject(MyService)
+class MyOtherService {
+    constructor(myService) {
+        this.data = myService.getData();
+    }
+}
+```
+
+###### Behind the Scenes
+ 
+module.service is called. The service name is auto-generated as you should not need to access manually. If you must access it, use the [getInjectableName()](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#getinjectablename) utility method.
+
 ## @Inject
+
+A decorator that declares the dependencies to be injected in to the class' constructor.
+
+Example:
+```js
+import { Component, Inject } from 'ng-forward';
+import { MyService } from './my-service.js';
+
+@Component()
+@Inject('$q', '$element', MyService)
+class MyOtherService {
+    constructor($q, $element, myService) { }
+}
+```
+
+###### Parameters
+
+- `injectables`  **string | class**  One or more injectables. Can be of type **string** or **class**.
+    - If **string**, then it's considered a core angular service such as $q or $http. It could also be a special 'local', for example component's can inject $element, $attrs or $scope.
+    - If **class**, then it's considered to be an annotated class that is injectable, for example via the [@Injectable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#injectable) decorator.
+
+###### Behind the Scenes
+
+The injectables are added to the `$inject` property of the class constructor function.
 
 ## Provider, provide
 
