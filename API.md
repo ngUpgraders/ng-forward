@@ -7,7 +7,11 @@ WIP, Help Wanted!! Just fill something in! Be consistent with other sections.
 - [bootstrap](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#bootstrap)
 - [bundle](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#bundle)
 - [@Component](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#component)
+- [@Directive](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#directive)
 - [JQLite Extensions](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#jqlite-extensions)
+- [@Injectable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#injectable)
+- [@Inject](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#inject)
+- [provide](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#provide)
 
 ## bootstrap
 
@@ -182,7 +186,7 @@ Transclusion is always enabled. Just add `<ng-content></ng-content>` (converted 
 
 ###### Behind the Scenes 
 
-At [bootstrap](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#bootstrap) time, a call to angular.directive is made. Angular 1 directive properties are set as follows:
+At [bootstrap](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#bootstrap) time, a call to `angular.directive` is made. Angular 1 directive properties are set as follows:
 
 - `template` is set via the @Component config template property (`templateUrl` can also be used)
 - `controller` is set to the class instance, but it not instantiated until after the link phase so that child directives are available in the DOM. `$scope`, `$element`, `$attrs`, and `$transclude` are injectable as locals.
@@ -195,30 +199,6 @@ At [bootstrap](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#boot
 - `link` and `compile` are not set but you can optionally set them if needed via the decorator.
 - For each output we create a directive of `'(outputName)'` that is listening for a DOM event or rx event of the same name.
 - Ng-forward does not differentiate between the `providers`, `directives` or `pipes` config properties; they're all used to define dependencies for the bundle. However in Angular 2 their unique usage matters, so you should use the properties properly to ease migration to Angular 2.
-
-## JQLite Extensions
-
-Ng-Forward adds the following extensions to the JQLite / JQuery object returned by angular.element. These extensions mimic features found in Angular 2.
-
-#### nativeElement 
-
-**read-only** The name element.
-
-#### componentInstance
-
-**read-only** The component's class instance. 
-
-#### componentViewChildren
-
-**read-only** An array of all child elements wrapped as jq elements.
-
-#### getLocal(injectable)
-
-An easy way to ask the injector for a dependency. You can pass either string or annotated class.
-
-###### Parameters
-
-- `injectable`  **string | class**  The string or annotated class you'd like to retrieve from the injector.
 
 ## @Directive
 
@@ -248,7 +228,7 @@ class FooClass {
 
 ###### Behind the Scenes 
 
-At [bootstrap](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#bootstrap) time, a call to angular.directive is made. Angular 1 directive properties are set as follows:
+At [bootstrap](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#bootstrap) time, a call to `angular.directive` is made. Angular 1 directive properties are set as follows:
 
 - `template` is not set.
 - `controller` is set to the class instance, but it not instantiated until after the link phase so that child directives are available in the DOM. `$scope`, `$element`, `$attrs`, and `$transclude` are injectable as locals.
@@ -256,6 +236,30 @@ At [bootstrap](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#boot
 - `controllerAs` is set to a camel-cased version of the selector but can be overridden if you prefer 'vm' or something else.
 - `scope` is not set and so is not isolated.
 - `link` and `compile` are not set and are not able to be set.
+
+## JQLite Extensions
+
+Ng-Forward adds the following extensions to the JQLite / JQuery object returned by angular.element. These extensions mimic features found in Angular 2.
+
+#### nativeElement 
+
+**read-only** The name element.
+
+#### componentInstance
+
+**read-only** The component's class instance. 
+
+#### componentViewChildren
+
+**read-only** An array of all child elements wrapped as jq elements.
+
+#### getLocal(injectable)
+
+An easy way to ask the injector for a dependency. You can pass either string or annotated class.
+
+###### Parameters
+
+- `injectable`  **string | class**  The string or annotated class you'd like to retrieve from the injector.
 
 ## @Injectable
 
@@ -282,7 +286,7 @@ class MyOtherService {
 
 ###### Behind the Scenes
  
-module.service is called. The service name is auto-generated as you should not need to access manually. If you must access it, use the [getInjectableName()](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#getinjectablename) utility method.
+At bootstrap time, a call to `module.service` is made. The service name is auto-generated as you should not need to access manually. If you must access it, use the [getInjectableName()](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#getinjectablename) utility method.
 
 ## @Inject
 
@@ -310,7 +314,80 @@ class MyOtherService {
 
 The injectables are added to the `$inject` property of the class constructor function.
 
-## Provider, provide
+## provide
+
+Creates a new provider to be bundled with your application and available for injection. This can be used in similar fashion to `module.value`, `module.constant`, `module.factory`, `module.service` and also to overwrite existing dependecies during testing.
+
+Example:
+
+```js
+import { Component, provide } from 'ng-forward';
+
+const MY_CONSTANT = new OpaqueToken('myConstant');
+
+class MyClass {}
+class MyOtherClass {}
+
+@Injectable()
+class MyService {
+    getData() {}
+}
+
+@Component({ 
+    selector: 'app', 
+    template: '...',
+    providers: [
+        provide('myValue',  { useValue: 100 }),
+        provide(MY_CONSTANT,{ useConstant: 0 }),
+        provide(MyClass,    { useClass: MyOtherClass }),
+        provide(MyData,     { useFactory: myService => myService.getData(), deps: [MyService] })
+    ]
+})
+@Inject('configVal')
+class App {
+    constructor(configVal) {
+        this.configVal = configVal;
+    }
+}
+```
+
+###### Parameters
+
+- `token`  **string | class | [OpaqueToken](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#opaquetoken)**  A token that will be used when asking for the dependency. Whatever you use, string, class or OpaqueToken, you must use that same object when injecting the dependency with [@Inject](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#inject). If you pass a class, it does not need to be already annotated since it's simply used as a token key.
+- `provideType`  **Object**  An object with various options on how to provide the dependency. Only one of the following should be used:
+    - `provideType.useValue`  **[any]**  If used, the value is provided when the token is requested from the injector.
+    - `provideType.useConstant`  **[any]**  If used, the constant is provided when the token is requested from the injector.
+    - `provideType.useClass`  **[class]**  If used, the class is provided when the token is requested from the injector. This is equivalent to adding [@Injectable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#injectable) to a class. But could be useful to overwrite an existing @Injectable with a new provided class.
+    - `providerType.useFactory`  **[Function]**  If used, the return value of the factory function is provided when the token is requested from the injector. You can also inject the function by supplying an array of dependencies to `providerType.deps`.
+    - `providerType.deps`  **[Array&lt;[IProvidable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#iprovidable)&gt;]**  Only used along with `useFactory` to inject dependencies.
+
+###### OpaqueToken
+
+Used to create a object to be used as a token with [`provide`](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#provide)
+
+Example:
+
+```js
+import { provide, OpaqueToken } from 'ng-forward';
+
+const CONFIG_VAL = new OpaqueToken('configVal');
+
+@Component({ 
+    ...
+    providers: [
+        provide(CONFIG_VAL, { useConstant: 100 })
+    ]
+})
+@Inject(CONFIG_VAL)
+class App {}
+```
+
+###### Behind the Scenes
+
+- `useValue` spurs a call to `module.value`
+- `useConstant` spurs a call to `module.constant`
+- `useClass` spurs a call to `module.service`
+- `useFactory` spurs a call to `module.factory`
 
 ## IProvidable
 
