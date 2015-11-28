@@ -105,7 +105,11 @@ class App {
 
 ###### Inputs and Outputs
 
-Inputs and Outputs are the public API of a component. If you had a component `MenuDropdown` like so:
+Inputs and Outputs are the public API of a component. There are two ways to specify them.
+- The `inputs` and `outputs` config property on @Component
+- The [@Input](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#input) and [@Output](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#output) decorators
+
+If you had a component `MenuDropdown` like so:
 
 ```js
 @Component({ 
@@ -117,7 +121,11 @@ Inputs and Outputs are the public API of a component. If you had a component `Me
     inputs: ['options'],
     outputs: ['optionSelect']
 })
-class MenuDropdown {}
+class MenuDropdown {
+    // Or you can use decorators instead of the properties above
+    @Input() options;
+    @Output() optionSelect = new EventEmitter;
+}
 ```
 
 Then I could use that component in another component's template like so, passing in 'inputs' and listening for 'outputs'.
@@ -237,17 +245,78 @@ At [bootstrap](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#boot
 - `scope` is not set and so is not isolated.
 - `link` and `compile` are not set and are not able to be set.
 
+## @Input
+
+An alternative to using the `inputs` property on [@Component](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#component).
+
+Example:
+
+```js
+@Component({ ... })
+class MenuDropdown {
+    @Input() options;
+}
+```
+
+###### Parameters
+
+- `exposedName`  **[string]**  If provided, then it will be the name of the input when setting on the html element.
+
+## @Output
+
+An alternative to using the `outputs` property on [@Component](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#component). Example: `@Input('fooPublic') fooLocal;`.
+
+Example:
+
+```js
+@Component({ ... })
+class MenuDropdown {
+    @Output() optionSelect = new EventEmitter();
+
+    someMethod() {
+        this.optionSelect.next('payload');
+    }
+}
+```
+
+###### Parameters
+
+- `exposedName`  **[string]**  If provided, then it will be the name of the output when listening on the html element. Example: `@Output('fooChangePublic') fooChangeLocal;`.
+
+## EventEmitter
+
+Extends RxJS [Subject](https://github.com/ReactiveX/RxJS/blob/master/src/Subject.ts). Really we have this specifically for [Outputs](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#output) but could be used for your own general purpose event emitter as well.
+
+#### subscribe(generatorOrNext?: any, error?: any, complete?: any): any
+
+###### Parameters
+
+- `generatorOrNext`  **Object | Function**  If **Function**, then it's a callback that is called everytime the Subject triggers 'next'.
+- `generatorOrNext.next`  **[Function]**  Callback that is called everytime the Subject triggers 'next'.
+- `generatorOrNext.error`  **[Function]**  Callback that is called when the Subject has an 'error'.
+- `generatorOrNext.complete`  **[Function]**  Callback that is called when the Subject is 'completed'.
+- `error`  **[Function]**  Callback that is called when the Subject has an 'error'.
+- `complete`  **[Function]**  Callback that is called when the Subject is 'completed'.
+
+#### next(value: any)
+
+Will trigger all subscriber's next callbacks, passing along the value.
+
+###### Parameters
+
+- `value`  **[any]**  A value to pass along to the next callback of any event subscribers.
+
 ## JQLite Extensions
 
 Ng-Forward adds the following extensions to the JQLite / JQuery object returned by angular.element. These extensions mimic features found in Angular 2.
 
-#### nativeElement 
+#### nativeElement
 
 **read-only** The name element.
 
 #### componentInstance
 
-**read-only** The component's class instance. 
+**read-only** The component's class instance.
 
 #### componentViewChildren
 
@@ -333,8 +402,8 @@ class MyService {
     getData() {}
 }
 
-@Component({ 
-    selector: 'app', 
+@Component({
+    selector: 'app',
     template: '...',
     providers: [
         provide('myValue',  { useValue: 100 }),
@@ -372,7 +441,7 @@ import { provide, OpaqueToken } from 'ng-forward';
 
 const CONFIG_VAL = new OpaqueToken('configVal');
 
-@Component({ 
+@Component({
     ...
     providers: [
         provide(CONFIG_VAL, { useConstant: 100 })
@@ -398,15 +467,41 @@ Anything that can be passed as a provider that you want to include in the bundle
 
 ## @Pipe
 
-## @Input
+A decorator for adding pipe metadata to a class. Pipes are essentially the same as angular 1 filters.
 
-## @Output
+Example:
+```js
+import { Pipe, Component } from 'ng-forward';
 
-### EventEmitter
+@Pipe
+class FirstLetter {
+
+    // Mandatory
+    transform(input, changeTo) {
+        input[0] = changeTo;
+        return input;
+    }
+
+    // Optional
+    supports(input) {
+        return typeof input === 'string';
+    }
+}
+
+@Component({
+    pipes: [FirstLetter],
+    template: `{{ 'foo' | firstLetter:'z' }}` // Will change to 'zoo'
+})
+class Thing {}
+```
+
+###### Behind the Scenes
+
+`module.filter` is called
 
 ## @StateConfig
 
-### @Resolve
+## @Resolve
 
 ## DecoratedModule 
 
@@ -444,8 +539,22 @@ Adds a run function to the module.
 
 ## getInjectableName
 
-## Testing
+A utility function that can be used to get the angular 1 injectable's name. Needed for some cases, since injectable names are auto-created.
 
-### TestComponentBuilder
+Example:
+```js
+import { Injectable, getInjectableName } from 'ng-forward';
 
-### ComponentFixture
+// this is given some random name like 'MyService48' when it's created with `module.service`
+@Injectable
+class MyService {}
+
+console.log(getInjectableName(MyService)); // 'MyService48'
+
+```
+
+# Testing
+
+## TestComponentBuilder
+
+## ComponentFixture
