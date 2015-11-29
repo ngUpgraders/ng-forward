@@ -302,6 +302,8 @@ Extends RxJS [Subject](https://github.com/ReactiveX/RxJS/blob/master/src/Subject
 
 #### subscribe(generatorOrNext?: any, error?: any, complete?: any): any
 
+We use this method behind the scenes to subscribe to your output events. You most likely will not use this method.
+
 ###### Parameters
 
 - `generatorOrNext`  **Object | Function**  If **Function**, then it's a callback that is called everytime the Subject triggers 'next'.
@@ -313,7 +315,7 @@ Extends RxJS [Subject](https://github.com/ReactiveX/RxJS/blob/master/src/Subject
 
 #### next(value: any)
 
-Will trigger all subscriber's next callbacks, passing along the value.
+Will trigger all subscriber's next callbacks, passing along the value. This is the main way to trigger an EventEmitter-based output.
 
 ###### Parameters
 
@@ -321,11 +323,11 @@ Will trigger all subscriber's next callbacks, passing along the value.
 
 ## JQLite Extensions
 
-Ng-Forward adds the following extensions to the JQLite / JQuery object returned by angular.element. These extensions mimic features found in Angular 2.
+Ng-Forward adds the following extensions to the JQLite / JQuery object returned by angular.element. These extensions mimic features found in Angular 2. These extensions serve as helpful methods for your convenience. All of these methods work on the 0 index element if the jq collection has more than one element.
 
 #### nativeElement
 
-**read-only** The name element.
+**read-only** The native DOM element inside the jq wrapper. 
 
 #### componentInstance
 
@@ -443,6 +445,12 @@ class App {
     - `providerType.useFactory`  **[Function]**  If used, the return value of the factory function is provided when the token is requested from the injector. You can also inject the function by supplying an array of dependencies to `providerType.deps`.
     - `providerType.deps`  **[Array&lt;[IProvidable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#iprovidable)&gt;]**  Only used along with `useFactory` to inject dependencies.
 
+Returns a [Provider](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#provider).
+
+###### Provider
+
+A generic dependency that is fulfilled by either value, constant, class or factory based on a unique token. To create Providers, use [provide](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#provide).
+
 ###### OpaqueToken
 
 Used to create a object to be used as a token with [`provide`](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#provide)
@@ -474,9 +482,10 @@ class App {}
 ## IProvidable
 
 Anything that can be passed as a provider that you want to include in the bundle. Can be of type **string**, **class**, or **Provider**.
-    - If **string**, will be considered an angular 1 legacy module. E.g. 'ui-router', 'my-other-ng1-module'.
-    - If **class**, must be an @Injectable and will add that 'service' to the bundle. Regular ES6 classes will throw an error.
-    - If **Provider**, will be included in bundle as specified.
+
+- If **string**, will be considered an angular 1 legacy module. E.g. 'ui-router', 'my-other-ng1-module'.
+- If **class**, must be an [@Injectable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#injectable) and will add that 'service' to the bundle. Regular ES6 classes will throw an error.
+- If [**Provider**](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#provider), will be included in bundle as specified.
 
 ## @Pipe
 
