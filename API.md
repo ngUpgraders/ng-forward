@@ -44,8 +44,8 @@ bootstrap(App);
 
 ###### Parameters
 
-- `component`  **class**  Any class that has been decorated with [`@Component`](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#component).
-- `otherProviders`  **[Array&lt;[IProvidable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#iprovidable)&gt;]**  An array of other providers that you want to include in the bundle.
+- **`component`**  **class**  Any class that has been decorated with [`@Component`](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#component).
+- **`otherProviders`**  **[Array&lt;[IProvidable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#iprovidable)&gt;]**  An array of other providers that you want to include in the bundle.
 
 Returns the `injector` from the bootstrapped auto-bundled module.
 
@@ -73,9 +73,9 @@ export bundle(App); // Will export the bundled angular 1 module
 
 ###### Parameters
 
-- `moduleName` **string** The name of the module to be created
-- `provider` **class** The entry point provider whose dependencies (providers, directives) will be traced and bundled.
-- `otherProviders`  **[Array&lt;[IProvidable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#iprovidable)&gt;]**  An array of other providers that you want to include in the bundle.
+- **`moduleName`** **string** The name of the module to be created
+- **`provider`** **class** The entry point provider whose dependencies (providers, directives) will be traced and bundled.
+- **`otherProviders`**  **[Array&lt;[IProvidable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#iprovidable)&gt;]**  An array of other providers that you want to include in the bundle.
 
 Returns a [`DecoratedModule`](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#decoratedmodule).
 
