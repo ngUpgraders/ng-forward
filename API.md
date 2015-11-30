@@ -184,15 +184,15 @@ class App {
 
 ###### Parameters
 
-- `selector`  **string**  The component's selector. It must be a css tag selector, for example `'app'` or `'my-thing'` are **valid**, but `'[my-attr]'` or `'.my-class'` are **invalid**.
-- `template`  **[string]**  The template string for the component. You can bind to class instance properties by prepending your bindings with the selector in camel-case form, e.g. `<h1>My Component's Name is: {{myComponent.name}}</h1>`.
-- `templateUrl`  **[string]**  Path to an external html template file. Either `template` or `templateUrl` **must** be provided.
-- `providers`  **[Array&lt;[IProvidable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#iprovidable)&gt;]**  Any providers that this component or any of it's children depends on.
-- `directives`  **[Array&lt;[IProvidable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#iprovidable)&gt;]**  Any directives or components that this component or any of it's children depends on. 
-- `pipes`  **[Array&lt;[IProvidable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#iprovidable)&gt;]**  Any [pipes](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#pipe) that this component or any of it's children depends on.
-- `inputs`  **[Array&lt;string&gt;]**  An array of strings naming what class properties you want to expose in `bindToController` (or `scope` if angular 1.3). For example, `inputs: ['foo']` will connect the class property `foo` to the input `foo`. You can also rename the input, for example `inputs: ['foo:theFoo']` will connect the class property `foo` to the input `the-foo`.
-- `outputs`  **[Array&lt;string&gt;]**  An array of strings naming what class properties you want to expose as outputs. For example, `outputs: ['fooChange']` will notify the app that this component can fire a `'fooChange'` event. If there is a class property `fooChange` that is an `EventEmitter` it can trigger this event via `this.fooChange.next()`. Otherwise the event can also be triggered with a regular DOM event of name `'fooChange'`. You can also rename the output, for example `inputs: ['fooChange:theFooChange']` will notify of a 'theFooChange' event, but will still look for a `fooChange` property on the class.
-- `controllerAs`  **[string=selector camel-cased]**  The controller name used in the template.
+- **`selector`**  **string**  The component's selector. It must be a css tag selector, for example `'app'` or `'my-thing'` are **valid**, but `'[my-attr]'` or `'.my-class'` are **invalid**.
+- **`template`**  **[string]**  The template string for the component. You can bind to class instance properties by prepending your bindings with the selector in camel-case form, e.g. `<h1>My Component's Name is: {{myComponent.name}}</h1>`.
+- **`templateUrl`**  **[string]**  Path to an external html template file. Either `template` or `templateUrl` **must** be provided.
+- **`providers`**  **[Array&lt;[IProvidable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#iprovidable)&gt;]**  Any providers that this component or any of it's children depends on.
+- **`directives`**  **[Array&lt;[IProvidable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#iprovidable)&gt;]**  Any directives or components that this component or any of it's children depends on.
+- **`pipes`**  **[Array&lt;[IProvidable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#iprovidable)&gt;]**  Any [pipes](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#pipe) that this component or any of it's children depends on.
+- **`inputs`**  **[Array&lt;string&gt;]**  An array of strings naming what class properties you want to expose in `bindToController` (or `scope` if angular 1.3). For example, `inputs: ['foo']` will connect the class property `foo` to the input `foo`. You can also rename the input, for example `inputs: ['foo:theFoo']` will connect the class property `foo` to the input `the-foo`.
+- **`outputs`**  **[Array&lt;string&gt;]**  An array of strings naming what class properties you want to expose as outputs. For example, `outputs: ['fooChange']` will notify the app that this component can fire a `'fooChange'` event. If there is a class property `fooChange` that is an `EventEmitter` it can trigger this event via `this.fooChange.next()`. Otherwise the event can also be triggered with a regular DOM event of name `'fooChange'`. You can also rename the output, for example `inputs: ['fooChange:theFooChange']` will notify of a 'theFooChange' event, but will still look for a `fooChange` property on the class.
+- **`controllerAs`**  **[string=selector camel-cased]**  The controller name used in the template.
 
 ###### Inputs and Outputs
 
@@ -322,8 +322,8 @@ class FooClass {
 
 ###### Parameters
 
-- `selector`  **string**  The component's selector. It must be a css attribute selector, for example `'[my-thing]'` is **valid**, but `'my-component'` or `'.my-class'` are **invalid**.
-- `providers`  **[Array&lt;IProvidable&gt;]**  Any providers that this component or any of it's children depends on.
+- **`selector`**  **string**  The component's selector. It must be a css attribute selector, for example `'[my-thing]'` is **valid**, but `'my-component'` or `'.my-class'` are **invalid**.
+- **`providers`**  **[Array&lt;IProvidable&gt;]**  Any providers that this component or any of it's children depends on.
 
 ###### Behind the Scenes 
 
@@ -351,7 +351,7 @@ class MenuDropdown {
 
 ###### Parameters
 
-- `exposedName`  **[string]**  If provided, then it will be the name of the input when setting on the html element.
+- **`exposedName`**  **[string]**  If provided, then it will be the name of the input when setting on the html element.
 
 ## @Output
 
@@ -372,7 +372,7 @@ class MenuDropdown {
 
 ###### Parameters
 
-- `exposedName`  **[string]**  If provided, then it will be the name of the output when listening on the html element. Example: `@Output('fooChangePublic') fooChangeLocal;`.
+- **`exposedName`**  **[string]**  If provided, then it will be the name of the output when listening on the html element. Example: `@Output('fooChangePublic') fooChangeLocal;`.
 
 ## EventEmitter
 
@@ -384,12 +384,12 @@ We use this method behind the scenes to subscribe to your output events. You mos
 
 ###### Parameters
 
-- `generatorOrNext`  **Object | Function**  If **Function**, then it's a callback that is called everytime the Subject triggers 'next'.
-- `generatorOrNext.next`  **[Function]**  Callback that is called everytime the Subject triggers 'next'.
-- `generatorOrNext.error`  **[Function]**  Callback that is called when the Subject has an 'error'.
-- `generatorOrNext.complete`  **[Function]**  Callback that is called when the Subject is 'completed'.
-- `error`  **[Function]**  Callback that is called when the Subject has an 'error'.
-- `complete`  **[Function]**  Callback that is called when the Subject is 'completed'.
+- **`generatorOrNext`**  **Object | Function**  If **Function**, then it's a callback that is called everytime the Subject triggers 'next'.
+- **`generatorOrNext.next`**  **[Function]**  Callback that is called everytime the Subject triggers 'next'.
+- **`generatorOrNext.error`**  **[Function]**  Callback that is called when the Subject has an 'error'.
+- **`generatorOrNext.complete`**  **[Function]**  Callback that is called when the Subject is 'completed'.
+- **`error`**  **[Function]**  Callback that is called when the Subject has an 'error'.
+- **`complete`**  **[Function]**  Callback that is called when the Subject is 'completed'.
 
 #### next(value: any)
 
@@ -397,7 +397,7 @@ Will trigger all subscriber's next callbacks, passing along the value. This is t
 
 ###### Parameters
 
-- `value`  **[any]**  A value to pass along to the next callback of any event subscribers.
+- **`value`**  **[any]**  A value to pass along to the next callback of any event subscribers.
 
 ## JQLite Extensions
 
@@ -421,7 +421,7 @@ An easy way to ask the injector for a dependency. You can pass either string or 
 
 ###### Parameters
 
-- `injectable`  **string | class**  The string or annotated class you'd like to retrieve from the injector.
+- **`injectable`**  **string | class**  The string or annotated class you'd like to retrieve from the injector.
 
 ## @Injectable
 
@@ -468,7 +468,7 @@ class MyOtherService {
 
 ###### Parameters
 
-- `injectables`  **string | class**  One or more injectables. Can be of type **string** or **class**.
+- **`injectables`**  **string | class**  One or more injectables. Can be of type **string** or **class**.
     - If **string**, then it's considered a core angular service such as $q or $http. It could also be a special 'local', for example component's can inject $element, $attrs or $scope.
     - If **class**, then it's considered to be an annotated class that is injectable, for example via the [@Injectable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#injectable) decorator.
 
@@ -515,13 +515,13 @@ class App {
 
 ###### Parameters
 
-- `token`  **string | class | [OpaqueToken](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#opaquetoken)**  A token that will be used when asking for the dependency. Whatever you use, string, class or OpaqueToken, you must use that same object when injecting the dependency with [@Inject](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#inject). If you pass a class, it does not need to be already annotated since it's simply used as a token key.
-- `provideType`  **Object**  An object with various options on how to provide the dependency. Only one of the following should be used:
-    - `provideType.useValue`  **[any]**  If used, the value is provided when the token is requested from the injector.
-    - `provideType.useConstant`  **[any]**  If used, the constant is provided when the token is requested from the injector.
-    - `provideType.useClass`  **[class]**  If used, the class is provided when the token is requested from the injector. This is equivalent to adding [@Injectable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#injectable) to a class. But could be useful to overwrite an existing @Injectable with a new provided class.
-    - `providerType.useFactory`  **[Function]**  If used, the return value of the factory function is provided when the token is requested from the injector. You can also inject the function by supplying an array of dependencies to `providerType.deps`.
-    - `providerType.deps`  **[Array&lt;[IProvidable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#iprovidable)&gt;]**  Only used along with `useFactory` to inject dependencies.
+- **`token`**  **string | class | [OpaqueToken](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#opaquetoken)**  A token that will be used when asking for the dependency. Whatever you use, string, class or OpaqueToken, you must use that same object when injecting the dependency with [@Inject](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#inject). If you pass a class, it does not need to be already annotated since it's simply used as a token key.
+- **`provideType`**  **Object**  An object with various options on how to provide the dependency. Only one of the following should be used:
+    - **`provideType.useValue`**  **[any]**  If used, the value is provided when the token is requested from the injector.
+    - **`provideType.useConstant`**  **[any]**  If used, the constant is provided when the token is requested from the injector.
+    - **`provideType.useClass`**  **[class]**  If used, the class is provided when the token is requested from the injector. This is equivalent to adding [@Injectable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#injectable) to a class. But could be useful to overwrite an existing @Injectable with a new provided class.
+    - **`providerType.useFactory`**  **[Function]**  If used, the return value of the factory function is provided when the token is requested from the injector. You can also inject the function by supplying an array of dependencies to `providerType.deps`.
+    - **`providerType.deps`**  **[Array&lt;[IProvidable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#iprovidable)&gt;]**  Only used along with `useFactory` to inject dependencies.
 
 Returns a [Provider](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#provider).
 
@@ -633,8 +633,8 @@ class Parent {}
 
 ###### Parameters
 
-- `stateConfigs`  **Array&lt;Object&gt;**  An array of state configurations, [see ui-router docs](http://angular-ui.github.io/ui-router/site/#/api/ui.router.state.$stateProvider#methods_state).
-- `stateConfigs[].component`  **class**  In addition to all the normal config properties, you can route to a @Component class. The component will populate the `ui-view` when the state becomes active.
+- **`stateConfigs`**  **Array&lt;Object&gt;**  An array of state configurations, [see ui-router docs](http://angular-ui.github.io/ui-router/site/#/api/ui.router.state.$stateProvider#methods_state).
+- **`stateConfigs[].component`**  **class**  In addition to all the normal config properties, you can route to a @Component class. The component will populate the `ui-view` when the state becomes active.
 
 ###### Behind the Scenes
 
@@ -681,7 +681,7 @@ class Parent {}
 
 ###### Parameters
 
-- `resolveName`  **[string]**  If provided, you will use this name when requesting the resolve from the injector.
+- **`resolveName`**  **[string]**  If provided, you will use this name when requesting the resolve from the injector.
 
 ## DecoratedModule 
 
@@ -693,7 +693,7 @@ Add an annotated class to the angular module.
 
 ###### Parameters
 
-- `providers`  **...class**  One or more annotated classes to add to the module. Annotated classes need to have previously registered a parser with Module via `Module.addProvider` (an internal method used for adding decorators).
+- **`providers`**  **...class**  One or more annotated classes to add to the module. Annotated classes need to have previously registered a parser with Module via `Module.addProvider` (an internal method used for adding decorators).
 
 Returns the `DecoratedModule`.
 
@@ -707,7 +707,7 @@ Adds a config function to the module.
 
 ###### Parameters
 
-- `configFn` **Function** A function to be ran during config phase of the angular module
+- **`configFn`** **Function** A function to be ran during config phase of the angular module
 
 #### `run()`
 
@@ -715,7 +715,7 @@ Adds a run function to the module.
 
 ###### Parameters
 
-- `runFn` **Function** A function to be ran during run phase of the angular module
+- **`runFn`** **Function** A function to be ran during run phase of the angular module
 
 ## getInjectableName
 
