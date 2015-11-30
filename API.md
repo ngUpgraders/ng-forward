@@ -68,7 +68,7 @@ import { bundle, Component } from 'ng-forward';
 })
 class App { }
 
-export bundle(App); // Will export the bundled angular 1 module
+export bundle('my.app', App); // Will export the bundled angular 1 module 'my.app'
 ```
 
 ###### Parameters
