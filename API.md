@@ -23,12 +23,13 @@ Testing:
 - [ComponentFixture](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#componentfixture)
 
 Other:
+- [The Dependency Tree](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#the-dependency-tree)
 - [EventEmitter](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#eventemitter)
 - [JQLite Extensions](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#jqlite-extensions)
 
 ## bootstrap
 
-Used to bootstrap your ng-forward application. Do **not** use the `ng-app` directive.
+Used to bootstrap your ng-forward application. Pass it your entry point component and it'll [bundle](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#bundle) up your app and then bootstrap it. Do **not** use the `ng-app` directive.
 
 Example:
 
@@ -75,10 +76,87 @@ export bundle(App); // Will export the bundled angular 1 module
 - `moduleName` **string** The name of the module to be created
 - `provider` **class** The entry point provider whose dependencies (providers, directives) will be traced and bundled.
 - `otherProviders`  **[Array&lt;[IProvidable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#iprovidable)&gt;]**  An array of other providers that you want to include in the bundle.
-    
+
 Returns a [`DecoratedModule`](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#decoratedmodule).
 
+#### The Dependency Tree
+
+**Important! - please read**
+
+It's important that you tell us what dependencies your component relies on and what it needs to be bundled up with it. This allows us to trace all the dependencies in your application and do our fancy just-in-time angular module creation. If you've left out a dependency it will not be included in the module.
+
+There are various ways to specify dependencies:
+
+```js
+// Your component relies on another component? Add it to 'directives'.
+@Component()
+class MyOtherComponent {}
+
+@Component({
+  selector: 'my-component',
+  directives: [MyOtherComponent],
+  template: '<my-other-component></my-other-component>'
+})
+class MyComponent {}
+
+// Your component relies on a directive? Add it to 'directives'.
+@Directive()
+class MyDirective {}
+
+@Component({
+  selector: 'my-component',
+  directives: [MyDirective],
+  template: '<div my-directive></div>'
+})
+class MyComponent {}
+
+// Your component relies on a pipe? Add it to 'pipes'.
+@Pipe()
+class MyPipe {}
+
+@Component({
+  selector: 'my-component',
+  pipes: [MyPipe],
+  template: '<div>{{ ctrl.foo | myPipe }}</div>'
+})
+class MyComponent {}
+
+// Your component relies on a service? Add it to 'providers' and/or @Inject it.
+@Injectable()
+class MyOtherService {}
+
+@Component({
+  selector: 'my-component',
+  providers: [MyOtherService]
+})
+@Inject(MyOtherService)
+class MyComponent {}
+
+// Your component relies on an ng1 service? @Inject it as a string.
+@Component()
+@Inject('$http')
+class MyComponent {
+    constructor($http) {}
+}
+
+// Your component relies on an ng1 module? Add it to 'providers' as a string.
+@Component({
+  selector: 'my-component',
+  providers: ['ui.router']
+})
+class MyComponent {}
+
+// Your service relies on another service? Just @Inject it.
+@Injectable()
+class MyOtherService {}
+
+@Injectable()
+@Inject(MyOtherService)
+class MyService {}
+```
+
 ###### Behind The Scenes
+
 `angular.module` is called. All string-based providers are considered ng 1 modules and passed as deps to angular.module. All other providers are added as whatever is appropriate: [`@Component`](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#component) calls module.directive, [`@Pipe`](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#pipe) calls module.filter, [`@Injectable`](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#injectable) calls module.service, etc.
 
 ## @Component
