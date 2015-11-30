@@ -5,7 +5,8 @@
 [![Build Status](https://travis-ci.org/ngUpgraders/ng-forward.svg?branch=master)](https://travis-ci.org/ngUpgraders/ng-forward)
 [![npm version](https://badge.fury.io/js/ng-forward.svg)](https://badge.fury.io/js/ng-forward)  [![dependencies](https://david-dm.org/ngUpgraders/ng-forward.svg)](https://david-dm.org/ngUpgraders/ng-forward)
 [![Join the chat at https://gitter.im/ngUpgraders/ng-forward](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ngUpgraders/ng-forward?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Plunkr Playground](https://img.shields.io/badge/plunkr-playground-blue.svg)](http://plnkr.co/edit/ktxXKHyHQ5DLcixe6kpO?p=preview)
+[![Plunkr TypeScript](https://img.shields.io/badge/plunkr-typescript-blue.svg)](http://plnkr.co/edit/ktxXKHyHQ5DLcixe6kpO?p=preview)
+[![Plunkr Babel](https://img.shields.io/badge/plunkr-babel-blue.svg)](http://plnkr.co/edit/FScTw1byVpQEJHGQ7zLW?p=preview)
 
 ***ng-forward*** is the default solution for people who want to start writing code using Angular 2 conventions and styles that runs today on Angular 1.3+.
 
@@ -20,7 +21,7 @@ We are targeting four types of developers:
 *Currently in the Alpha phase, please contribute: [ng-forward issues](https://github.com/ngUpgraders/ng-forward/issues)* 
 
 ### Found a bug? 
-Please [submit an issue](https://github.com/ngUpgraders/ng-forward/issues) with a plunkr that reproduces the bug. Here's a [ng-forward starter plunkr](http://plnkr.co/edit/ktxXKHyHQ5DLcixe6kpO?p=preview) that you can fork.
+Please [submit an issue](https://github.com/ngUpgraders/ng-forward/issues) with a plunkr that reproduces the bug. Here's an ng-forward starter plunkr ([TypeScript](http://plnkr.co/edit/ktxXKHyHQ5DLcixe6kpO?p=preview) or [Babel](http://plnkr.co/edit/FScTw1byVpQEJHGQ7zLW?p=preview)) that you can fork.
 
 ## Install
 
@@ -38,7 +39,7 @@ npm i --save ng-forward@latest reflect-metadata
 
 - Read the [Walk-Through](https://github.com/ngUpgraders/ng-forward/blob/master/Walkthrough.md)
 - Open the [API Reference](https://github.com/ngUpgraders/ng-forward/blob/master/API.md)
-- Play around in [Plunkr](http://plnkr.co/edit/ktxXKHyHQ5DLcixe6kpO?p=preview)
+- Play around in Plunkr ([TypeScript](http://plnkr.co/edit/ktxXKHyHQ5DLcixe6kpO?p=preview) or [Babel](http://plnkr.co/edit/FScTw1byVpQEJHGQ7zLW?p=preview))
 - Explore the [TodoMVC app](https://github.com/ngUpgraders/ng-forward-playground)
 
 ## FAQ
