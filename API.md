@@ -79,6 +79,10 @@ export bundle(App); // Will export the bundled angular 1 module
 
 Returns a [`DecoratedModule`](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#decoratedmodule).
 
+###### Behind The Scenes
+
+`angular.module` is called. All string-based providers are considered ng 1 modules and passed as deps to `angular.module`. All other providers are added as whatever is appropriate: [`@Component`](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#component) calls `module.directive`, [`@Pipe`](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#pipe) calls `module.filter`, [`@Injectable`](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#injectable) calls `module.service`, etc.
+
 #### The Dependency Tree
 
 **Important! - please read**
@@ -154,10 +158,6 @@ class MyOtherService {}
 @Inject(MyOtherService)
 class MyService {}
 ```
-
-###### Behind The Scenes
-
-`angular.module` is called. All string-based providers are considered ng 1 modules and passed as deps to angular.module. All other providers are added as whatever is appropriate: [`@Component`](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#component) calls module.directive, [`@Pipe`](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#pipe) calls module.filter, [`@Injectable`](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#injectable) calls module.service, etc.
 
 ## @Component
 
