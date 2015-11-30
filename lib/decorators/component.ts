@@ -13,8 +13,8 @@
 // 	inputs: ['messageSubject: subject'],
 // 	bind: [Messenger]
 // 	template: `
-// 		<textarea ng-model="sendMessage.body"></textarea>
-// 		<button on-click="sendMessage.send()"></textarea>
+// 		<textarea ng-model="ctrl.body"></textarea>
+// 		<button on-click="ctrl.send()"></textarea>
 // 	`
 // })
 // @Inject(Messenger)
@@ -152,13 +152,16 @@ export function Component(
 
 
 		// Allow for renaming the controllerAs
-		if(controllerAs) {
-			componentStore.set('controllerAs', controllerAs, t);
-		}
-		else {
+		if(controllerAs === '$auto') {
 			// ControllerAs is the parsed selector. For example, `app` becomes `app` and
 			// `send-message` becomes `sendMessage`
 			componentStore.set('controllerAs', name, t);
+		} else if (controllerAs) {
+			// set to what was provided
+			componentStore.set('controllerAs', controllerAs, t);
+		} else {
+			// set to default of 'ctrl'
+			componentStore.set('controllerAs', 'ctrl', t);
 		}
 	
 		// Set a link function

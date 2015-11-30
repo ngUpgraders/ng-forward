@@ -39,8 +39,7 @@ export interface INgForwardJQuery extends IAugmentedJQuery {
       get() {
         if (this._componentInstance) return this._componentInstance;
         let isolateScope = this.isolateScope();
-        let name = dashToCamel(this[0].tagName.toLowerCase());
-        this._componentInstance = isolateScope && isolateScope[name] || null;
+        this._componentInstance = isolateScope && isolateScope['ctrl'] || null;
         return this._componentInstance;
       }
     },

@@ -16,7 +16,7 @@ describe("Opaque Token", () => {
 
     @Component({
       selector: 'player',
-      template: `{{player.lives}}`
+      template: `{{ctrl.lives}}`
     })
     @Inject(LIVES)
     class Player {
