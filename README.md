@@ -84,6 +84,8 @@ Here's an example of the steps you might take:
 #### How do I use ui-router with ng-forward?
 Use the [@StateConfig](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#stateconfig) and [@Resolve](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#resolve) decorators.
 
+Also check out [@brandonroberts](https://github.com/brandonroberts) [ng-forward-ui-router-example](https://github.com/brandonroberts/ng-forward-ui-router-example) repo.
+
 #### Do you support writing in plain ES5?
 
 Our goal is to support the ES5 syntax used by Angular 2.x. Currently, this part of ng-forward is not well developed but we intend to support it in the future. Follow this issue: https://github.com/ngUpgraders/ng-forward/pull/60
