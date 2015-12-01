@@ -451,7 +451,7 @@ At bootstrap time, a call to `module.service` is made. The service name is auto-
 
 ## @Inject
 
-A decorator that declares the dependencies to be injected in to the class' constructor.
+A decorator that declares the dependencies to be injected in to the class' constructor or a static method.
 
 Example:
 ```js
@@ -462,13 +462,17 @@ import { MyService } from './my-service.js';
 @Inject('$q', '$element', MyService)
 class MyOtherService {
     constructor($q, $element, myService) { }
+    
+    // also works on static methods
+    @Inject('$q', '$element', MyService)
+    static foo($q, $element, myService) {}
 }
 ```
 
 ###### Parameters
 
 - **`injectables`**  **string | class**  One or more injectables. Can be of type **string** or **class**.
-    - If **string**, then it's considered a core angular service such as $q or $http. It could also be a special 'local', for example component's can inject $element, $attrs or $scope.
+    - If **string**, then it's considered a core angular service such as $q or $http. It could also be a special 'local', for example component's can inject `$element`, `$attrs` or `$scope`.
     - If **class**, then it's considered to be an annotated class that is injectable, for example via the [@Injectable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#injectable) decorator.
 
 ###### Behind the Scenes
@@ -641,7 +645,7 @@ Calls to `$stateProvider.state` are made. All `resolve`'s are added as locals fo
 
 ## @Resolve
 
-A decorator to be used in place of the `resolve` ui-router state property. You place this decorator on a static function and it will add that function to the state's resolve map. It is convenient because you can store the Resolve information alongside the component that needs it, instead of the parent.
+A decorator to be used in place of the `resolve` ui-router state property. You place this decorator on a static function and it will add that function to the state's resolve map. It is convenient because you can store the Resolve information alongside the component that needs it, instead of the parent. If you need to inject dependencies into the resolve method, use [@Inject](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#inject).
 
 Example:
 
@@ -659,6 +663,13 @@ class ChildA {
     @Resolve()
     static resolveA() {
         return 'A resolved!';
+    }
+
+    // If you need injection, use @Inject
+    @Resolve()
+    @Inject('$q')
+    static resolveA($q) {
+        return $q.resolve('A resolved!');
     }
 
     constructor(resolveA) {
