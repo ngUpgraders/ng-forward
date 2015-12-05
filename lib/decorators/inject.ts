@@ -21,7 +21,13 @@ import {OpaqueToken} from '../classes/opaque-token';
 // ## @Inject
 // Takes an array of injects
 export function Inject( ...injects: any[] ){
-	return function(t1:any, name: string, {value: t2} = {}){
+	return function(t1:any, name?: string, {value: t2} = {value: undefined}){
+		
+		// We can use @Inject on classes and--in the case of ui-router @Resolve decorator--static methods.
+		// If we use @Inject on a static method then 3 arguments are passed in, instead of just 1.
+		const targetIsClass = arguments.length === 1;
+		const t = targetIsClass ? t1 : t2;
+		
 		const notStringBased = (inj: any) => typeof inj !== 'string' && !(inj instanceof OpaqueToken);
 		const ensureInjectable = (inj: any) => {
 			if (!providerStore.get('name', inj) || !providerStore.get('type', inj)) {
@@ -34,10 +40,6 @@ export function Inject( ...injects: any[] ){
 			return inj;
 		};
 
-		// We can use @Inject on classes and--in the case of ui-router @Resolve decorator--static methods.
-		// If we use @Inject on a static method then 3 arguments are passed in, instead of just 1.
-		const targetIsClass = arguments.length === 1;
-		const t = targetIsClass ? t1 : t2;
 
 		// At the end of the day, Angular 1's DI requires the injection array to be
 		// an array of strings. Map over the injects to get the string provider name for

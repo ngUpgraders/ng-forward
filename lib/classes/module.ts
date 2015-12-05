@@ -38,7 +38,7 @@ export class DecoratedModule{
 	}
 
 	// This is where you add an annotated class to the Angular module
-	add(...providers: any[]){
+	add(...providers: any[]): DecoratedModule {
 		// We used a rest parameter so that you can add multiple providers at once.
 		// So we must iterate over our array of providers.
 		for(let provider of providers)
