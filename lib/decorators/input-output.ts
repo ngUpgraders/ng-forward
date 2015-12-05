@@ -17,13 +17,13 @@ export const writeMapMulti = (t, names, storeKey) => {
 	return putMap;
 };
 
-export function Input(publicName: string){
+export function Input(publicName?: string){
 	return function(proto: any, localName: string){
 		writeMapSingle(proto.constructor, localName, publicName, 'inputMap');
 	}
 }
 
-export function Output(publicName: string){
+export function Output(publicName?: string){
 	return function(proto: any, localName: string){
 		let outputMap = writeMapSingle(proto.constructor, localName, publicName, 'outputMap');
 		Object.keys(outputMap).forEach(key => events.add(key));
