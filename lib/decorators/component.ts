@@ -87,7 +87,7 @@ export function Component(
 			outputs = [],
 			pipes = [],
 			directives = []
-		} : 
+		} :
 		{
 			selector: string,
 			controllerAs?: string,
@@ -105,34 +105,34 @@ export function Component(
 		if( !selector ) {
 			throw new Error(`Component Decorator Error in "${t.name}": Component selector must be provided`);
 		}
-	
+
 		// Grab the provider name and selector type by parsing the selector
 		let {name, type: restrict} = parseSelector(selector);
-	
+
 		// Setup provider information using the parsed selector
 		providerStore.set('name', name, t);
 		providerStore.set('type', TYPE, t);
-	
+
 		// The appWriter needs the raw selector. This lets it bootstrap the root component
 		bundleStore.set('selector', selector, t);
-	
+
 		// Grab the providers from the config object, parse them, and write the metadata
 		// to the target.
 		Providers(...providers)(t, `while analyzing Component '${t.name}' providers`);
-	
+
 		// Restrict type must be 'element'
 		componentStore.set('restrict', restrict, t);
-	
+
 		// Components should always create an isolate scope
 		componentStore.set('scope', {}, t);
-		
+
 		// Since components must have a template, set transclude to true
 		componentStore.set('transclude', true, t);
-	
+
 		// Inputs should always be bound to the controller instance, not
 		// to the scope
 		componentStore.set('bindToController', true, t);
-	
+
 		// Must perform some basic shape checking on the config object
 		[
 			['inputs', inputs],
@@ -163,17 +163,17 @@ export function Component(
 			// set to default of 'ctrl'
 			componentStore.set('controllerAs', 'ctrl', t);
 		}
-	
+
 		// Set a link function
 		if(t.link) {
 			componentStore.set('link', t.link, t);
 		}
-	
+
 		// Set a compile function
 		if(t.compile){
 			componentStore.set('compile', t.compile, t);
 		}
-	
+
 		View({
 			selector,
 			template,
@@ -210,7 +210,7 @@ export function View(
 		else {
 			throw new Error(`@Component config must include either a template or a template url for component with selector ${selector} on ${t.name}`);
 		}
-	
+
 		Providers(...directives)(t, `while analyzing Component '${t.name}' directives`);
 		Providers(...pipes)(t, `while analyzing Component '${t.name}' pipes`);
 	}
@@ -240,6 +240,7 @@ Module.addProvider(TYPE, (target: any, name: string, injects: string[], ngModule
 	controller.$inject = ['$scope', '$element', '$attrs', '$transclude', '$injector'];
 	function controller($scope: any, $element: any, $attrs: any, $transclude: any, $injector: any): any{
 		let locals = { $scope, $element, $attrs, $transclude };
+
 		return directiveControllerFactory(this, injects, target, ddo, $injector, locals);
 	}
 	ddo.controller = controller;

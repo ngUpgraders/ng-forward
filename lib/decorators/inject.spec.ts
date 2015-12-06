@@ -1,9 +1,11 @@
 /* global describe, it */
 import {Inject} from './inject';
+import {Component} from './component';
 import {Injectable} from './injectable';
 import {bundleStore} from '../writers';
 import {expect} from '../tests/frameworks';
-import {provide} from '../classes/provider';
+import {provide} from '../classes/provider'
+import {quickFixture} from '../tests/utils';;
 
 describe('@Inject annotation', function(){
 	it('should decorate a function with the $inject array', function(){
@@ -44,5 +46,60 @@ describe('@Inject annotation', function(){
 			@Inject(validNg1Service, ValidClass, validProvider, NotValidClass)
 			class A{}
 		}).to.throw(/Processing "A" @Inject parameter: "NotValidClass" is not a valid injectable/);
+	});
+
+	it('should inject requested parent components when using transclusion', () => {
+		@Component({
+			selector: 'parent',
+			template: `<ng-transclude></ng-transclude>`
+		})
+		class Parent {}
+
+		@Component({ selector: 'child', template: 'x' })
+		@Inject(Parent)
+		class Child {
+			parentCtrl: Parent;
+			constructor(p) {
+				this.parentCtrl = p;
+			}
+		}
+
+		let fixture = quickFixture({
+			directives: [Parent, Child],
+			template: `<parent><child></child></parent>`
+		});
+
+		let fixtureEl = fixture.debugElement;
+		let fixtureComponent = fixtureEl.componentInstance;
+		let parentEl = fixtureEl.componentViewChildren[0];
+		let parentComponent = parentEl.componentInstance;
+		let childEl = parentEl.componentViewChildren[0].componentViewChildren[0];
+		let childComponent = childEl.componentInstance;
+
+		childComponent.parentCtrl.should.be.equal(parentComponent);
+	});
+
+	it('should throw the default $injector error when no matching parent was found', () => {
+		expect(() => {
+			@Component({
+				selector: 'parent',
+				template: `<ng-transclude></ng-transclude>`
+			})
+			class Parent {}
+
+			@Component({ selector: 'child', template: 'x' })
+			@Inject(Parent)
+			class Child {
+				parentCtrl: Parent;
+				constructor(p) {
+					this.parentCtrl = p;
+				}
+			}
+
+			let fixture = quickFixture({
+				directives: [Parent, Child],
+				template: `<child></child>`
+			});
+		}).to.throw(/Unknown provider: parentProvider <- parent/);
 	});
 });
