@@ -21,6 +21,7 @@ Decorators:
 Testing:
 - [TestComponentBuilder](#testcomponentbuilder)
 - [ComponentFixture](#componentfixture)
+- [providers](#providers)
 
 Other:
 - [The Dependency Tree](#the-dependency-tree)
@@ -377,7 +378,9 @@ class MenuDropdown {
 
 Extends RxJS [Subject](https://github.com/ReactiveX/RxJS/blob/master/src/Subject.ts). Really we have this specifically for [Outputs](#output) but could be used for your own general purpose event emitter as well.
 
-#### subscribe(generatorOrNext?: any, error?: any, complete?: any): any
+#### `subscribe()`
+
+`subscribe(generatorOrNext?: any, error?: any, complete?: any): any`
 
 We use this method behind the scenes to subscribe to your output events. You most likely will not use this method.
 
@@ -390,7 +393,9 @@ We use this method behind the scenes to subscribe to your output events. You mos
 - **`error`**  **[Function]**  Callback that is called when the Subject has an 'error'.
 - **`complete`**  **[Function]**  Callback that is called when the Subject is 'completed'.
 
-#### next(value: any)
+#### `next()`
+
+`next(value: any)`
 
 Will trigger all subscriber's next callbacks, passing along the value. This is the main way to trigger an EventEmitter-based output.
 
@@ -743,10 +748,163 @@ console.log(getInjectableName(MyService)); // 'MyService48'
 
 ```
 
+# Testing
+
+Testing in ng-forward is very, very close to testing in Angular 2. We wanted your test migrations to be as minimal as possible.
+
 ## TestComponentBuilder
 
-WIP
+A testing helper specially designed to help you test [Components](#component).
+
+You use the TestComponentBuilder to create a test bed component. Use the test bed component to test the actual component you want to test. Do this by including the component under test in the test component's view. Since you may not want the same usage every time, you can create a test component with generic view and then use `overrideTemplate` to set a specific view for a specific test case.
+
+Example:
+
+```js
+import {Component, TestComponentBuilder} from 'ng-forward';
+import {MyComponent} from './my-component';
+
+// Instantiate the Builder, this part is different than ng2.
+// In ng2 you inject tcb.
+const tcb = new TestComponentBuilder();
+
+// Create your test bed
+@Component({ selector: 'test-cmp')
+class Test {}
+
+describe('MyComponent', () => {
+    it('does something', () => {
+        let html = '<my-component name="mine"></my-component>';
+
+        // Use tcb to override templates and providers, then create your fixture.
+        tcb
+            .overrideTemplate(Test, html)
+            .createAsync(Test).then(fixture => {
+                let myComponent = fixture.debugElement.componentViewChildren[0];
+                expect(myComponent.name).to.equal('mine');
+            });
+    });
+})
+
+```
+
+#### `createAsync()`
+
+`createAsync(rootComponent: `[`Component`](#component)`): Promise<`[`ComponentFixture`](#componentfixture)`>`
+
+Creates a [ComponentFixture](#componentfixture) out of a [Component](#component). This method is called last, after all desired override methods are called.
+
+In ng-forward this is not really async. But we are polyfilling Angular 2 which is async.
+
+###### Parameters
+
+- **`rootComponent`**  **class**  A @Component annotated class that you want to serve as the test bed. Typically this is not the actual component under test, but instead a container for your test.
+
+Returns a `Promise<`[`ComponentFixture`](#componentfixture)`>`. The fixture's debugElement is set to the rootComponent as an `angular.element`.
+
+#### `overrideTemplate()`
+
+`overrideTemplate(component: `[`Component`](#component)`, template: string): TestComponentBuilder`
+
+Override just the html of the test bed component. Set it to something relevant for your current test or test block. Use this method before calling `createAsync()`.
+
+Returns the TestComponentBuilder for easy chaining.
+
+#### `overrideProviders()`
+
+`overrideProviders(component: `[`Component`](#component)`, providers: (`[`Component`](#component)`| string )[]): TestComponentBuilder`
+
+Overrides one or more injectables configured via `providers` metadata property of a directive or component. Very useful when certain providers need to be mocked out. Use this method before calling `createAsync()`.
+
+Returns the TestComponentBuilder for easy chaining.
+
+#### `overrideView()`
+
+`overrideView(component: `[`Component`](#component)`, config: { template?: string, templateUrl?: string, pipes?: any[], directives?: `[`IProvidable`](#iprovidable)`[] }): TestComponentBuilder`
+
+Use this method before calling `createAsync()` to override the view of the test bed component. Similar to `overrideTemplate` but also allows setting other view properties.
+
+Returns the TestComponentBuilder for easy chaining.
+
+#### `overrideDirective()`
+
+Not Yet Implemented.
+
+#### `overrideViewProviders()`
+
+Not Yet Implemented.
 
 ## ComponentFixture
 
-WIP
+A fixture for debugging and testing a component. Use the [TestComponentBuilder's](#testcomponentbuilder) `createAsync()` method to create one. You'll also use the jqlite extensions pretty heavily.
+
+Example:
+
+```js
+import {Component, TestComponentBuilder} from 'ng-forward';
+import {MyComponent} from './my-component';
+import {MyService} from './my-service';
+
+const tcb = new TestComponentBuilder();
+
+@Component({ selector: 'test-cmp')
+class Test {}
+
+describe('MyComponent', () => {
+    it('does something', () => {
+        let html = '<my-component name="mine"></my-component>';
+
+        tcb
+            .overrideTemplate(Test, html)
+            .createAsync(Test).then(fixture => {
+                // debugElement is just an angular.element that has all the jqlite extensions
+                fixture.debugElement.nativeElement; // Reference to <test-cmp> as a raw DOM element
+                fixture.debugElement.componentInstance; // Reference to Test class instance attached to linked to nativeElement
+
+                // There's also proxies of the two above properties added directly to the fixture.
+                fixture.nativeElement;
+                fixture.componentInstance;
+
+                // There's more on debugElement
+                fixture.debugElement.componentViewChildren; // An array of direct children within <test-cmp>. Each child is it's own jqlite object.
+                let myComponent = fixture.debugElement.componentViewChildren[0]; // This is a debugElement but now wrapping <my-component>
+                myComponent.nativeElement; // Reference to <my-component> as a raw DOM element
+                myComponent.componentInstance; // Reference to MyComponent class instance attached to linked to nativeElement
+
+                // There's also a helper on debugElement to get things from the injector attached to the fixture
+                fixture.debugElement.getLocal('$q'); // Returns the $q service
+                fixture.debugElement.getLocal(MyService); // Returns the MyService service
+
+                // Since debugElements are just jqlite elements, you can use jqlite methods too
+                // BUT BE CAREFUL!! You are probably going to make it harder to migrate later!!
+                let myComponent = fixture.debugElement.find('my-component').componentInstance;
+            });
+    });
+})
+```
+
+## providers
+
+A testing helper to help with mocking out dependencies, typically in a `beforeEach` block.
+
+Example:
+
+```js
+beforeEach(providers(provide => {
+  mockSomeService = {
+    getData: sinon.stub().returns('mock success')
+  };
+
+  $http = { get: sinon.stub() };
+
+  return [
+    provide(SomeService, { useValue: mockSomeService }),
+    provide('$http', { useValue: $http })
+  ];
+}));
+```
+
+###### Parameters
+
+- **`provideFn`**  **Function**  A function that must return an array of [Providers](#provider). The function is passed the [provide](#provide) method for you to use.
+

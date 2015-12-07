@@ -125,6 +125,14 @@ describe('Test Utils', () => {
           .to.be.an.instanceOf(angular.element);
 
       // nativeElement is an alias to the [0] index raw dom element
+      expect(fixture.nativeElement)
+          .to.be.an.instanceOf(HTMLElement);
+
+      // The actual class instance hosted by the element
+      expect(fixture.componentInstance)
+          .to.be.an.instanceOf(TestComponent);
+
+      // nativeElement is an alias to the [0] index raw dom element
       expect(fixture.debugElement.nativeElement)
           .to.be.an.instanceOf(HTMLElement);
 
@@ -251,6 +259,14 @@ describe('Test Utils', () => {
       // debugElement is an angular.element decorated with extra properties, see next lines
       expect(fixture.debugElement)
           .to.be.an.instanceOf(angular.element);
+
+      // nativeElement is an alias to the [0] index raw dom element
+      expect(fixture.nativeElement)
+          .to.be.an.instanceOf(HTMLElement);
+
+      // The actual class instance hosted by the element
+      expect(fixture.componentInstance)
+          .to.be.an.instanceOf(TestComponent);
 
       // nativeElement is an alias to the [0] index raw dom element
       expect(fixture.debugElement.nativeElement)
