@@ -18,18 +18,15 @@ export const writeMapMulti = (t, names, storeKey) => {
 };
 
 export function Input(publicName: string){
-	return function(proto: any, localName: string, descriptor){
-		//console.log(descriptor);
-		//descriptor.initializer = function() {
-		//	return this[localName];
-		//};
-
+	return function(proto: any, localName: string, descriptor?: {configurable: boolean, enumerable: boolean, initializer: Function}){
+		if (descriptor) descriptor.initializer = function() { return this[localName]; };
 		writeMapSingle(proto.constructor, localName, publicName, 'inputMap');
 	}
 }
 
 export function Output(publicName: string){
-	return function(proto: any, localName: string){
+	return function(proto: any, localName: string, descriptor?: {configurable: boolean, enumerable: boolean, initializer: Function}){
+		if (descriptor) descriptor.initializer = function() { return this[localName]; };
 		let outputMap = writeMapSingle(proto.constructor, localName, publicName, 'outputMap');
 		Object.keys(outputMap).forEach(key => events.add(key));
 	}
