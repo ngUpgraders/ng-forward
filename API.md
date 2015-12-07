@@ -3,33 +3,33 @@
 #### Table of Contents
 
 Methods:
-- [bootstrap](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#bootstrap)
-- [bundle](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#bundle)
-- [provide](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#provide)
+- [bootstrap](#bootstrap)
+- [bundle](#bundle)
+- [provide](#provide)
 
 Decorators:
-- [@Component](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#component)
-- [@Directive](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#directive)
-- [@Input](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#input)
-- [@Output](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#output)
-- [@Injectable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#injectable)
-- [@Inject](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#inject)
-- [@Pipe](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#pipe)
-- [@StateConfig](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#stateconfig)
-- [@Resolve](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#resolve)
+- [@Component](#component)
+- [@Directive](#directive)
+- [@Input](#input)
+- [@Output](#output)
+- [@Injectable](#injectable)
+- [@Inject](#inject)
+- [@Pipe](#pipe)
+- [@StateConfig](#stateconfig)
+- [@Resolve](#resolve)
 
 Testing:
-- [TestComponentBuilder](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#testcomponentbuilder)
-- [ComponentFixture](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#componentfixture)
+- [TestComponentBuilder](#testcomponentbuilder)
+- [ComponentFixture](#componentfixture)
 
 Other:
-- [The Dependency Tree](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#the-dependency-tree)
-- [EventEmitter](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#eventemitter)
-- [JQLite Extensions](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#jqlite-extensions)
+- [The Dependency Tree](#the-dependency-tree)
+- [EventEmitter](#eventemitter)
+- [JQLite Extensions](#jqlite-extensions)
 
 ## bootstrap
 
-Used to bootstrap your ng-forward application. Pass it your entry point component and it'll [bundle](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#bundle) up your app and then bootstrap it. Do **not** use the `ng-app` directive.
+Used to bootstrap your ng-forward application. Pass it your entry point component and it'll [bundle](#bundle) up your app and then bootstrap it. Do **not** use the `ng-app` directive.
 
 Example:
 
@@ -44,14 +44,14 @@ bootstrap(App);
 
 ###### Parameters
 
-- **`component`**  **class**  Any class that has been decorated with [`@Component`](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#component).
-- **`otherProviders`**  **[Array&lt;[IProvidable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#iprovidable)&gt;]**  An array of other providers that you want to include in the bundle.
+- **`component`**  **class**  Any class that has been decorated with [`@Component`](#component).
+- **`otherProviders`**  **[Array&lt;[IProvidable](#iprovidable)&gt;]**  An array of other providers that you want to include in the bundle.
 
 Returns the `injector` from the bootstrapped auto-bundled module.
 
 ###### Behind the Scenes
 
-[`bundle`](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#bundle) is called to auto-create an angular module and then `angular.bootstrap` is called on the page element that matches the component's selector.
+[`bundle`](#bundle) is called to auto-create an angular module and then `angular.bootstrap` is called on the page element that matches the component's selector.
 
 ## bundle
 
@@ -75,13 +75,13 @@ export bundle('my.app', App); // Will export the bundled angular 1 module 'my.ap
 
 - **`moduleName`** **string** The name of the module to be created
 - **`provider`** **class** The entry point provider whose dependencies (providers, directives) will be traced and bundled.
-- **`otherProviders`**  **[Array&lt;[IProvidable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#iprovidable)&gt;]**  An array of other providers that you want to include in the bundle.
+- **`otherProviders`**  **[Array&lt;[IProvidable](#iprovidable)&gt;]**  An array of other providers that you want to include in the bundle.
 
-Returns a [`DecoratedModule`](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#decoratedmodule).
+Returns a [`DecoratedModule`](#decoratedmodule).
 
 ###### Behind The Scenes
 
-`angular.module` is called. All string-based providers are considered ng 1 modules and passed as deps to `angular.module`. All other providers are added as whatever is appropriate: [`@Component`](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#component) calls `module.directive`, [`@Pipe`](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#pipe) calls `module.filter`, [`@Injectable`](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#injectable) calls `module.service`, etc.
+`angular.module` is called. All string-based providers are considered ng 1 modules and passed as deps to `angular.module`. All other providers are added as whatever is appropriate: [`@Component`](#component) calls `module.directive`, [`@Pipe`](#pipe) calls `module.filter`, [`@Injectable`](#injectable) calls `module.service`, etc.
 
 #### The Dependency Tree
 
@@ -161,7 +161,7 @@ class MyService {}
 
 ## @Component
 
-A decorator for adding component metadata to a class. Components are essentially angular 1 directives with both a template and controller. If you are looking to only modify the host element in some way, you should use [@Directive](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#directive).
+A decorator for adding component metadata to a class. Components are essentially angular 1 directives with both a template and controller. If you are looking to only modify the host element in some way, you should use [@Directive](#directive).
 
 Example:
 
@@ -187,9 +187,9 @@ class App {
 - **`selector`**  **string**  The component's selector. It must be a css tag selector, for example `'app'` or `'my-thing'` are **valid**, but `'[my-attr]'` or `'.my-class'` are **invalid**.
 - **`template`**  **[string]**  The template string for the component. You can bind to class instance properties by prepending your bindings with the selector in camel-case form, e.g. `<h1>My Component's Name is: {{myComponent.name}}</h1>`.
 - **`templateUrl`**  **[string]**  Path to an external html template file. Either `template` or `templateUrl` **must** be provided.
-- **`providers`**  **[Array&lt;[IProvidable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#iprovidable)&gt;]**  Any providers that this component or any of it's children depends on.
-- **`directives`**  **[Array&lt;[IProvidable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#iprovidable)&gt;]**  Any directives or components that this component or any of it's children depends on.
-- **`pipes`**  **[Array&lt;[IProvidable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#iprovidable)&gt;]**  Any [pipes](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#pipe) that this component or any of it's children depends on.
+- **`providers`**  **[Array&lt;[IProvidable](#iprovidable)&gt;]**  Any providers that this component or any of it's children depends on.
+- **`directives`**  **[Array&lt;[IProvidable](#iprovidable)&gt;]**  Any directives or components that this component or any of it's children depends on.
+- **`pipes`**  **[Array&lt;[IProvidable](#iprovidable)&gt;]**  Any [pipes](#pipe) that this component or any of it's children depends on.
 - **`inputs`**  **[Array&lt;string&gt;]**  An array of strings naming what class properties you want to expose in `bindToController` (or `scope` if angular 1.3). For example, `inputs: ['foo']` will connect the class property `foo` to the input `foo`. You can also rename the input, for example `inputs: ['foo:theFoo']` will connect the class property `foo` to the input `the-foo`.
 - **`outputs`**  **[Array&lt;string&gt;]**  An array of strings naming what class properties you want to expose as outputs. For example, `outputs: ['fooChange']` will notify the app that this component can fire a `'fooChange'` event. If there is a class property `fooChange` that is an `EventEmitter` it can trigger this event via `this.fooChange.next()`. Otherwise the event can also be triggered with a regular DOM event of name `'fooChange'`. You can also rename the output, for example `inputs: ['fooChange:theFooChange']` will notify of a 'theFooChange' event, but will still look for a `fooChange` property on the class.
 - **`controllerAs`**  **[string='ctrl']**  The controller name used in the template. By default uses 'ctrl'. We wanted to use something consistent across all components to make migration to Angular 2 easier later. When migrating you'll only need to do a simple find and replace of all 'ctrl.' and remove them. If you want the controllerAs name to match the selector (camel-cased) then set controllerAs to '$auto'.
@@ -198,7 +198,7 @@ class App {
 
 Inputs and Outputs are the public API of a component. There are two ways to specify them.
 - The `inputs` and `outputs` config property on @Component
-- The [@Input](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#input) and [@Output](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#output) decorators
+- The [@Input](#input) and [@Output](#output) decorators
 
 If you had a component `MenuDropdown` like so:
 
@@ -241,7 +241,7 @@ Every input can be bound in three different ways, just like Angular 2:
 
 Every output can trigger it's event in various ways.
 
-- Via [EventEmitter](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#eventemitter). This is the preferred method. Does not bubble. Add a matching named event emitter to your class and call it's `.next()` method.
+- Via [EventEmitter](#eventemitter). This is the preferred method. Does not bubble. Add a matching named event emitter to your class and call it's `.next()` method.
 
 ```js
 import { Component, EventEmitter } from 'ng-forward';
@@ -285,7 +285,7 @@ Transclusion is always enabled. Just add `<ng-content></ng-content>` (converted 
 
 ###### Behind the Scenes 
 
-At [bootstrap](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#bootstrap) time, a call to `angular.directive` is made. Angular 1 directive properties are set as follows:
+At [bootstrap](#bootstrap) time, a call to `angular.directive` is made. Angular 1 directive properties are set as follows:
 
 - `template` is set via the @Component config template property (`templateUrl` can also be used)
 - `controller` is set to the class instance, but it not instantiated until after the link phase so that child directives are available in the DOM. `$scope`, `$element`, `$attrs`, and `$transclude` are injectable as locals.
@@ -327,7 +327,7 @@ class FooClass {
 
 ###### Behind the Scenes 
 
-At [bootstrap](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#bootstrap) time, a call to `angular.directive` is made. Angular 1 directive properties are set as follows:
+At [bootstrap](#bootstrap) time, a call to `angular.directive` is made. Angular 1 directive properties are set as follows:
 
 - `template` is not set.
 - `controller` is set to the class instance, but it not instantiated until after the link phase so that child directives are available in the DOM. `$scope`, `$element`, `$attrs`, and `$transclude` are injectable as locals.
@@ -337,7 +337,7 @@ At [bootstrap](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#boot
 
 ## @Input
 
-An alternative to using the `inputs` property on [@Component](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#component).
+An alternative to using the `inputs` property on [@Component](#component).
 
 Example:
 
@@ -354,7 +354,7 @@ class MenuDropdown {
 
 ## @Output
 
-An alternative to using the `outputs` property on [@Component](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#component). Example: `@Input('fooPublic') fooLocal;`.
+An alternative to using the `outputs` property on [@Component](#component). Example: `@Input('fooPublic') fooLocal;`.
 
 Example:
 
@@ -375,7 +375,7 @@ class MenuDropdown {
 
 ## EventEmitter
 
-Extends RxJS [Subject](https://github.com/ReactiveX/RxJS/blob/master/src/Subject.ts). Really we have this specifically for [Outputs](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#output) but could be used for your own general purpose event emitter as well.
+Extends RxJS [Subject](https://github.com/ReactiveX/RxJS/blob/master/src/Subject.ts). Really we have this specifically for [Outputs](#output) but could be used for your own general purpose event emitter as well.
 
 #### subscribe(generatorOrNext?: any, error?: any, complete?: any): any
 
@@ -424,7 +424,7 @@ An easy way to ask the injector for a dependency. You can pass either string or 
 
 ## @Injectable
 
-A decorator that marks a class as injectable. It can then be injected into other annotated classes via the [@Inject](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#inject) decorator.
+A decorator that marks a class as injectable. It can then be injected into other annotated classes via the [@Inject](#inject) decorator.
 
 Example:
 
@@ -447,7 +447,7 @@ class MyOtherService {
 
 ###### Behind the Scenes
  
-At bootstrap time, a call to `module.service` is made. The service name is auto-generated as you should not need to access manually. If you must access it, use the [getInjectableName()](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#getinjectablename) utility method.
+At bootstrap time, a call to `module.service` is made. The service name is auto-generated as you should not need to access manually. If you must access it, use the [getInjectableName()](#getinjectablename) utility method.
 
 ## @Inject
 
@@ -462,7 +462,7 @@ import { MyService } from './my-service.js';
 @Inject('$q', '$element', MyService)
 class MyOtherService {
     constructor($q, $element, myService) { }
-    
+
     // also works on static methods
     @Inject('$q', '$element', MyService)
     static foo($q, $element, myService) {}
@@ -473,7 +473,7 @@ class MyOtherService {
 
 - **`injectables`**  **string | class**  One or more injectables. Can be of type **string** or **class**.
     - If **string**, then it's considered a core angular service such as $q or $http. It could also be a special 'local', for example component's can inject `$element`, `$attrs` or `$scope`.
-    - If **class**, then it's considered to be an annotated class that is injectable, for example via the [@Injectable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#injectable) decorator.
+    - If **class**, then it's considered to be an annotated class that is injectable, for example via the [@Injectable](#injectable) decorator.
 
 ###### Behind the Scenes
 
@@ -518,23 +518,23 @@ class App {
 
 ###### Parameters
 
-- **`token`**  **string | class | [OpaqueToken](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#opaquetoken)**  A token that will be used when asking for the dependency. Whatever you use, string, class or OpaqueToken, you must use that same object when injecting the dependency with [@Inject](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#inject). If you pass a class, it does not need to be already annotated since it's simply used as a token key.
+- **`token`**  **string | class | [OpaqueToken](#opaquetoken)**  A token that will be used when asking for the dependency. Whatever you use, string, class or OpaqueToken, you must use that same object when injecting the dependency with [@Inject](#inject). If you pass a class, it does not need to be already annotated since it's simply used as a token key.
 - **`provideType`**  **Object**  An object with various options on how to provide the dependency. Only one of the following should be used:
     - **`provideType.useValue`**  **[any]**  If used, the value is provided when the token is requested from the injector.
     - **`provideType.useConstant`**  **[any]**  If used, the constant is provided when the token is requested from the injector.
-    - **`provideType.useClass`**  **[class]**  If used, the class is provided when the token is requested from the injector. This is equivalent to adding [@Injectable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#injectable) to a class. But could be useful to overwrite an existing @Injectable with a new provided class.
+    - **`provideType.useClass`**  **[class]**  If used, the class is provided when the token is requested from the injector. This is equivalent to adding [@Injectable](#injectable) to a class. But could be useful to overwrite an existing @Injectable with a new provided class.
     - **`providerType.useFactory`**  **[Function]**  If used, the return value of the factory function is provided when the token is requested from the injector. You can also inject the function by supplying an array of dependencies to `providerType.deps`.
-    - **`providerType.deps`**  **[Array&lt;[IProvidable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#iprovidable)&gt;]**  Only used along with `useFactory` to inject dependencies.
+    - **`providerType.deps`**  **[Array&lt;[IProvidable](#iprovidable)&gt;]**  Only used along with `useFactory` to inject dependencies.
 
-Returns a [Provider](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#provider).
+Returns a [Provider](#provider).
 
 ###### Provider
 
-A generic dependency that is fulfilled by either value, constant, class or factory based on a unique token. To create Providers, use [provide](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#provide).
+A generic dependency that is fulfilled by either value, constant, class or factory based on a unique token. To create Providers, use [provide](#provide).
 
 ###### OpaqueToken
 
-Used to create a object to be used as a token with [`provide`](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#provide)
+Used to create a object to be used as a token with [`provide`](#provide)
 
 Example:
 
@@ -565,8 +565,8 @@ class App {}
 Anything that can be passed as a provider that you want to include in the bundle. Can be of type **string**, **class**, or **Provider**.
 
 - If **string**, will be considered an angular 1 legacy module. E.g. 'ui-router', 'my-other-ng1-module'.
-- If **class**, must be an [@Injectable](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#injectable) and will add that 'service' to the bundle. Regular ES6 classes will throw an error.
-- If [**Provider**](https://github.com/ngUpgraders/ng-forward/blob/master/API.md#provider), will be included in bundle as specified.
+- If **class**, must be an [@Injectable](#injectable) and will add that 'service' to the bundle. Regular ES6 classes will throw an error.
+- If [**Provider**](#provider), will be included in bundle as specified.
 
 ## @Pipe
 
