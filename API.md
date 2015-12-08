@@ -18,15 +18,15 @@ Decorators:
 - [@StateConfig](#stateconfig)
 - [@Resolve](#resolve)
 
-Testing:
+[Testing](#testing):
+- [providers](#providers)
 - [TestComponentBuilder](#testcomponentbuilder)
 - [ComponentFixture](#componentfixture)
-- [providers](#providers)
+- [Extended Angular Element](#extended-angular-element)
 
 Other:
 - [The Dependency Tree](#the-dependency-tree)
 - [EventEmitter](#eventemitter)
-- [JQLite Extensions](#jqlite-extensions)
 
 ## bootstrap
 
@@ -403,30 +403,6 @@ Will trigger all subscriber's next callbacks, passing along the value. This is t
 
 - **`value`**  **[any]**  A value to pass along to the next callback of any event subscribers.
 
-## JQLite Extensions
-
-Ng-Forward adds the following extensions to the JQLite / JQuery object returned by angular.element. These extensions mimic features found in Angular 2. These extensions serve as helpful methods for your convenience. All of these methods work on the 0 index element if the jq collection has more than one element.
-
-#### nativeElement
-
-**read-only** The native DOM element inside the jq wrapper.
-
-#### componentInstance
-
-**read-only** The component's class instance.
-
-#### componentViewChildren
-
-**read-only** An array of all child elements wrapped as jq elements.
-
-#### getLocal(injectable)
-
-An easy way to ask the injector for a dependency. You can pass either string or annotated class.
-
-###### Parameters
-
-- **`injectable`**  **string | class**  The string or annotated class you'd like to retrieve from the injector.
-
 ## @Injectable
 
 A decorator that marks a class as injectable. It can then be injected into other annotated classes via the [@Inject](#inject) decorator.
@@ -752,6 +728,31 @@ console.log(getInjectableName(MyService)); // 'MyService48'
 
 Testing in ng-forward is very, very close to testing in Angular 2. We wanted your test migrations to be as minimal as possible.
 
+## providers
+
+A testing helper to help with mocking out dependencies, typically in a `beforeEach` block.
+
+Example:
+
+```js
+beforeEach(providers(provide => {
+  mockSomeService = {
+    getData: sinon.stub().returns('mock success')
+  };
+
+  $http = { get: sinon.stub() };
+
+  return [
+    provide(SomeService, { useValue: mockSomeService }),
+    provide('$http', { useValue: $http })
+  ];
+}));
+```
+
+###### Parameters
+
+- **`provideFn`**  **Function**  A function that must return an array of [Providers](#provider). The function is passed the [provide](#provide) method for you to use.
+
 ## TestComponentBuilder
 
 A testing helper specially designed to help you test [Components](#component).
@@ -836,7 +837,7 @@ Not Yet Implemented.
 
 ## ComponentFixture
 
-A fixture for debugging and testing a component. Use the [TestComponentBuilder's](#testcomponentbuilder) `createAsync()` method to create one. You'll also use the jqlite extensions pretty heavily.
+A fixture for debugging and testing a component. Use the [TestComponentBuilder's](#testcomponentbuilder) `createAsync()` method to create one. You'll also use the [jqlite extensions](#extended-angular-element) pretty heavily.
 
 Example:
 
@@ -883,28 +884,72 @@ describe('MyComponent', () => {
 })
 ```
 
-## providers
+#### `detectChanges()`
 
-A testing helper to help with mocking out dependencies, typically in a `beforeEach` block.
+An alias to $rootScope.$apply() for the fixture's scope.
 
-Example:
+#### `debugElement`
 
+An [Extended Angular Element](#extended-angular-element) wrapped around the test bed element. Read about the [properties and methods](#extended-angular-element) this object has.
+
+#### `nativeElement`
+
+A proxy to `debugElement.nativeElement` for convenience.
+
+#### `componentInstance`
+
+A proxy to `debugElement.componentInstance` for convenience.
+
+## Extended Angular Element
+
+An `angular.element` that has been extended with additional properties and methods. All JQlite and JQuery elements are extended by ng-forward automatically. Ng-Forward adds the following extensions to the JQLite / JQuery object returned by angular.element. These extensions mimic features found in Angular 2. These extensions serve as helpful methods for your convenience. All of these methods work on the 0 index element if the jq collection has more than one element.
+
+#### `nativeElement`
+
+**read-only** The native DOM element.
+
+Example: 
 ```js
-beforeEach(providers(provide => {
-  mockSomeService = {
-    getData: sinon.stub().returns('mock success')
-  };
+constructor($element) {
+  $element.nativeElement; // Alias to $element[0]
+}
+```
 
-  $http = { get: sinon.stub() };
+#### `componentInstance`
 
-  return [
-    provide(SomeService, { useValue: mockSomeService }),
-    provide('$http', { useValue: $http })
-  ];
-}));
+**read-only** The component's class instance.
+
+Example: 
+```js
+constructor($element) {
+  $element.componentInstance; // Alias to $element.controller()
+}
+```
+
+#### `componentViewChildren`
+
+**read-only** An array of all child elements as Extended Angular Elements.
+
+Example: 
+```js
+constructor($element) {
+  $element.componentViewChildren; // Roughly an alias to $element.children(), but all children are themselves an angular element.
+}
+```
+
+#### `getLocal(injectable)`
+
+An easy way to ask the injector for a dependency. You can pass either string or annotated class.
+
+Example: 
+```js
+constructor($element) {
+  $element.getLocal('$q'); // Alias to $element.injector().get('$q')
+  $element.getLocal(SomeClass); // Unique to ng-forward. You can get a dep by class.
+}
 ```
 
 ###### Parameters
 
-- **`provideFn`**  **Function**  A function that must return an array of [Providers](#provider). The function is passed the [provide](#provide) method for you to use.
+- **`injectable`**  **string | class**  The string or annotated class you'd like to retrieve from the injector.
 
