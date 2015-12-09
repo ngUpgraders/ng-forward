@@ -63,7 +63,7 @@ Example:
 ```js
 import { bundle, Component } from 'ng-forward';
 
-@Component({ selector: 'app', template: 'Hello World!', 
+@Component({ selector: 'app', template: 'Hello World!',
     providers: [...otherProvidersToIncludeInTheBundle],
     directives: [...otherDirectivesToIncludeInTheBundle]
 })
@@ -169,14 +169,14 @@ Example:
 ```js
 import { Component } from 'ng-forward';
 
-@Component({ 
-    selector: 'app', 
+@Component({
+    selector: 'app',
     template: `Hello {{ctrl.place}}!`,
     providers: [...providers],
     directives: [...directives]
     pipes: [...pipes]
 })
-class App { 
+class App {
     constructor() {
         this.place = "World";
     }
@@ -204,8 +204,8 @@ Inputs and Outputs are the public API of a component. There are two ways to spec
 If you had a component `MenuDropdown` like so:
 
 ```js
-@Component({ 
-    selector: 'menu-dropdown', 
+@Component({
+    selector: 'menu-dropdown',
     template: `
     <label>{{ctrl.name}}</label>
     <a ng-repeat="option in ctrl.options" ng-href="{{option.action}}">{{option.name}}</a>
@@ -234,7 +234,7 @@ Then I could use that component in another component's template like so, passing
 class MainMenu {}
 ```
 
-Every input can be bound in three different ways, just like Angular 2: 
+Every input can be bound in three different ways, just like Angular 2:
 
 - String-based `foo="some string"`. Will pass the raw string into the input.
 - One-way binding `[foo]="someObj.property"`. Will one-way bind the expression to the input. The input can be changed locally but if the expression ever changes it will overwrite the input with the latest value.
@@ -252,7 +252,7 @@ import { Component, EventEmitter } from 'ng-forward';
 class MenuDropdown {
     // Initialize your output as an EventEmitter and now you can trigger with .next()
     optionSelect = new EventEmitter();
-    
+
     triggerEventViaEventEmitter() {
         this.optionSelect.next(selectedOption)
     }
@@ -271,7 +271,7 @@ class MenuDropdown {
         // Need a reference to the host element for DOM event triggering
         this.$element = $element;
     }
-    
+
     triggerEventViaDOM() {
         this.$element.triggerHandler('optionSelect');
         // or for bubbling of custom events...
@@ -281,10 +281,10 @@ class MenuDropdown {
 ```
 
 ###### Transclusion
- 
-Transclusion is always enabled. Just add `<ng-content></ng-content>` (converted to ng-transclude) or `<ng-transclude></ng-tranclude>` to mark your transclusion point. No real reason to set this to false. We always set it to `true`. You can tranclude by default. 
 
-###### Behind the Scenes 
+Transclusion is always enabled. Just add `<ng-content></ng-content>` (converted to ng-transclude) or `<ng-transclude></ng-tranclude>` to mark your transclusion point. No real reason to set this to false. We always set it to `true`. You can tranclude by default.
+
+###### Behind the Scenes
 
 At [bootstrap](#bootstrap) time, a call to `angular.directive` is made. Angular 1 directive properties are set as follows:
 
@@ -309,12 +309,12 @@ Example:
 ```js
 import { Directive } from 'ng-forward';
 
-@Directive({ 
-    selector: '[foo-class]', 
+@Directive({
+    selector: '[foo-class]',
     providers: [...providers],
 })
 @Inject('$element')
-class FooClass { 
+class FooClass {
     constructor($element) {
         $element.addClass('foo');
     }
@@ -326,7 +326,7 @@ class FooClass {
 - **`selector`**  **string**  The component's selector. It must be a css attribute selector, for example `'[my-thing]'` is **valid**, but `'my-component'` or `'.my-class'` are **invalid**.
 - **`providers`**  **[Array&lt;IProvidable&gt;]**  Any providers that this component or any of it's children depends on.
 
-###### Behind the Scenes 
+###### Behind the Scenes
 
 At [bootstrap](#bootstrap) time, a call to `angular.directive` is made. Angular 1 directive properties are set as follows:
 
@@ -427,7 +427,7 @@ class MyOtherService {
 ```
 
 ###### Behind the Scenes
- 
+
 At bootstrap time, a call to `module.service` is made. The service name is auto-generated as you should not need to access manually. If you must access it, use the [getInjectableName()](#getinjectablename) utility method.
 
 ## @Inject
@@ -440,9 +440,12 @@ import { Component, Inject } from 'ng-forward';
 import { MyService } from './my-service.js';
 
 @Component()
-@Inject('$q', '$element', MyService)
-class MyOtherService {
-    constructor($q, $element, myService) { }
+class MyParentComponent {}
+
+@Component()
+@Inject('$q', '$element', MyService, MyParentComponent)
+class MyChildComponent {
+    constructor($q, $element, myService, myParent) { }
 
     // also works on static methods
     @Inject('$q', '$element', MyService)
@@ -454,11 +457,11 @@ class MyOtherService {
 
 - **`injectables`**  **string | class**  One or more injectables. Can be of type **string** or **class**.
     - If **string**, then it's considered a core angular service such as $q or $http. It could also be a special 'local', for example component's can inject `$element`, `$attrs` or `$scope`.
-    - If **class**, then it's considered to be an annotated class that is injectable, for example via the [@Injectable](#injectable) decorator.
+    - If **class**, then it's considered to be an annotated class that is injectable, for example via the [@Injectable](#injectable) decorator or a parent component class. Parent components can only be injected into the constructor of another component. Also currently this only works when the child is transcluded into the parent.
 
 ###### Behind the Scenes
 
-The injectables are added to the `$inject` property of the class constructor function.
+The injectables are added to the `$inject` property of the class constructor function. Parent components will be injected as locals.
 
 ## provide
 
@@ -674,7 +677,7 @@ class Parent {}
 
 - **`resolveName`**  **[string]**  If provided, you will use this name when requesting the resolve from the injector.
 
-## DecoratedModule 
+## DecoratedModule
 
 A wrapper around the angular 1 module. This is mostly private and you shouldn't need to use it unless you are creating a plugin.
 
@@ -908,7 +911,7 @@ An `angular.element` that has been extended with additional properties and metho
 
 **read-only** The native DOM element.
 
-Example: 
+Example:
 ```js
 constructor($element) {
   $element.nativeElement; // Alias to $element[0]
@@ -919,7 +922,7 @@ constructor($element) {
 
 **read-only** The component's class instance.
 
-Example: 
+Example:
 ```js
 constructor($element) {
   $element.componentInstance; // Alias to $element.controller()
@@ -930,7 +933,7 @@ constructor($element) {
 
 **read-only** An array of all child elements as Extended Angular Elements.
 
-Example: 
+Example:
 ```js
 constructor($element) {
   $element.componentViewChildren; // Roughly an alias to $element.children(), but all children are themselves an angular element.
@@ -941,7 +944,7 @@ constructor($element) {
 
 An easy way to ask the injector for a dependency. You can pass either string or annotated class.
 
-Example: 
+Example:
 ```js
 constructor($element) {
   $element.getLocal('$q'); // Alias to $element.injector().get('$q')
@@ -952,4 +955,3 @@ constructor($element) {
 ###### Parameters
 
 - **`injectable`**  **string | class**  The string or annotated class you'd like to retrieve from the injector.
-

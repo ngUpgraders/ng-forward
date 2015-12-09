@@ -17,17 +17,18 @@ import {bundleStore, providerStore} from '../writers';
 import {getInjectableName} from '../util/get-injectable-name';
 import {Providers} from '../decorators/providers';
 import {OpaqueToken} from '../classes/opaque-token';
+import {componentHooks} from './component';
 
 // ## @Inject
 // Takes an array of injects
 export function Inject( ...injects: any[] ){
 	return function(t1:any, name?: string, {value: t2} = {value: undefined}){
-		
+
 		// We can use @Inject on classes and--in the case of ui-router @Resolve decorator--static methods.
 		// If we use @Inject on a static method then 3 arguments are passed in, instead of just 1.
 		const targetIsClass = arguments.length === 1;
 		const t = targetIsClass ? t1 : t2;
-		
+
 		const notStringBased = (inj: any) => typeof inj !== 'string' && !(inj instanceof OpaqueToken);
 		const ensureInjectable = (inj: any) => {
 			if (!providerStore.get('name', inj) || !providerStore.get('type', inj)) {
@@ -48,11 +49,11 @@ export function Inject( ...injects: any[] ){
 		var providers = injects
 				.filter(notStringBased)
 				.map(ensureInjectable);
-	
+
 		Providers(...providers)(t, `while analyzing '${t.name}' injected providers`);
-	
+
 		let dependencies = injects.map(getInjectableName).filter(n => n !== undefined);
-	
+
 		// If there is already an $inject array, assume that it was set by a parent class.
 		// The resultant $inject array should be a concat of local dependencies and parent
 		// injects.
@@ -76,4 +77,27 @@ export function Inject( ...injects: any[] ){
 			bundleStore.set('$inject', dependencies, t);
 		}
 	}
+}
+
+componentHooks.beforeCtrlInvoke(injectParentComponents);
+
+// Checks every injection if it is known to the $injector
+// It will then check the unknown injects if there is any parent component that matches
+// the name. If a matching component was found it will inject that component as a
+// local.
+function injectParentComponents(caller: any, injects: string[], controller: any, ddo: any, $injector: any, locals: any) {
+	injects.forEach((inject) => {
+		if (!$injector.has(inject)) {
+			let parent = locals.$element;
+
+			do {
+				if (!parent.controller) continue;
+				const parentCtrl = parent.controller(inject);
+				if (parentCtrl) {
+					locals[inject] = parentCtrl;
+					return;
+				}
+			} while ((parent = parent.parent()) && parent.length > 0);
+		}
+	});
 }
