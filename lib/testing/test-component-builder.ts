@@ -27,7 +27,7 @@ export class TestComponentBuilder {
    * @param rootComponent
    * @returns {ComponentFixture}
    */
-  create(rootComponent: ngClass): ComponentFixture {
+  private create(rootComponent: ngClass): ComponentFixture {
     let decoratedModule: DecoratedModule = bundle('test.module', rootComponent);
     angular.mock.module(decoratedModule.name);
     angular.mock.module($provide =>
@@ -40,17 +40,26 @@ export class TestComponentBuilder {
     return fixture;
   }
 
+  /**
+   * Takes a root component, typically a test component whose template houses another component
+   * under test. Returns a ComponentFixture that contains a debugElement reference
+   * to the test component (which you can use to drill down to the component under test) as well
+   * as a detectChanges method which aliases to a scope digest call.
+   *
+   * @param rootComponent
+   * @returns {Promise<ComponentFixture>}
+     */
   createAsync(rootComponent: ngClass): Promise<ComponentFixture> {
     let fixture: ComponentFixture = this.create(rootComponent);
     return Promise.resolve(fixture);
   }
 
-  overrideTemplate(component: ngClass, template: string) {
+  overrideTemplate(component: ngClass, template: string): TestComponentBuilder {
     componentStore.set('template', template, component);
     return this;
   }
 
-  overrideProviders(component: ngClass, providers: (ngClass|string)[]) {
+  overrideProviders(component: ngClass, providers: (ngClass|string)[]): TestComponentBuilder {
     bundleStore.set('providers', providers, component);
     return this;
   }
@@ -60,7 +69,7 @@ export class TestComponentBuilder {
     templateUrl?: string,
     pipes?: any[],
     directives?: ngClass[]
-  }) {
+  }): TestComponentBuilder {
     View(config)(component);
     return this;
   }
@@ -78,6 +87,8 @@ export class TestComponentBuilder {
  */
 export class ComponentFixture {
   public debugElement: INgForwardJQuery;
+  public componentInstance: any;
+  public nativeElement: any;
   private rootTestScope: ng.IScope;
 
   constructor({
@@ -92,6 +103,9 @@ export class ComponentFixture {
       }) {
     this.debugElement = debugElement;
     this.debugElement.data('$injector', $injector);
+    this.componentInstance = debugElement.componentInstance;
+    this.nativeElement = debugElement.nativeElement;
+
     this.rootTestScope = rootTestScope;
   }
 
