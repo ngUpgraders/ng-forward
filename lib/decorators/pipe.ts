@@ -34,7 +34,7 @@ const TYPE = 'pipe';
 // The decorator itself. Note that while the name is technically optional,
 // with pipes you will almost _always_ wants to provide a name to use in your
 // templates that is different from the class name. This keeps your code uglify-proof.
-export const Pipe: (any) => any = decoratorFactory(TYPE);
+export const Pipe: (any?: any) => any = decoratorFactory(TYPE);
 
 // ## Provider Parser
 Module.addProvider(TYPE, (provider: any, name: string, injects: string[], ngModule: ng.IModule) => {
