@@ -14,6 +14,16 @@ import del from 'del';
 import replace from 'gulp-replace';
 import filter from 'gulp-filter';
 import concat from 'gulp-concat';
+import conventionalChangelog from 'conventional-changelog';
+import fs from 'fs';
+
+gulp.task('changelog', function () {
+	return conventionalChangelog({
+		preset: 'angular',
+		releaseCount: 0
+	})
+			.pipe(fs.createWriteStream('CHANGELOG.md'));
+});
 
 const tsconfig = require('./tsconfig.json');
 const tsBuildProject = ts.createProject('tsconfig.json', {
