@@ -18,6 +18,15 @@ import {componentHooks} from '../decorators/component';
 export default function(caller: any, injects: string[], controller: any, ddo: any, $injector: any, locals: any): any{
   // Create an instance of the controller without calling its constructor
   let instance = Object.create(controller.prototype);
+
+  componentHooks._beforeCtrlInvoke.forEach(hook => hook(caller, injects, controller, ddo, $injector, locals));
+
+  // Finally, invoke the constructor using the injection array and the captured
+  // locals
+  $injector.invoke([...injects, controller], instance, locals);
+
+  componentHooks._afterCtrlInvoke.forEach(hook => hook(caller, injects, controller, ddo, $injector, locals));
+
   // Use a1atscript's inputsBuilder to add the getters/setters then sugar
   // over `=` and `@` bindings
   for(let key in ddo.inputMap) {
@@ -27,14 +36,6 @@ export default function(caller: any, injects: string[], controller: any, ddo: an
   // argument. Now we need to extend them onto our `instance`. It is important
   // to extend after defining the properties. That way we fire the setters.
   Object.assign(instance, caller);
-
-  componentHooks._beforeCtrlInvoke.forEach(hook => hook(caller, injects, controller, ddo, $injector, locals));
-
-  // Finally, invoke the constructor using the injection array and the captured
-  // locals
-  $injector.invoke([...injects, controller], instance, locals);
-
-  componentHooks._afterCtrlInvoke.forEach(hook => hook(caller, injects, controller, ddo, $injector, locals));
 
   // Outputs work similarly, but they need the raw $element and the $scope for
   // destroying output observables.

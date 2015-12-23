@@ -807,6 +807,42 @@ describe('@Component', function(){
 				childEl.text().should.eql('Howdy');
 			});
 
+			it('does NOT initialize inputs in component constructor', () => {
+				@Component({
+					selector: 'child',
+					template: 'x',
+					inputs: ['foo']
+				})
+				class Child {
+					private foo;
+					private ctorFoo;
+					constructor() {
+						this.ctorFoo = this.foo;
+					}
+				}
+
+				@Component({
+					selector: 'parent',
+					directives: [Child],
+					template: `
+						<child foo="bar"></child>
+					`
+				})
+				class Parent {}
+
+				let fixture = quickFixture({
+					directives: [Parent],
+					template: `<parent></parent>`
+				});
+
+				let fixtureEl = fixture.debugElement;
+				let parentEl = fixtureEl.find('parent');
+				let childEl = parentEl.find('child');
+
+				childEl.componentInstance.foo.should.be.eql("bar");
+				expect(childEl.componentInstance.ctorFoo).to.be.undefined;
+			});
+
 			describe('binding to scope or bindToController based on angular version', () => {
 				const quickBuildBindingTest = () => {
 					@Component({ selector: 'foo', template: '{{ctrl.bar}}', inputs: ['bar'] })
