@@ -71,7 +71,7 @@ Our goal in ng-forward will be to adjust to changes and provide the same level o
 
 #### Does ng-forward support all Angular 2.x features?
 
-No. Definitely not. In addition to some of the differences called out above, there are several other features that are simply not possible to implement using Angular 1.x as a base. We'll trying to add what we can over time, but something will just have to wait for Angular 2.x
+No. Definitely not. In addition to some of the differences called out above, there are several other features that are simply not possible to implement using Angular 1.x as a base. We'll trying to add what we can over time, but some things will just have to wait for Angular 2.x
 
 #### What does a migration from regular Angular 1 code to ng-forward code look like?
 
