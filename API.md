@@ -9,6 +9,8 @@ Methods:
 
 Decorators:
 - [@Component](#component)
+    - [Inputs / Outputs](#inputs-and-outputs)
+    - [Life Cycle Hooks](#component-life-cycle-hooks)
 - [@Directive](#directive)
 - [@Input](#input)
 - [@Output](#output)
@@ -195,7 +197,7 @@ class App {
 - **`outputs`**  **[Array&lt;string&gt;]**  An array of strings naming what class properties you want to expose as outputs. For example, `outputs: ['fooChange']` will notify the app that this component can fire a `'fooChange'` event. If there is a class property `fooChange` that is an `EventEmitter` it can trigger this event via `this.fooChange.next()`. Otherwise the event can also be triggered with a regular DOM event of name `'fooChange'`. You can also rename the output, for example `inputs: ['fooChange:theFooChange']` will notify of a 'theFooChange' event, but will still look for a `fooChange` property on the class.
 - **`controllerAs`**  **[string='ctrl']**  The controller name used in the template. By default uses 'ctrl'. We wanted to use something consistent across all components to make migration to Angular 2 easier later. When migrating you'll only need to do a simple find and replace of all 'ctrl.' and remove them. If you want the controllerAs name to match the selector (camel-cased) then set controllerAs to '$auto'.
 
-###### Inputs and Outputs
+## Inputs and Outputs
 
 Inputs and Outputs are the public API of a component. There are two ways to specify them.
 - The `inputs` and `outputs` config property on @Component
@@ -214,7 +216,7 @@ If you had a component `MenuDropdown` like so:
     outputs: ['optionSelect']
 })
 class MenuDropdown {
-    // Or you can use decorators instead of the properties above
+    // Or you can use decorators instead of the config properties above
     @Input() options;
     @Output() optionSelect = new EventEmitter;
 }
@@ -234,55 +236,43 @@ Then I could use that component in another component's template like so, passing
 class MainMenu {}
 ```
 
+###### Input Usage
+
 Every input can be bound in three different ways, just like Angular 2:
 
 - String-based `foo="some string"`. Will pass the raw string into the input.
 - One-way binding `[foo]="someObj.property"`. Will one-way bind the expression to the input. The input can be changed locally but if the expression ever changes it will overwrite the input with the latest value.
 - Two-way binding `[(foo)]="someObj.property"`. Will two-way bind the expression to the input. If either the input or expression changes, the other will change to match.
 
-Every output can trigger it's event in various ways.
+**Important:** We do **not** support the optional `bind-foo` and `bind-on-foo` syntax. We decided it may impact performance.
 
-- Via [EventEmitter](#eventemitter). This is the preferred method. Does not bubble. Add a matching named event emitter to your class and call it's `.next()` method.
+###### Output Usage
+
+Every output can be listened for using the `(event)="handler()"` syntax.
+
+**Important:** We do **not** support the optional `on-event` syntax.
+
+Trigger an output via an [EventEmitter](#eventemitter) instance. This is the preferred method, but it [does not bubble](https://github.com/angular/angular/issues/2296#issuecomment-164289758).
 
 ```js
-import { Component, EventEmitter } from 'ng-forward';
+import { Component, Output, EventEmitter } from 'ng-forward';
 
 @Component({ ... })
 @Inject('$element')
 class MenuDropdown {
-    // Initialize your output as an EventEmitter and now you can trigger with .next()
-    optionSelect = new EventEmitter();
+    // Initialize your output as an EventEmitter
+    @Output() optionSelect = new EventEmitter();
 
     triggerEventViaEventEmitter() {
-        this.optionSelect.next(selectedOption)
-    }
-}
-```
-
-- Via DOM Event. Bubbling is configurable.
-
-```js
-import { Component, EventEmitter } from 'ng-forward';
-
-@Component({ ... })
-@Inject('$element')
-class MenuDropdown {    
-    constructor($element) {
-        // Need a reference to the host element for DOM event triggering
-        this.$element = $element;
-    }
-
-    triggerEventViaDOM() {
-        this.$element.triggerHandler('optionSelect');
-        // or for bubbling of custom events...
-        this.$element.nativeElement.dispatchEvent(new CustomEvent('optionSelect', { data, bubbles: true }));
+        // You can optionally pass along a payload
+        this.optionSelect.next(selectedOption);
     }
 }
 ```
 
 ###### Transclusion
 
-Transclusion is always enabled. Just add `<ng-content></ng-content>` (converted to ng-transclude) or `<ng-transclude></ng-tranclude>` to mark your transclusion point. No real reason to set this to false. We always set it to `true`. You can tranclude by default.
+Transclusion is always enabled. Just add `<ng-content></ng-content>` (converted to ng-transclude during pre-compilation) or `<ng-transclude></ng-tranclude>` to mark your transclusion point.
 
 ###### Behind the Scenes
 
@@ -299,6 +289,33 @@ At [bootstrap](#bootstrap) time, a call to `angular.directive` is made. Angular 
 - `link` and `compile` are not set but you can optionally set them if needed via the decorator.
 - For each output we create a directive of `'(outputName)'` that is listening for a DOM event or rx event of the same name.
 - Ng-forward does not differentiate between the `providers`, `directives` or `pipes` config properties; they're all used to define dependencies for the bundle. However in Angular 2 their unique usage matters, so you should use the properties properly to ease migration to Angular 2.
+
+## Component Life Cycle Hooks
+
+Life cycle hooks are methods added to a Component or Directive. If the hook is present then it will be fired at the designated time. Read about each hook and when and why you would use it.
+
+#### `ngOnInit()`
+
+Implement this method to execute custom initialization logic after your directive's data-bound properties have been initialized and after the constructor. It is invoked only once when the directive is instantiated.
+
+Example:
+```js
+import { Component, Input } from 'ng-forward';
+
+@Component({ ... })
+class MyComponent {
+  @Input() foo;
+
+  constructor() {
+    console.log("this.foo", this.foo); // not ready :(
+  }
+
+  ngOnOnit() {
+    console.log("ngOnInit");
+    console.log("this.foo", this.foo); // ready to go!
+  }
+}
+```
 
 ## @Directive
 
@@ -338,7 +355,7 @@ At [bootstrap](#bootstrap) time, a call to `angular.directive` is made. Angular 
 
 ## @Input
 
-An alternative to using the `inputs` property on [@Component](#component).
+An alternative a preferred method to using the `inputs` property on [@Component](#component).
 
 Example:
 
@@ -355,7 +372,7 @@ class MenuDropdown {
 
 ## @Output
 
-An alternative to using the `outputs` property on [@Component](#component). Example: `@Input('fooPublic') fooLocal;`.
+An alternative and preferred method to using the `outputs` property on [@Component](#component). Example: `@Input('fooPublic') fooLocal;`.
 
 Example:
 

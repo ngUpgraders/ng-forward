@@ -5,6 +5,7 @@ import {providers} from '../testing/providers';
 import {quickFixture} from '../tests/utils';
 import {Inject} from './inject';
 import {Directive} from './directive';
+import {Component} from './component';
 
 describe('@Directive Decorator', function(){
 
@@ -112,6 +113,53 @@ describe('@Directive Decorator', function(){
 
       fixture = quickFixture({directives: [AttrCount], template: '<div foo bar baz attr-count></div>'});
       fixture.debugElement.find('div').attr('attr-count').should.eql('4');
+    });
+
+    describe('Life Cycle Hooks', () => {
+      it('fires ngOnInit hook every time component is added to DOM', () => {
+        let initCount = 0;
+
+        @Directive({
+          selector: '[child]'
+        })
+        class Child {
+          ngOnInit() { initCount++ }
+        }
+
+        @Component({
+          selector: 'parent',
+          directives: [Child],
+          template: `
+					<div ng-if="ctrl.show">
+						<div child></div>
+					</div>
+					`
+        })
+        class Parent {}
+
+        let fixture = quickFixture({
+          directives: [Parent],
+          template: `<parent></parent>`
+        });
+
+        let fixtureEl = fixture.debugElement;
+        let parentEl = fixtureEl.find('parent');
+
+        initCount.should.eql(0);
+
+        parentEl.componentInstance.show = true;
+        fixture.detectChanges();
+
+        initCount.should.eql(1);
+
+        parentEl.componentInstance.show = false;
+        fixture.detectChanges();
+
+        parentEl.componentInstance.show = true;
+        fixture.detectChanges();
+
+        initCount.should.eql(2);
+      });
     });
   });
 

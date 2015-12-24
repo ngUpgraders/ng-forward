@@ -42,6 +42,10 @@ export default function(caller: any, injects: string[], controller: any, ddo: an
   let {$element, $scope} : { $element: JQuery, $scope: ng.IScope } = locals;
   outputsBuilder(instance, $element, $scope, ddo.outputMap || {});
 
+  if (typeof instance.ngOnInit === 'function') {
+    instance.ngOnInit();
+  }
+
   // Return the controller instance
   return instance;
 }

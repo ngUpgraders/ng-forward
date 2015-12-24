@@ -1106,5 +1106,89 @@ describe('@Component', function(){
 				fooComponent.bar.should.be.true;
 			});
 		});
+
+		describe('lifecycle hooks', () => {
+			it('fires ngOnInit hook after inputs are initially assigned', () => {
+				@Component({
+					selector: 'child',
+					template: 'x',
+					inputs: ['foo']
+				})
+				class Child {
+					private foo;
+					private initFoo;
+					ngOnInit() {
+						this.initFoo = this.foo;
+					}
+				}
+
+				@Component({
+					selector: 'parent',
+					directives: [Child],
+					template: `
+						<child foo="bar"></child>
+					`
+				})
+				class Parent {}
+
+				let fixture = quickFixture({
+					directives: [Parent],
+					template: `<parent></parent>`
+				});
+
+				let fixtureEl = fixture.debugElement;
+				let parentEl = fixtureEl.find('parent');
+				let childEl = parentEl.find('child');
+
+				childEl.componentInstance.foo.should.eql('bar');
+				childEl.componentInstance.initFoo.should.eql('bar');
+			});
+
+			it('fires ngOnInit hook every time component is added to DOM', () => {
+				let initCount = 0;
+
+				@Component({
+					selector: 'child',
+					template: 'x'
+				})
+				class Child {
+					ngOnInit() { initCount++ }
+				}
+
+				@Component({
+					selector: 'parent',
+					directives: [Child],
+					template: `
+					<div ng-if="ctrl.show">
+						<child foo="bar"></child>
+					</div>
+					`
+				})
+				class Parent {}
+
+				let fixture = quickFixture({
+					directives: [Parent],
+					template: `<parent></parent>`
+				});
+
+				let fixtureEl = fixture.debugElement;
+				let parentEl = fixtureEl.find('parent');
+
+				initCount.should.eql(0);
+
+				parentEl.componentInstance.show = true;
+				fixture.detectChanges();
+
+				initCount.should.eql(1);
+
+				parentEl.componentInstance.show = false;
+				fixture.detectChanges();
+
+				parentEl.componentInstance.show = true;
+				fixture.detectChanges();
+
+				initCount.should.eql(2);
+			});
+		});
 	});
 });
