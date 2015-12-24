@@ -116,7 +116,7 @@ describe('@Directive Decorator', function(){
     });
 
     describe('Life Cycle Hooks', () => {
-      it('fires ngOnInit hook every time component is added to DOM', () => {
+      it('fires ngOnInit hook every time directive is added to DOM', () => {
         let initCount = 0;
 
         @Directive({
@@ -159,6 +159,46 @@ describe('@Directive Decorator', function(){
         fixture.detectChanges();
 
         initCount.should.eql(2);
+      });
+
+      it('fires ngOnDestroy hook when directive is removed from DOM', () => {
+        let destroyCount = 0;
+
+        @Directive({
+          selector: '[child]'
+        })
+        class Child {
+          ngOnDestroy() { destroyCount++ }
+        }
+
+        @Component({
+          selector: 'parent',
+          directives: [Child],
+          template: `
+            <div ng-if="ctrl.show">
+                <div child></div>
+            </div>
+            `
+        })
+        class Parent {}
+
+        let fixture = quickFixture({
+          directives: [Parent],
+          template: `<parent></parent>`
+        });
+
+        let fixtureEl = fixture.debugElement;
+        let parentEl = fixtureEl.find('parent');
+
+        destroyCount.should.eql(0);
+
+        parentEl.componentInstance.show = true;
+        fixture.detectChanges();
+
+        parentEl.componentInstance.show = false;
+        fixture.detectChanges();
+
+        destroyCount.should.eql(1);
       });
     });
   });

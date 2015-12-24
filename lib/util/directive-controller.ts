@@ -46,6 +46,10 @@ export default function(caller: any, injects: string[], controller: any, ddo: an
     instance.ngOnInit();
   }
 
+  if (typeof instance.ngOnDestroy === 'function') {
+    $scope.$on('$destroy', instance.ngOnDestroy.bind(instance));
+  }
+
   // Return the controller instance
   return instance;
 }

@@ -270,26 +270,6 @@ class MenuDropdown {
 }
 ```
 
-###### Transclusion
-
-Transclusion is always enabled. Just add `<ng-content></ng-content>` (converted to ng-transclude during pre-compilation) or `<ng-transclude></ng-tranclude>` to mark your transclusion point.
-
-###### Behind the Scenes
-
-At [bootstrap](#bootstrap) time, a call to `angular.directive` is made. Angular 1 directive properties are set as follows:
-
-- `template` is set via the @Component config template property (`templateUrl` can also be used)
-- `controller` is set to the class instance, but it not instantiated until after the link phase so that child directives are available in the DOM. `$scope`, `$element`, `$attrs`, and `$transclude` are injectable as locals.
-- `restrict` is set to 'E' since components must use tag-based selectors.
-- `controllerAs` is set to 'ctrl' but can be overridden if you prefer 'vm' or something else. Or you can set it to '$auto' which will set it to a camel-cased version of the selector.
-- `scope` and `bindToController`:
-    - If angular 1.3, inputs are set on an isolated `scope` and `bindToController` to `true`.
-    - If angular 1.4+, `scope` is set to an isolate scope with `{}` and inputs are set on `bindToController` object.
-- `transclude` is always set to `true`
-- `link` and `compile` are not set but you can optionally set them if needed via the decorator.
-- For each output we create a directive of `'(outputName)'` that is listening for a DOM event or rx event of the same name.
-- Ng-forward does not differentiate between the `providers`, `directives` or `pipes` config properties; they're all used to define dependencies for the bundle. However in Angular 2 their unique usage matters, so you should use the properties properly to ease migration to Angular 2.
-
 ## Component Life Cycle Hooks
 
 Life cycle hooks are methods added to a Component or Directive. If the hook is present then it will be fired at the designated time. Read about each hook and when and why you would use it.
@@ -316,6 +296,44 @@ class MyComponent {
   }
 }
 ```
+
+#### `ngOnDestroy()`
+
+Implement this interface to get notified when your directive is destroyed.
+
+ngOnDestroy callback is typically used for any custom cleanup that needs to occur when the instance is destroyed.
+
+Example:
+```js
+import { Component } from 'ng-forward';
+
+@Component({ ... })
+class MyComponent {
+  ngOnDestroy() {
+    console.log("ngOnDestroy");
+  }
+}
+```
+
+###### Transclusion
+
+Transclusion is always enabled. Just add `<ng-content></ng-content>` (converted to ng-transclude during pre-compilation) or `<ng-transclude></ng-tranclude>` to mark your transclusion point.
+
+###### Behind the Scenes
+
+At [bootstrap](#bootstrap) time, a call to `angular.directive` is made. Angular 1 directive properties are set as follows:
+
+- `template` is set via the @Component config template property (`templateUrl` can also be used)
+- `controller` is set to the class instance, but it not instantiated until after the link phase so that child directives are available in the DOM. `$scope`, `$element`, `$attrs`, and `$transclude` are injectable as locals.
+- `restrict` is set to 'E' since components must use tag-based selectors.
+- `controllerAs` is set to 'ctrl' but can be overridden if you prefer 'vm' or something else. Or you can set it to '$auto' which will set it to a camel-cased version of the selector.
+- `scope` and `bindToController`:
+    - If angular 1.3, inputs are set on an isolated `scope` and `bindToController` to `true`.
+    - If angular 1.4+, `scope` is set to an isolate scope with `{}` and inputs are set on `bindToController` object.
+- `transclude` is always set to `true`
+- `link` and `compile` are not set but you can optionally set them if needed via the decorator.
+- For each output we create a directive of `'(outputName)'` that is listening for a DOM event or rx event of the same name.
+- Ng-forward does not differentiate between the `providers`, `directives` or `pipes` config properties; they're all used to define dependencies for the bundle. However in Angular 2 their unique usage matters, so you should use the properties properly to ease migration to Angular 2.
 
 ## @Directive
 

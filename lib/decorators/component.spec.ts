@@ -1189,6 +1189,47 @@ describe('@Component', function(){
 
 				initCount.should.eql(2);
 			});
+
+			it('fires ngOnDestroy hook when component is removed from DOM', () => {
+				let destroyCount = 0;
+
+				@Component({
+					selector: 'child',
+					template: 'x'
+				})
+				class Child {
+					ngOnDestroy() { destroyCount++ }
+				}
+
+				@Component({
+					selector: 'parent',
+					directives: [Child],
+					template: `
+					<div ng-if="ctrl.show">
+						<child foo="bar"></child>
+					</div>
+					`
+				})
+				class Parent {}
+
+				let fixture = quickFixture({
+					directives: [Parent],
+					template: `<parent></parent>`
+				});
+
+				let fixtureEl = fixture.debugElement;
+				let parentEl = fixtureEl.find('parent');
+
+				destroyCount.should.eql(0);
+
+				parentEl.componentInstance.show = true;
+				fixture.detectChanges();
+
+				parentEl.componentInstance.show = false;
+				fixture.detectChanges();
+
+				destroyCount.should.eql(1);
+			});
 		});
 	});
 });
