@@ -245,6 +245,10 @@ Module.addProvider(TYPE, (target: any, name: string, injects: string[], ngModule
 	}
 	ddo.controller = controller;
 
+	if (typeof target.prototype.ngAfterViewInit === 'function') {
+		ddo.link = () => ddo.ngAfterViewInitBound();
+	}
+
 	if (ddo.template && ddo.template.replace) {
 		ddo.template = ddo.template.replace(/ng-content/g, 'ng-transclude')
 	}

@@ -50,6 +50,10 @@ export default function(caller: any, injects: string[], controller: any, ddo: an
     $scope.$on('$destroy', instance.ngOnDestroy.bind(instance));
   }
 
+  if (typeof instance.ngAfterViewInit === 'function') {
+    ddo.ngAfterViewInitBound = instance.ngAfterViewInit.bind(instance);
+  }
+
   // Return the controller instance
   return instance;
 }

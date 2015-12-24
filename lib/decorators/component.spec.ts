@@ -9,6 +9,7 @@ import events from '../events/events';
 import { quickFixture } from '../tests/utils';
 import EventEmitter from '../events/event-emitter';
 import CustomEvent from '../util/custom-event';
+import { Inject } from './inject';
 
 describe('@Component', function(){
 
@@ -1229,6 +1230,43 @@ describe('@Component', function(){
 				fixture.detectChanges();
 
 				destroyCount.should.eql(1);
+			});
+
+			it('fires ngAfterViewInit hook after component children are fully initialized', () => {
+				let ctorChild;
+				let hookChild;
+
+				@Component({
+					selector: 'child',
+					template: 'x'
+				})
+				class Child {}
+
+				@Component({
+					selector: 'parent',
+					directives: [Child],
+					template: `
+					<child></child>
+					`
+				})
+				@Inject('$element')
+				class Parent {
+					constructor(private $element) {
+						ctorChild = this.$element.find('child').componentInstance;
+					}
+
+					ngAfterViewInit() {
+						hookChild = this.$element.find('child').componentInstance;
+					}
+				}
+
+				let fixture = quickFixture({
+					directives: [Parent],
+					template: `<parent></parent>`
+				});
+
+				expect(ctorChild).to.not.exist;
+				hookChild.should.exist;
 			});
 		});
 	});

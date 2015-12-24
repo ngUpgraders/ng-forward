@@ -297,6 +297,38 @@ class MyComponent {
 }
 ```
 
+#### `ngAfterViewInit()`
+
+Implement this interface to get notified when your component's view has been fully initialized. All children components in the view will have their controller instances ready at this time.
+
+Example:
+```js
+import { Component, Inject } from 'ng-forward';
+
+@Component({
+    selector: 'child',
+    template: 'x'
+})
+class Child {}
+
+@Component({
+    selector: 'parent',
+    directives: [Child],
+    template: `<child></child>`
+})
+@Inject('$element')
+class Parent {
+    constructor($element) {
+        this.$element = $element;
+        console.log(this.$element.find('child').componentInstance); // not ready :(
+    }
+
+    ngAfterViewInit() {
+        console.log(this.$element.find('child').componentInstance); // ready to go!
+    }
+}
+```
+
 #### `ngOnDestroy()`
 
 Implement this interface to get notified when your directive is destroyed.
