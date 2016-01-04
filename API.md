@@ -290,7 +290,7 @@ class MyComponent {
     console.log("this.foo", this.foo); // not ready :(
   }
 
-  ngOnOnit() {
+  ngOnInit() {
     console.log("ngOnInit");
     console.log("this.foo", this.foo); // ready to go!
   }
