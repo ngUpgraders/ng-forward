@@ -214,6 +214,7 @@ If you had a component `MenuDropdown` like so:
     <label>{{ctrl.name}}</label>
     <a ng-repeat="option in ctrl.options" ng-href="{{option.action}}">{{option.name}}</a>
     `,
+    // You can do it this way, or...
     inputs: ['options'],
     outputs: ['optionSelect']
 })
@@ -260,7 +261,6 @@ Trigger an output via an [EventEmitter](#eventemitter) instance. This is the pre
 import { Component, Output, EventEmitter } from 'ng-forward';
 
 @Component({ ... })
-@Inject('$element')
 class MenuDropdown {
     // Initialize your output as an EventEmitter
     @Output() optionSelect = new EventEmitter();
