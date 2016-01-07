@@ -58,6 +58,8 @@ Returns the `injector` from the bootstrapped auto-bundled module.
 
 ## bundle
 
+*Note: Not really necessary if you are starting a project from scratch. Useful when you are migrating portions of an existing app over to ng-forward. `bundle` is not an Angular 2 method, it's just for ng-forward usage.*
+
 Used to create (aka 'bundle up') an angular 1 module by tracing the provider tree of an entry point provider. Ng-Forward doesn't create an angular module until bundle or bootstrap is called. This differs from typical angular 1 where a module is usually created and then appended to with services and directives.
 
 Example:
@@ -71,7 +73,7 @@ import { bundle, Component } from 'ng-forward';
 })
 class App { }
 
-export bundle('my.app', App); // Will export the bundled angular 1 module 'my.app'
+export bundle('my.app', App).publish(); // Will export the bundled angular 1 module 'my.app'
 ```
 
 ###### Parameters
