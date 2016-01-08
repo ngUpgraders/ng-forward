@@ -9,7 +9,7 @@
 import parseSelector from '../util/parse-selector';
 // `providerStore` sets up provider information, `componentStore` writes the DDO,
 // and `appWriter` sets up app traversal/bootstrapping information.
-import {providerStore, componentStore} from '../writers';
+import {providerStore, componentStore, bundleStore} from '../writers';
 // Takes the information from `config.providers` and turns it into the actual metadata
 // needed during app traversal
 import {Providers} from './providers';
@@ -51,6 +51,7 @@ export function Directive(
 		// Setup provider information using the parsed selector
 		providerStore.set('name', name, t);
 		providerStore.set('type', TYPE, t);
+		bundleStore.set('selector', selector, t);
 	
 		// Grab the providers from the config object, parse them, and write the metadata
 		// to the target.

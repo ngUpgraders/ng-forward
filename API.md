@@ -1009,6 +1009,36 @@ constructor($element) {
 }
 ```
 
+#### `query(predicate)`
+
+A method for finding the first descendant that matches a predicate. Valid values for predicate are `By.all()`, `By.css()`, or `By.directive()`.
+
+Example:
+```js
+import {By} from 'ng-forward';
+
+constructor($element) {
+  $element.query(By.all()); // finds first descendant
+  $element.query(By.css('.some-class')); // find first descendants matching the css selector
+  $element.query(By.directive(SomeChildComponent)); // find first descendant that is instance of the directive
+}
+```
+
+#### `queryAll(predicate)`
+
+A method for querying the children of the element. Valid values for predicate are `By.all()`, `By.css()`, or `By.directive()`.
+
+Example:
+```js
+import {By} from 'ng-forward';
+
+constructor($element) {
+  $element.queryAll(By.all()); // finds all descendants
+  $element.queryAll(By.css('.some-class')); // finds all descendants matching the css selector
+  $element.queryAll(By.directive(SomeChildComponent)); // finds all descendants that are instances of the directive
+}
+```
+
 #### `getLocal(injectable)`
 
 An easy way to ask the injector for a dependency. You can pass either string or annotated class.

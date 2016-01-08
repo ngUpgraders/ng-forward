@@ -1,8 +1,10 @@
+import {bundleStore} from '../writers'
 import {dashToCamel} from './helpers';
 import {getInjectableName} from './get-injectable-name';
 import JQuery from "./";
 import IAugmentedJQuery = angular.IAugmentedJQuery;
 import IAugmentedJQueryStatic = angular.IAugmentedJQueryStatic;
+import {ngClass} from "../testing/test-component-builder";
 
 export interface INgForwardJQueryStatic extends IAugmentedJQueryStatic {
   (selector: string, context?: any): INgForwardJQuery;
@@ -24,6 +26,22 @@ export interface INgForwardJQuery extends IAugmentedJQuery {
   componentInstance: any;
   componentViewChildren: INgForwardJQuery[];
   getLocal(injectable:any): any;
+  queryAll(predicate:string, scope?:any): INgForwardJQuery[];
+  query(predicate:string, scope?:any): INgForwardJQuery;
+}
+
+export class By {
+  static all():string {
+    return '*'
+  }
+
+  static css(selector: string):string {
+    return selector;
+  }
+
+  static directive(type: ngClass):string {
+    return bundleStore.get('selector', type);
+  }
 }
 
 (function extendJQLite(proto:IAugmentedJQuery) {
@@ -59,14 +77,19 @@ export interface INgForwardJQuery extends IAugmentedJQuery {
     },
 
     query: {
-      value: function(predicate, scope) {
-        throw new Error('Not yet implemented in ng-forward.')
+      value: function(predicate, scope?) {
+        //noinspection TypeScriptUnresolvedFunction
+        let results = this.queryAll(predicate, scope);
+        return results.length > 0 ? results[0] : null;
       }
     },
 
     queryAll: {
-      value: function(predicate, scope) {
-        throw new Error('Not yet implemented in ng-forward.')
+      value: function(predicate, scope?) {
+        if (scope) throw Error('scope argument not yet supported. All queries are done with Scope.all for now.');
+        return Array
+            .from(this[0].querySelectorAll(predicate))
+            .map(el => angular.element(el));
       }
     },
 

@@ -5,6 +5,7 @@ import {Injectable} from '../decorators/injectable';
 import {ng} from '../tests/angular';
 import {providers, TestComponentBuilder} from './index';
 import {ComponentFixture} from './test-component-builder';
+import {By} from "../util/jqlite-extensions";
 
 describe('Test Utils', () => {
 
@@ -50,7 +51,7 @@ describe('Test Utils', () => {
 
     @Component({
       selector: 'test',
-      template: `<some-component foo="Hello" [bar]="ctrl.bar"></some-component>`,
+      template: `<some-component foo="Hello" [bar]="ctrl.bar" class="test"></some-component>`,
       directives: [SomeComponent]
     })
     class _TestComponent {
@@ -159,6 +160,37 @@ describe('Test Utils', () => {
 
       expect(someComponentEl.getLocal('$q'))
           .to.contain.all.keys(['resolve', 'reject', 'defer']);
+
+      // queryAll()
+
+      fixture.debugElement.queryAll(By.all())
+          .should.have.length(1);
+
+      fixture.debugElement.queryAll(By.css('.test'))
+          .should.have.length(1);
+
+      fixture.debugElement.queryAll(By.css('.invalid'))
+          .should.have.length(0);
+
+      fixture.debugElement.queryAll(By.directive(SomeComponent))
+          .should.have.length(1);
+
+      fixture.debugElement.queryAll(By.directive(SomeComponent))[0].componentInstance
+          .should.be.an.instanceOf(SomeComponent);
+
+      // query()
+
+      fixture.debugElement.query(By.all()).componentInstance
+          .should.be.an.instanceOf(SomeComponent);
+
+      fixture.debugElement.query(By.css('.test')).componentInstance
+          .should.be.an.instanceOf(SomeComponent);
+
+      expect(fixture.debugElement.query(By.css('.invalid')))
+          .to.be.null;
+
+      fixture.debugElement.query(By.directive(SomeComponent)).componentInstance
+          .should.be.an.instanceOf(SomeComponent);
     });
 
     it('should allow mock decorated class components and services via bindings() method', () => {
