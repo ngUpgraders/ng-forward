@@ -20,8 +20,8 @@ describe('@Injectable Decorator', function(){
 		@Injectable()
 		class MyClass extends BaseClass{ }
 
-		providerStore.get('name', BaseClass).should.eql('BaseClass');
-		providerStore.get('name', MyClass).should.eql('MyClass');
+		providerStore.get('name', BaseClass).should.contain('BaseClass');
+		providerStore.get('name', MyClass).should.contain('MyClass');
 	});
 
 	it('should let you specify a name for the service', function(){

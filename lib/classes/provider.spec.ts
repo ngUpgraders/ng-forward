@@ -10,6 +10,7 @@ import { Component } from '../decorators/component';
 import { TestComponentBuilder, providers } from '../testing/index';
 import { OpaqueToken } from '../classes/opaque-token';
 import { quickFixture } from '../tests/utils';
+import {By} from "../util/jqlite-extensions";
 
 class SomeToken {}
 
@@ -212,6 +213,37 @@ describe('Provider Class', () => {
         fixture = quickFixture({ providers: [new Provider(Foo, { useValue: 'bar' })] });
         let name = providerStore.get('name', Foo);
         fixture.debugElement.getLocal(name).should.be.eql('bar');
+      });
+
+      it('supports class tokens upon injection', () => {
+        class MyClass {
+          something: string;
+
+          constructor({something} = {}) {
+            this.something = something ? something : 'default';
+          }
+        }
+
+        class MyClassFoo extends MyClass {
+          constructor() {
+            super({something: 'foo'});
+          }
+        }
+
+        @Component({
+          selector: 'app',
+          template: `x`,
+          providers: [
+            provide(MyClass, {useClass: MyClassFoo})
+          ]
+        })
+        @Inject(MyClass)
+        class App{
+          constructor(public myClass){}
+        }
+
+        fixture = quickFixture({ providers: [App], template: '<app></app>' });
+        fixture.debugElement.query(By.directive(App)).componentInstance.myClass.something.should.eql('foo');
       });
     });
   });

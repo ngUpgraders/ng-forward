@@ -12,6 +12,7 @@ const TYPE = 'provider';
  * A binding from a token to a value (only one implemented currently), class, existing, or factory
  */
 export class Provider {
+  public isProvider = true;
   public token: any;
   public useClass: any;
   public useValue: any;

@@ -10,6 +10,7 @@
 // namespaced metadata to a class. Each writer is responsible for handling some
 // subset of useful information
 import {bundleStore, providerStore} from '../writers';
+import {Provider} from "./provider";
 
 // A very simple map holding the parsers for each provider. More on this later.
 let _parsers: any = {};
@@ -41,8 +42,11 @@ export class DecoratedModule{
 	add(...providers: any[]): DecoratedModule {
 		// We used a rest parameter so that you can add multiple providers at once.
 		// So we must iterate over our array of providers.
-		for(let provider of providers)
-		{
+
+		const providersInferred = providers.filter(p => !p.isProvider);
+		const providersProper = providers.filter(p => p.isProvider);
+
+		const handleProvider = provider => {
 			// The providerStore contains the type of provider the class will be transformed
 			// into as well as the name of the eventual provider. If this information has
 			// not been set on the class, then we aren't dealing with a decorated class.
@@ -67,7 +71,10 @@ export class DecoratedModule{
 			else{
 				throw new Error(`No parser registered for type '${type}'`);
 			}
-		}
+		};
+
+		providersInferred.forEach(handleProvider);
+		providersProper.forEach(handleProvider);
 
 		return this;
 	}
