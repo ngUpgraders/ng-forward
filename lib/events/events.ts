@@ -48,7 +48,6 @@ function resolve(): any[]{
       public expression: any;
 
       constructor($parse: ng.IParseService, public $element: JQuery, $attrs: ng.IAttributes, public $scope: ng.IScope){
-
         let { name: attrName } = parseSelector(selector);
         this.expression = $parse($attrs[attrName]);
         $element.on(event, e => this.eventHandler(e));
@@ -56,16 +55,15 @@ function resolve(): any[]{
       }
 
       eventHandler($event: any = {}){
-        let detail = $event.detail;
-        
-        if(!detail && $event.originalEvent && $event.originalEvent.detail){
-          detail = $event.originalEvent.detail;
+        if ($event.detail && $event.detail._output !== undefined) {
+          $event = $event.detail._output;
         }
-        else if(!detail){
-          detail = {};
+
+        if($event.originalEvent && $event.originalEvent.detail && $event.originalEvent.detail._output) {
+          $event = $event.detail._output;
         }
-        
-        this.expression(this.$scope, Object.assign(detail, { $event }));
+
+        this.expression(this.$scope, {$event});
         this.$scope.$applyAsync();
       }
 

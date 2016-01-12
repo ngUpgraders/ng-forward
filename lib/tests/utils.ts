@@ -16,5 +16,6 @@ export function quickFixture({
 
   let builder =  new tcb.TestComponentBuilder();
   
+  //noinspection TypeScriptUnresolvedFunction
   return builder.create(Test);
 };

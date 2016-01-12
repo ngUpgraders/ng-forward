@@ -251,7 +251,7 @@ Every input can be bound in three different ways, just like Angular 2:
 
 ###### Output Usage
 
-Every output can be listened for using the `(event)="handler()"` syntax.
+Every output can be listened for using the `(event)="handler()"` syntax. The `$event` var can be used your expression like this, `(event)="handler($event)"`, and will either be a reference to your output's payload for custom outputs, or a reference to the DOM event object for standard DOM events.
 
 **Important:** We do **not** support the optional `on-event` syntax.
 
@@ -270,6 +270,11 @@ class MenuDropdown {
         this.optionSelect.next(selectedOption);
     }
 }
+```
+
+Then you'd use it like so:
+```html
+<menu-dropdown (option-select)="ctrl.optionSelected($event)"></menu-dropdown>
 ```
 
 ## Component Life Cycle Hooks

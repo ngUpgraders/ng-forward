@@ -404,12 +404,11 @@ describe('@Input Decorator', function(){
 				directives: [Child],
 				template: `
 					<h1 class="greeting">{{ctrl.foo}} World!</h1>
-					<child [foo]="ctrl.foo" (foo-changed)="ctrl.fooChanged($event)"></child>
+					<child [foo]="ctrl.foo" (foo-changed)="ctrl.foo=$event"></child>
 				`
 			})
 			class Parent {
 				foo = "Hello";
-				fooChanged($event) { this.foo = $event.detail; }
 			}
 
 			fixture = quickFixture({
@@ -608,7 +607,7 @@ describe('@Output Decorator', function(){
 
 			let fixture = quickFixture({
 				directives: [Foo],
-				template: `<foo ng-init="ctrl.bar=false" (output)="ctrl.bar=$event.detail"></foo>`
+				template: `<foo ng-init="ctrl.bar=false" (output)="ctrl.bar=$event"></foo>`
 			});
 
 			fixture.debugElement.componentInstance.bar.should.be.false;
@@ -618,7 +617,7 @@ describe('@Output Decorator', function(){
 			fixture.debugElement.componentViewChildren[0].nativeElement.dispatchEvent(new CustomEvent('output', {detail}));
 			this.clock.tick();
 
-			fixture.debugElement.componentInstance.bar.should.eql('hello');
+			fixture.debugElement.componentInstance.bar.detail.should.eql('hello');
 		});
 
 		it('creates a directive triggered by event emitter', () => {
@@ -667,7 +666,7 @@ describe('@Output Decorator', function(){
 
 			let fixture = quickFixture({
 				directives: [Foo],
-				template: `<foo ng-init="ctrl.bar=false" (output)="ctrl.bar=$event.detail"></foo>`
+				template: `<foo ng-init="ctrl.bar=false" (output)="ctrl.bar=$event"></foo>`
 			});
 
 			fixture.debugElement.componentInstance.bar.should.be.false;

@@ -20,7 +20,7 @@ export default function(instance: any, element: INgForwardJQuery, $scope: ng.ISc
   // dispatch a bubbling event onto the element
   const create = (eventKey: string, emitter: EventEmitter) => {
     return emitter.subscribe((data: any) => {
-      let event = new CustomEvent(eventKey, { detail: data, bubbles: false });
+      let event = new CustomEvent(eventKey, { detail: {_output: data}, bubbles: false });
       element[0].dispatchEvent(event);
     });
   };

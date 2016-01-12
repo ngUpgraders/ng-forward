@@ -34,7 +34,36 @@ describe('Auto-generated Event Directives', function(){
       asserts.should.eql(allEvents.length);
     });
 
-    xit('bubbles the events', () => {
+    it('sets $event local to DOM event', () => {
+      let fixture = quickFixture({
+        template: `
+        <div ng-init="ctrl.evt=false">
+          <button (click)="ctrl.evt=$event">Click Me</button>
+        </div>
+        `
+      });
+
+      fixture.debugElement.componentInstance.evt.should.be.false;
+      fixture.debugElement.find('button').nativeElement.click();
+      fixture.debugElement.componentInstance.evt.should.be.instanceOf(MouseEvent);
+    });
+
+    it('sets $event local hidden detail._output property if present', () => {
+      let fixture = quickFixture({
+        template: `
+        <div ng-init="ctrl.evt=false">
+          <button (click)="ctrl.evt=$event">Click Me</button>
+        </div>
+        `
+      });
+
+      fixture.debugElement.componentInstance.evt.should.be.false;
+      let event = new CustomEvent('click', { detail: { _output: 'foo' }});
+      fixture.debugElement.find('button').nativeElement.dispatchEvent(event);
+      fixture.debugElement.componentInstance.evt.should.eql('foo');
+    });
+
+    it.skip('bubbles the events', () => {
       let fixture = quickFixture({
         template: `
         <div ng-init="ctrl.clicked=false" (click)="ctrl.clicked=true">
