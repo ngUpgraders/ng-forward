@@ -26,7 +26,7 @@
 // 	}
 // 	async send(){
 // 		let message = await this.Messenger.create(this.subject, this.message);
-// 		this.sent.next(message);
+// 		this.sent.emit(message);
 // 	}
 // }
 //```

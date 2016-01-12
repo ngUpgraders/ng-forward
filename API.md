@@ -196,7 +196,7 @@ class App {
 - **`directives`**  **[Array&lt;[IProvidable](#iprovidable)&gt;]**  Any directives or components that this component or any of it's children depends on.
 - **`pipes`**  **[Array&lt;[IProvidable](#iprovidable)&gt;]**  Any [pipes](#pipe) that this component or any of it's children depends on.
 - **`inputs`**  **[Array&lt;string&gt;]**  An array of strings naming what class properties you want to expose in `bindToController` (or `scope` if angular 1.3). For example, `inputs: ['foo']` will connect the class property `foo` to the input `foo`. You can also rename the input, for example `inputs: ['foo:theFoo']` will connect the class property `foo` to the input `the-foo`.
-- **`outputs`**  **[Array&lt;string&gt;]**  An array of strings naming what class properties you want to expose as outputs. For example, `outputs: ['fooChange']` will notify the app that this component can fire a `'fooChange'` event. If there is a class property `fooChange` that is an `EventEmitter` it can trigger this event via `this.fooChange.next()`. Otherwise the event can also be triggered with a regular DOM event of name `'fooChange'`. You can also rename the output, for example `inputs: ['fooChange:theFooChange']` will notify of a 'theFooChange' event, but will still look for a `fooChange` property on the class.
+- **`outputs`**  **[Array&lt;string&gt;]**  An array of strings naming what class properties you want to expose as outputs. For example, `outputs: ['fooChange']` will notify the app that this component can fire a `'fooChange'` event. If there is a class property `fooChange` that is an `EventEmitter` it can trigger this event via `this.fooChange.emit()`. Otherwise the event can also be triggered with a regular DOM event of name `'fooChange'`. You can also rename the output, for example `inputs: ['fooChange:theFooChange']` will notify of a 'theFooChange' event, but will still look for a `fooChange` property on the class.
 - **`controllerAs`**  **[string='ctrl']**  The controller name used in the template. By default uses 'ctrl'. We wanted to use something consistent across all components to make migration to Angular 2 easier later. When migrating you'll only need to do a simple find and replace of all 'ctrl.' and remove them. If you want the controllerAs name to match the selector (camel-cased) then set controllerAs to '$auto'.
 
 ## Inputs and Outputs
@@ -267,7 +267,7 @@ class MenuDropdown {
 
     triggerEventViaEventEmitter() {
         // You can optionally pass along a payload
-        this.optionSelect.next(selectedOption);
+        this.optionSelect.emit(selectedOption);
     }
 }
 ```
@@ -439,7 +439,7 @@ class MenuDropdown {
     @Output() optionSelect = new EventEmitter();
 
     someMethod() {
-        this.optionSelect.next('payload');
+        this.optionSelect.emit('payload');
     }
 }
 ```
@@ -467,9 +467,9 @@ We use this method behind the scenes to subscribe to your output events. You mos
 - **`error`**  **[Function]**  Callback that is called when the Subject has an 'error'.
 - **`complete`**  **[Function]**  Callback that is called when the Subject is 'completed'.
 
-#### `next()`
+#### `emit()`
 
-`next(value: any)`
+`emit(value: any)`
 
 Will trigger all subscriber's next callbacks, passing along the value. This is the main way to trigger an EventEmitter-based output.
 

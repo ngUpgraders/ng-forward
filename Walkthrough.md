@@ -132,7 +132,7 @@ class InnerApp{
 	}
 
 	triggerEventViaEventEmitter() {
-		this.evt2.next()
+		this.evt2.emit()
 	}
 }
 
@@ -227,7 +227,7 @@ and here's where we call them in the component
 
 	triggerEventViaEventEmitter() {
 		// this won't bubble, but most custom events probably shouldn't...
-		this.evt2.next()
+		this.evt2.emit()
 	}
 ```
 
@@ -404,7 +404,7 @@ class InnerApp{
 	}
 
 	triggerEventViaEventEmitter() {
-		this.evt2.next()
+		this.evt2.emit()
 	}
 }
 

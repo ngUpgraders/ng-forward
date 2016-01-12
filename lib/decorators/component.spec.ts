@@ -759,7 +759,7 @@ describe('@Component', function(){
 					private fooChanged = new EventEmitter();
 					setAndTriggerFoo(val) {
 						this.foo = val;
-						this.fooChanged.next(val);
+						this.fooChanged.emit(val);
 					}
 				}
 
@@ -974,7 +974,7 @@ describe('@Component', function(){
 
 				fixture.debugElement.componentInstance.bar.should.be.false;
 
-				fixture.debugElement.componentViewChildren[0].componentInstance.output.next();
+				fixture.debugElement.componentViewChildren[0].componentInstance.output.emit();
 				this.clock.tick();
 
 				fixture.debugElement.componentInstance.bar.should.be.true;
@@ -993,7 +993,7 @@ describe('@Component', function(){
 
 				fixture.debugElement.componentInstance.bar.should.be.false;
 
-				fixture.debugElement.componentViewChildren[0].componentInstance.outputChange.next();
+				fixture.debugElement.componentViewChildren[0].componentInstance.outputChange.emit();
 				this.clock.tick();
 
 				fixture.debugElement.componentInstance.bar.should.be.true;
@@ -1014,7 +1014,7 @@ describe('@Component', function(){
 
 				let detail = 'hello';
 
-				fixture.debugElement.componentViewChildren[0].componentInstance.output.next(detail);
+				fixture.debugElement.componentViewChildren[0].componentInstance.output.emit(detail);
 				this.clock.tick();
 
 				fixture.debugElement.componentInstance.bar.should.eql('hello');
@@ -1033,7 +1033,7 @@ describe('@Component', function(){
 
 				fixture.debugElement.componentInstance.bar.should.be.false;
 
-				fixture.debugElement.componentViewChildren[0].componentInstance.o.next();
+				fixture.debugElement.componentViewChildren[0].componentInstance.o.emit();
 				this.clock.tick();
 
 				fixture.debugElement.componentInstance.bar.should.be.true;
@@ -1099,7 +1099,7 @@ describe('@Component', function(){
 				fixtureComponent.bar.should.be.false;
 				fooComponent.bar.should.be.false;
 
-				barComponent.barChange.next();
+				barComponent.barChange.emit();
 				this.clock.tick();
 
 				fixtureComponent.bar.should.be.false;
