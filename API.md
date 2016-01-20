@@ -771,7 +771,7 @@ Returns the raw angular 1 module.
 
 #### `config()`
 
-Adds a config function to the module.
+Adds a config function to the module. We hope to soon add a special @Config annotation that can be added to any component.
 
 ###### Parameters
 
@@ -779,7 +779,7 @@ Adds a config function to the module.
 
 #### `run()`
 
-Adds a run function to the module.
+Adds a run function to the module. We hope to soon add a special @Run annotation that can be added to any component.
 
 ###### Parameters
 
@@ -839,7 +839,8 @@ You use the TestComponentBuilder to create a test bed component. Use the test be
 Example:
 
 ```js
-import {Component, TestComponentBuilder} from 'ng-forward';
+import {Component} from 'ng-forward';
+import {TestComponentBuilder} from 'ng-forward/testing';
 import {MyComponent} from './my-component';
 
 // Instantiate the Builder, this part is different than ng2.
@@ -919,7 +920,8 @@ A fixture for debugging and testing a component. Use the [TestComponentBuilder's
 Example:
 
 ```js
-import {Component, TestComponentBuilder} from 'ng-forward';
+import {Component} from 'ng-forward';
+import {TestComponentBuilder} from 'ng-forward/testing';
 import {MyComponent} from './my-component';
 import {MyService} from './my-service';
 
