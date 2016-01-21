@@ -852,7 +852,7 @@ const tcb = new TestComponentBuilder();
 class Test {}
 
 describe('MyComponent', () => {
-    it('does something', () => {
+    it('does something', done => {
         let html = '<my-component name="mine"></my-component>';
 
         // Use tcb to override templates and providers, then create your fixture.
@@ -861,6 +861,7 @@ describe('MyComponent', () => {
             .createAsync(Test).then(fixture => {
                 let myComponent = fixture.debugElement.componentViewChildren[0];
                 expect(myComponent.name).to.equal('mine');
+                done();
             });
     });
 })
@@ -873,7 +874,17 @@ describe('MyComponent', () => {
 
 Creates a [ComponentFixture](#componentfixture) out of a [Component](#component). This method is called last, after all desired override methods are called.
 
-In ng-forward this is not really async. But we are polyfilling Angular 2 which is async.
+In ng-forward this is not really async. But we are polyfilling Angular 2 which is async. Be sure to call `done()` in your tests.
+
+Example:
+```js
+it('tests something', done => {
+    tcb.createAsync(TestComponent).then(fixture => {
+        // ... test some stuff ...
+        done();
+    });
+});
+```
 
 ###### Parameters
 
@@ -931,7 +942,7 @@ const tcb = new TestComponentBuilder();
 class Test {}
 
 describe('MyComponent', () => {
-    it('does something', () => {
+    it('does something', done => {
         let html = '<my-component name="mine"></my-component>';
 
         tcb
@@ -958,6 +969,8 @@ describe('MyComponent', () => {
                 // Since debugElements are just jqlite elements, you can use jqlite methods too
                 // BUT BE CAREFUL!! You are probably going to make it harder to migrate later!!
                 let myComponent = fixture.debugElement.find('my-component').componentInstance;
+                
+                done(); // be sure to tell the test that you are done.
             });
     });
 })
