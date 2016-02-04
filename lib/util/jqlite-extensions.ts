@@ -1,7 +1,6 @@
 import {bundleStore} from '../writers'
 import {dashToCamel} from './helpers';
 import {getInjectableName} from './get-injectable-name';
-import JQuery from "./";
 import IAugmentedJQuery = angular.IAugmentedJQuery;
 import IAugmentedJQueryStatic = angular.IAugmentedJQueryStatic;
 import {ngClass} from "../testing/test-component-builder";
@@ -11,7 +10,7 @@ export interface INgForwardJQueryStatic extends IAugmentedJQueryStatic {
   (element: any): INgForwardJQuery;
   (object: {}): INgForwardJQuery;
   (elementArray: any[]): INgForwardJQuery;
-  (object: JQuery): INgForwardJQuery;
+  (object: IAugmentedJQuery): INgForwardJQuery;
   (func: Function): INgForwardJQuery;
   (array: any[]): INgForwardJQuery;
   (): INgForwardJQuery;
@@ -20,7 +19,7 @@ export interface INgForwardJQueryStatic extends IAugmentedJQueryStatic {
 export interface INgForwardJQuery extends IAugmentedJQuery {
   find(selector: string): INgForwardJQuery;
   find(element: any): INgForwardJQuery;
-  find(obj: JQuery): INgForwardJQuery;
+  find(obj: IAugmentedJQuery): INgForwardJQuery;
 
   nativeElement: any;
   componentInstance: any;
