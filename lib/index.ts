@@ -5,7 +5,7 @@ import { OpaqueToken } from './classes/opaque-token';
 import { Provider, provide } from './classes/provider';
 
 // Decorators
-import { Component } from './decorators/component';
+import { Component, View } from './decorators/component';
 import { Directive } from './decorators/directive';
 import { Inject } from './decorators/inject';
 import { Injectable } from './decorators/injectable';
@@ -31,36 +31,37 @@ import './util/jqlite-extensions';
 
 
 export {
-	// Classes
-	Module,
-	Metastore,
-	OpaqueToken,
-	Provider,
-	provide,
-	
-	// Decorators
-	Component,
-	Directive,
-	Inject,
-	Injectable,
-	Pipe,
-	Providers,
-	Input,
-	Output,
-	StateConfig,
-	Resolve,
-	
-	// Events
-	events,
-	EventEmitter,
-	
-	// Functions
-	bootstrap,
-	bundle,
-	getInjectableName,
-	
-	// Writers
-	bundleStore,
-	providerStore,
-	componentStore
+  // Classes
+  Module,
+  Metastore,
+  OpaqueToken,
+  Provider,
+  provide,
+
+  // Decorators
+  Component,
+  View,
+  Directive,
+  Inject,
+  Injectable,
+  Pipe,
+  Providers,
+  Input,
+  Output,
+  StateConfig,
+  Resolve,
+
+  // Events
+  events,
+  EventEmitter,
+
+  // Functions
+  bootstrap,
+  bundle,
+  getInjectableName,
+
+  // Writers
+  bundleStore,
+  providerStore,
+  componentStore
 };
