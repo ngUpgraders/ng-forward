@@ -168,7 +168,7 @@ Let's take a look at the template for this component:
 		</button>
 ```
 
-ng-forward has built custom directives for all the (standard dom events)[https://github.com/ngUpgraders/ng-forward/blob/master/src/util/events.js#L6-L36]:
+ng-forward has built custom directives for all the (standard dom events)[https://github.com/ngUpgraders/ng-forward/blob/master/lib/events/events.ts#L7-L37]:
 click, change, scroll, etc so you can use ng2 syntax for interacting with these events. Here we attach a click handler to a button, which in turn calls a function on a component. This is equivalent to using standard ng-click and works the same way, but matches Angular 2 syntax.
 
 ### Inputs
