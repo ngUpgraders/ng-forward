@@ -1,5 +1,7 @@
 # ng-forward
 
+# This Project is no longer under active development.
+
 ![ng-forward logo](https://raw.githubusercontent.com/ngUpgraders/ng-forward/master/ng-forward-logo.png)
 
 [![Build Status](https://travis-ci.org/ngUpgraders/ng-forward.svg?branch=master)](https://travis-ci.org/ngUpgraders/ng-forward)
