@@ -1,6 +1,7 @@
 # ng-forward
 
-# This Project is no longer under active development.
+# This Project is no longer under active development. 
+## Consider using [ng-metadata](https://github.com/ngParty/ng-metadata). Production ready Angular 2 decorators and utils for your Angular 1 apps.
 
 ![ng-forward logo](https://raw.githubusercontent.com/ngUpgraders/ng-forward/master/ng-forward-logo.png)
 
