@@ -22,7 +22,7 @@ gulp.task('changelog', function () {
 		preset: 'angular',
 		releaseCount: 0
 	})
-			.pipe(fs.createWriteStream('CHANGELOG.md'));
+		.pipe(fs.createWriteStream('CHANGELOG.md'));
 });
 
 const tsconfig = require('./tsconfig.json');
@@ -42,8 +42,8 @@ function typescriptToES6(){
 		.pipe(ts(tsBuildProject));
 
 	return merge([
-		result.js.pipe(sourcemaps.write()).pipe(gulp.dest('dist')),
-		result.dts.pipe(gulp.dest('dist'))
+		result.js.pipe(sourcemaps.write()).pipe(gulp.dest('dist/lib')),
+		result.dts.pipe(gulp.dest('dist/lib'))
 	]);
 }
 
@@ -108,10 +108,10 @@ function bundleToES5(){
 
 function createSFXBundle(){
 	return gulp.src([
-			require.resolve('babel-core/browser-polyfill'),
-			require.resolve('reflect-metadata'),
-			'./dist/ng-forward.es5.js'
-		])
+		require.resolve('babel-core/browser-polyfill'),
+		require.resolve('reflect-metadata'),
+		'./dist/ng-forward.es5.js'
+	])
 		.pipe(concat('ng-forward.dist.js'))
 		.pipe(gulp.dest('./dist'))
 
@@ -130,10 +130,10 @@ async function cleanupDistFolder(){
 
 function moveMiscFiles(){
 	return gulp.src([
-			'./package.json',
-			'./build/**.js',
-			'./README.md'
-		])
+		'./package.json',
+		'./build/**.js',
+		'./README.md'
+	])
 		.pipe(gulp.dest('./dist'));
 }
 
@@ -162,27 +162,27 @@ gulp.task('watch/ts-to-es6', () => {
 
 gulp.task('build', done => {
 	runSequence(
-			'clean-dist',
-			'build/ts-to-es6',
-			'build/test',
-			'build/lib-to-es6',
-			'build/es6-to-cjs',
-			'build/rollup',
-			'build/bundle-to-es5',
-			'build/create-sfx-bundle',
-			'build/cleanup',
-			'build/move-misc-files',
-			'build/entry-typings',
-			done
-	)
+	'clean-dist',
+	'build/ts-to-es6',
+	'build/test',
+	'build/lib-to-es6',
+	'build/es6-to-cjs',
+	'build/rollup',
+	'build/bundle-to-es5',
+	'build/create-sfx-bundle',
+	'build/cleanup',
+	'build/move-misc-files',
+	'build/entry-typings',
+	done
+)
 });
 
 gulp.task('dev', done => {
 	runSequence(
-			'build/ts-to-es6',
-			['watch/ts-to-es6', 'watch/test'],
-			done
-	);
+	'build/ts-to-es6',
+	['watch/ts-to-es6', 'watch/test'],
+done
+);
 });
 
 gulp.task('default', ['build']);
