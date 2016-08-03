@@ -28,7 +28,7 @@ module.exports = function(config){
 			transform: [
 				['babelify', { stage: 0 }],
 				['aliasify', { aliases: {
-					'@reactivex/rxjs/dist/es6/Subject': '@reactivex/rxjs/dist/cjs/Subject'
+					'rxjs-es/Subject': 'rxjs/Subject'
 				}}]
 			]
 		},

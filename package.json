@@ -31,7 +31,7 @@
   ],
   "license": "ISC",
   "dependencies": {
-    "@reactivex/rxjs": "5.0.0-alpha.7",
+    "rxjs": "5.0.0-beta.10",
     "reflect-metadata": "^0.1.2"
   },
   "devDependencies": {
@@ -69,6 +69,7 @@
     "rollup": "^0.20.2",
     "rollup-babel": "^0.6.1",
     "run-sequence": "^1.1.4",
+    "rxjs-es": "5.0.0-beta.10",
     "sinon": "^1.17.2",
     "sinon-chai": "^2.8.0",
     "tsd": "^0.6.5"

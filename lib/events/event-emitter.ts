@@ -1,4 +1,4 @@
-import Subject from '@reactivex/rxjs/dist/es6/Subject';
+import {Subject} from 'rxjs-es/Subject';
 
 /**
  * Use by directives and components to emit custom Events. Copied from Angular 2's [EventEmitter](
