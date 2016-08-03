@@ -50,7 +50,7 @@ function typescriptToES6(){
 function buildES6Dist(){
 	let transpile = gulp.src('./dist/lib/**/*.js')
 		.pipe(filter(['**/*', '!**/*.spec.js']))
-		.pipe(replace('@reactivex/rxjs/dist/es6', '@reactivex/rxjs/dist/cjs'))
+		.pipe(replace('rxjs-es', 'rxjs'))
 		.pipe(gulp.dest('./dist/es6'));
 
 	let move = gulp.src('./dist/lib/**/*.d.ts')
