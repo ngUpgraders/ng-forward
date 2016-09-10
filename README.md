@@ -35,7 +35,7 @@ npm i --save ng-forward@latest reflect-metadata
 
 **CDN**: 
 ```html
-<script src="https://npmcdn.com/ng-forward/ng-forward.dist.min.js"></script>
+<script src="https://unpkg.com/ng-forward/ng-forward.dist.min.js"></script>
 ```
 
 ## Learn
